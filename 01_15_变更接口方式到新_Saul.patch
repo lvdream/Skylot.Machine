@@ -1,0 +1,934 @@
+Index: src/main/java/com/fangda/skylot/mathine/scheduler/springtask/SyncFTPUtil.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/com/fangda/skylot/mathine/scheduler/springtask/SyncFTPUtil.java	(revision 6809)
++++ src/main/java/com/fangda/skylot/mathine/scheduler/springtask/SyncFTPUtil.java	(date 1516068276000)
+@@ -73,7 +73,7 @@
+                     loggerParking.warn("当前时间:[" + SkylotUtils.getStrDate() + "],当前操作车辆序号[" + strings[0] + "],当前车辆是[" + strings[2] + "]");
+                     if (strings[1].equals("存车")) {
+                         loggerParking.warn("当前时间:[" + SkylotUtils.getStrDate() + "],当前操作[存车],当前车辆是[" + strings[2] + "]");
+-                        statusMap = syncServiceImpl.parkCar(StringUtils.remove(strings[2], " "));
++                        statusMap = syncServiceImpl.parkCar(StringUtils.remove(strings[2], " "), false);
+ 
+                     } else if (strings[1].equals("取车")) {
+                         loggerParking.warn("当前时间:[" + SkylotUtils.getStrDate() + "],当前操作[取车],当前车辆是[" + strings[2] + "]");
+@@ -103,7 +103,7 @@
+                     FTPFile file = ftpFiles[i];
+                     //直接将获取到车牌对象插入到数据中
+                     String actualName = StringUtils.substringBeforeLast(StringUtils.substringAfterLast(file.getName(), GetProperties.getProperties("system.properties", "ftp.image.file.split")), GetProperties.getProperties("system.properties", "ftp.image.file.extention"));
+-                    int result = ((ParkingLogService) serviceMap.get("parkinglogService")).parkingAction(actualName);
++                    int result = ((ParkingLogService) serviceMap.get("parkinglogService")).parkingAction(actualName, true);
+                     if (result == NumberUtils.toInt(PARKING_PULLING_STATUS_PROGRESS)) {
+                         errorList.add(file.getName());
+                     }
+Index: src/main/java/com/fangda/skylot/mathine/scheduler/springtask/SyncHeartbeatPLCTask.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/com/fangda/skylot/mathine/scheduler/springtask/SyncHeartbeatPLCTask.java	(revision 6809)
++++ src/main/java/com/fangda/skylot/mathine/scheduler/springtask/SyncHeartbeatPLCTask.java	(date 1516068274000)
+@@ -2,6 +2,8 @@
+ 
+ import com.fangda.skylot.mathine.service.sync.SyncService;
+ import com.fangda.skylot.mathine.utils.exception.SkyLotException;
++import com.fangda.skylot.mathine.utils.socket.WSThreadMgt;
++import com.google.common.collect.Maps;
+ import lombok.extern.slf4j.Slf4j;
+ import org.springframework.beans.factory.annotation.Autowired;
+ import org.springframework.stereotype.Component;
+@@ -19,11 +21,15 @@
+ public class SyncHeartbeatPLCTask {
+     @Autowired
+     private SyncService syncServiceImpl;
++    @Autowired
++    private WSThreadMgt wsThreadMgt;
+ 
+     public void syncPLC() throws SkyLotException {
+         int result = 0;
+         try {
++            wsThreadMgt.putCommander(Maps.newHashMap());
+             result = syncServiceImpl.heartbeatSyncPLC();
++            wsThreadMgt.getCommands();
+         } catch (Exception e) {
+             throw new SkyLotException(e);
+         }
+Index: src/main/java/com/fangda/skylot/mathine/service/impl/parking/ParkingLogServiceImpl.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/com/fangda/skylot/mathine/service/impl/parking/ParkingLogServiceImpl.java	(revision 6809)
++++ src/main/java/com/fangda/skylot/mathine/service/impl/parking/ParkingLogServiceImpl.java	(date 1516025284000)
+@@ -54,7 +54,7 @@
+                         if (!Pattern.compile(rex).matcher(actualName).find()) {//// TODO: 21/12/2017 车牌验证规则需要更新,如果武警和使馆
+                             return 1;
+                         } else {
+-                            return parkingAction(actualName);
++                            return parkingAction(actualName, false);
+                         }
+                     }
+                 }
+@@ -64,7 +64,7 @@
+     }
+ 
+     @Override
+-    public int parkingAction(String parkingCar) throws Exception {
++    public int parkingAction(String parkingCar, boolean firstPark) throws Exception {
+         TstbFtpCarInformationCriteria carInformationCriteria = new TstbFtpCarInformationCriteria();
+         TstbFtpCarInformation tstbFtpCarInformation = TstbFtpCarInformation.builder().build();
+         tstbFtpCarInformation.setTfcCarCode(parkingCar);
+@@ -98,7 +98,7 @@
+                     Map statusMap = new HashMap();
+                     loggerParking.warn("正常停车模式,开始停车");
+                     loggerParking.warn("当前时间:[" + SkylotUtils.getStrDate() + "],,当前车辆是[" + parkingCar + "]");
+-                    statusMap = syncServiceImpl.parkCar(StringUtils.remove(parkingCar, " "));
++                    statusMap = syncServiceImpl.parkCar(StringUtils.remove(parkingCar, " "), firstPark);
+                     if (MapUtils.getIntValue(statusMap, MAP_PARKING_STATUS) == NumberUtils.toInt(PARKING_PULLING_STATUS_FINISH)) {
+                         tstbFtpCarInformation = TstbFtpCarInformation.builder().build();
+                         tstbFtpCarInformation.setTfcStatus(NumberUtils.toInt(PARKING_PULLING_STATUS_FINISH));
+@@ -109,12 +109,29 @@
+                         serviceMap.get("ftpcarService").update(tstbFtpCarInformation, carInformationCriteria);
+                     }
+                     layoutMessage(statusMap, "存车");
++                } else {
++                    ftpUtils.removeFile(parkingCar);
+                 }
+ 
+             } else {
+                 throw new SkyLotException(e);
+             }
+-
++        }
++        if (firstPark) {
++            Map statusMap = new HashMap();
++            loggerParking.warn("正常停车模式1,开始停车");
++            loggerParking.warn("当前时间1:[" + SkylotUtils.getStrDate() + "],,当前车辆是[" + parkingCar + "]");
++            statusMap = syncServiceImpl.parkCar(StringUtils.remove(parkingCar, " "), firstPark);
++            if (MapUtils.getIntValue(statusMap, MAP_PARKING_STATUS) == NumberUtils.toInt(PARKING_PULLING_STATUS_FINISH)) {
++                tstbFtpCarInformation = TstbFtpCarInformation.builder().build();
++                tstbFtpCarInformation.setTfcStatus(NumberUtils.toInt(PARKING_PULLING_STATUS_FINISH));
++                tstbFtpCarInformation.setTfcUpdatetime(SkylotUtils.getStrDate());
++                tstbFtpCarInformation.setTfcUpdateuser("auto");
++                carInformationCriteria = new TstbFtpCarInformationCriteria();
++                carInformationCriteria.createCriteria().andTfcStatusEqualTo(NumberUtils.toInt(PARKING_PULLING_STATUS_PROGRESS)).andTfcCarCodeEqualTo(parkingCar);
++                serviceMap.get("ftpcarService").update(tstbFtpCarInformation, carInformationCriteria);
++            }
++            layoutMessage(statusMap, "存车");
+         }
+         return 0;
+     }
+Index: src/main/java/com/fangda/skylot/mathine/service/impl/sync/SyncServiceImpl.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/com/fangda/skylot/mathine/service/impl/sync/SyncServiceImpl.java	(revision 6842)
++++ src/main/java/com/fangda/skylot/mathine/service/impl/sync/SyncServiceImpl.java	(date 1516068276000)
+@@ -124,7 +124,7 @@
+     }
+ 
+     @Override
+-    public Map parkCar(String carNumber) throws Exception {
++    public Map parkCar(String carNumber, boolean firstPark) throws Exception {
+         Map parkingMap = new HashMap();
+         Logger loggerParking = Logger.getLogger("Parking");
+         try {
+@@ -134,7 +134,7 @@
+                 if (parkingStatus == 0) {//PLC是否准备好停车
+                     loggerParking.warn("当前时间:[" + SkylotUtils.getStrDate() + "],当前操作[存车],当前车辆是[" + carNumber + "],PLC设备可用,准备停车!");
+                     if (getParkingPhysicalCode(carNumber) == 0) {//车牌已经停车,不能再存
+-                        parkingMap = socketService.doParking(carNumber);
++                        parkingMap = socketService.doParking(carNumber, firstPark);
+                         if (MapUtils.getIntValue(parkingMap, MAP_PARKING_STATUS) == 0) {
+                             if (createParkinglog(carNumber, parkingMap, 0) == 0) {
+                                 ((TstbMathineParkingLogDAO) this.daoMap.get("tstbMathineParkingLogDao")).save(this.getTmpl());
+@@ -249,7 +249,7 @@
+             }
+             OftbCustomerCarCriteria customerCarCriteria = new OftbCustomerCarCriteria();
+             customerCarCriteria.createCriteria().andOccCodeEqualTo(carNumber);
+-            OftbCustomerCar customerCar = ((OftbCustomerCarDAO) this.daoMap.get("oftbCustomerCarDao")).ReadSingle(customerCarCriteria);
++            OftbCustomerCar customerCar = ((OftbCustomerCarDAO) this.daoMap.get("customerCarDao")).ReadSingle(customerCarCriteria);
+             if (customerCar != null) {//车牌是否存在
+                 MstbCustomerCriteria customerCriteria = new MstbCustomerCriteria();
+                 customerCriteria.createCriteria().andMcIdEqualTo(customerCar.getMcId());
+@@ -330,6 +330,7 @@
+      * @throws Exception
+      */
+     private int checkPLC(int checkType) throws Exception {
++
+         if (socketService.confirmStatus(2) == 0) {//设备状态是否正常
+             if (checkType == 1) {//是否有可用车位可以进行停车
+                 if (socketService.enableParking() == 0) {
+@@ -413,6 +414,7 @@
+                 scheduleService.update(iftbScheduleAction, iftbScheduleActionCriteria);
+             }
+         } else {
++            iftbScheduleAction.setIsaBusinessObj(SCHEDULEACTION_BUSINESSOBJ_CUSTOMER);
+             scheduleService.add(iftbScheduleAction);
+         }
+ 
+@@ -625,6 +627,10 @@
+                 try {
+                     wsThreadMgtSend.putCommander(next);
+                     String data = sendSync(next);
++                    if (StringUtils.equals(data, FN_RETURN_STATUS_SUCCESS)) {
++
++                    }
++
+                     wsThreadMgtSend.getCommands();
+                 } catch (Exception e) {//已有队列正在运行e
+                     throw new SkyLotException(e);
+@@ -648,9 +654,10 @@
+                         Map maps = new HashMap();
+                         System.out.println(iftbScheduleAction.getIsaScheduleMessage());
+                         maps = SkylotUtils.jsonToMap(iftbScheduleAction.getIsaScheduleMessage());
+-                        String url = GetProperties.getProperties("system.properties", "skylot.webservice.heartbeat");
++                        String url = GetProperties.getProperties("system.properties", "skylot.webservice.parking");
+                         if (StringUtils.equals(iftbScheduleAction.getIsaBusinessObj(), SCHEDULEACTION_BUSINESSOBJ_MACHINE)) {
+-                            url = GetProperties.getProperties("system.properties", "skylot.webservice.parking");
++
++                            url = GetProperties.getProperties("system.properties", "skylot.webservice.heartbeat");
+                         }
+                         HttpClientUtil.getInstance()
+                                 .sendHttpPost(url, maps);
+Index: src/main/java/com/fangda/skylot/mathine/service/impl/BaseCommandUtils.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/com/fangda/skylot/mathine/service/impl/BaseCommandUtils.java	(revision 6809)
++++ src/main/java/com/fangda/skylot/mathine/service/impl/BaseCommandUtils.java	(date 1516022574000)
+@@ -77,21 +77,23 @@
+      * @param returnStr PLC返回的字符串
+      */
+     protected void convertArraytoCalc(String returnStr) throws SkyLotException {
++        StringBuilder stringBuildernew = new StringBuilder();
+         if (StringUtils.split(returnStr, " ").length == 32) {
+-            stringBuilder = new StringBuilder();
+-            stringBuilder.append(StringUtils.leftPad(StringUtils.split(returnStr, " ")[30], 2, "0"));
+-            stringBuilder.append(StringUtils.leftPad(StringUtils.split(returnStr, " ")[31], 2, "0"));
+-            calculateStatus(stringBuilder.toString());
+-        } else if (StringUtils.split(returnStr, " ").length == 34) {//获取故障代码相关长度
+-            stringBuilder = new StringBuilder();
+-            stringBuilder.append(StringUtils.leftPad(StringUtils.split(returnStr, " ")[32], 2, "0"));
+-            stringBuilder.append(StringUtils.leftPad(StringUtils.split(returnStr, " ")[33], 2, "0"));
+-            calculateStatus(stringBuilder.toString());
++            stringBuildernew = new StringBuilder();
++            stringBuildernew.append(StringUtils.leftPad(StringUtils.split(returnStr, " ")[30], 2, "0"));
++            stringBuildernew.append(StringUtils.leftPad(StringUtils.split(returnStr, " ")[31], 2, "0"));
++            calculateStatus(stringBuildernew.toString());
++        } else if (StringUtils.split(returnStr, " ").length == 34) {//获取故障代码相关长度,状态信息
++            stringBuildernew = new StringBuilder();
++            stringBuildernew.append(StringUtils.leftPad(StringUtils.split(returnStr, " ")[32], 2, "0"));
++            stringBuildernew.append(StringUtils.leftPad(StringUtils.split(returnStr, " ")[33], 2, "0"));
++            calculateStatus(stringBuildernew.toString());
+             setValueMapAppend(this.valueMap);
+-            stringBuilder = new StringBuilder();
+-            stringBuilder.append(StringUtils.leftPad(StringUtils.split(returnStr, " ")[30], 2, "0"));
+-            stringBuilder.append(StringUtils.leftPad(StringUtils.split(returnStr, " ")[31], 2, "0"));
+-            calculateStatus(stringBuilder.toString());
++            stringBuildernew = null;
++            stringBuildernew = new StringBuilder();
++            stringBuildernew.append(StringUtils.leftPad(StringUtils.split(returnStr, " ")[30], 2, "0"));
++            stringBuildernew.append(StringUtils.leftPad(StringUtils.split(returnStr, " ")[31], 2, "0"));
++            calculateStatus(stringBuildernew.toString());
+         } else {
+             throw new SkyLotException(PLC_EXCEPTION_COMMUNACAITON_LENGTH_ERROR);
+         }
+Index: src/main/java/com/fangda/skylot/mathine/service/impl/SocketServiceImpl.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/com/fangda/skylot/mathine/service/impl/SocketServiceImpl.java	(revision 6842)
++++ src/main/java/com/fangda/skylot/mathine/service/impl/SocketServiceImpl.java	(date 1516068276000)
+@@ -95,7 +95,7 @@
+             if (StringUtils.equals(actionType, "0")) {
+                 stringBuilder.append("01");
+             } else {
+-                stringBuilder.append("10");
++                stringBuilder.append("02");
+             }
+             returnint = CommandExectue(PLC_COMMUNACAITON_HEAD_CAR_DOOR, stringBuilder.toString());
+             convertArraytoCalc(stringBuilderto.toString());
+@@ -105,6 +105,25 @@
+         return returnint;
+     }
+ 
++    /**
++     * 获取告警信息之和
++     *
++     * @return 0, 操作成功,-1操作失败,-2,操作超时
++     * @throws SkyLotException
++     */
++    public int getIndexError() throws SkyLotException {
++        int returnint = -1;
++        try {
++            StringBuilder stringBuilder = new StringBuilder();
++            stringBuilder.append("000001018203ED000002");
++            returnint = CommandExectue(PLC_COMMUNACAITON_HEAD_ALL_INDEX_STATUS, stringBuilder.toString());
++            convertArraytoCalc(stringBuilderto.toString());
++        } catch (Exception e) {
++            log.error(e.getMessage());
++        }
++        return returnint;
++    }
++
+     /**
+      * 行人门,操作
+      *
+@@ -120,7 +139,7 @@
+             if (StringUtils.equals(actionType, "0")) {
+                 stringBuilder.append("01");
+             } else {
+-                stringBuilder.append("10");
++                stringBuilder.append("02");
+             }
+             returnint = CommandExectue(PLC_COMMUNACAITON_HEAD_PEOPLE_DOOR, stringBuilder.toString());
+             convertArraytoCalc(stringBuilderto.toString());
+@@ -156,7 +175,7 @@
+         try {
+             StringBuilder stringBuilder = new StringBuilder();
+             //一般
+-            stringBuilder.append("000001018203EB000002");
++            stringBuilder.append("000001018203EC000001");
+             returnint = CommandExectue(PLC_COMMUNACAITON_HEAD_ERROR_NORMAL_STATUS, stringBuilder.toString());
+             convertArraytoCalc(stringBuilderto.toString());
+         } catch (Exception e) {
+@@ -217,7 +236,7 @@
+         try {
+             StringBuilder stringBuilder = new StringBuilder();
+             //整体故障
+-            stringBuilder.append("000001018203E9000002");
++            stringBuilder.append("000001018203EA000002");
+             returnint = CommandExectue(PLC_COMMUNACAITON_HEAD_ERROR_STATUS, stringBuilder.toString());
+             convertArraytoCalc(stringBuilderto.toString());
+         } catch (Exception e) {
+@@ -237,7 +256,7 @@
+         try {
+             StringBuilder stringBuilder = new StringBuilder();
+             //整体状态
+-            stringBuilder.append("000001018203E8000001");
++            stringBuilder.append("000001018203E8000002");
+             returnint = CommandExectue(PLC_COMMUNACAITON_HEAD_STATUS, stringBuilder.toString());
+             convertArraytoCalc(stringBuilderto.toString());
+         } catch (Exception e) {
+@@ -354,7 +373,7 @@
+             returnint = CommandExectue(PLC_COMMUNACAITON_HEAD_PARKING, stringBuilder.toString(), null);//旋转车台
+             if (returnint == 0) {//存车
+                 if (confirmStatus(0) == 0) {//设备旋转完成
+-                    getEnergy();//获取旋转电量
++//                    getEnergy();//获取旋转电量
+                     //旋转车台结束,进行计时
+                     if (getDirectionBeforeTime() == 0) {
+                         setDirectionBeforeTime(0);
+@@ -367,15 +386,8 @@
+                     if (carDoor(FN_RETURN_STATUS_SUCCESS) == NumberUtils.toInt(FN_RETURN_STATUS_SUCCESS)) {//车库门开门指令发送成功
+                         //等待车库门已开
+                         if (confirmStatus(3) == 0) {//车库门已经打开
+-                            //获取内置摄像头数据 // TODO: 12/01/2018 获取内置摄像头数据
+-                            //写车牌
+-                            stringBuilder = new StringBuilder();
+-                            stringBuilder.append("00000102820BBB00000A");
+-                            stringBuilder.append(StringUtils.rightPad(encode(carCode), 40, "0"));
+-                            returnint = CommandExectue(PLC_COMMUNACAITON_HEAD_CAR_CODE, stringBuilder.toString(), null);
+-                            if (returnint != 0) {//写车牌
+-                                return returnint;
+-                            }
++                            return returnint;
++
+                         } else {
+                             return returnint;
+                         }
+@@ -401,18 +413,31 @@
+      * @param parkingLogic
+      * @return -1.故障信息,0,可以继续停车
+      */
+-    public int ParkingCarConfirm() {
++    public int ParkingCarConfirm(String carCode) {
+         int returnint = -1;
+         try {
+             getHighErrorStatus();//查询是否有故障码
+             if (MapUtils.isNotEmpty(valueMapAppend) || MapUtils.isNotEmpty(valueMap)) {//有故障码
+                 return returnint;
+             }
+-            if (confirmStatus(2) == 0) {//PLC是否空闲
++            if (confirmStatus(3) == 0) {//车库门打开状态
++                //获取当前设备是否有主要故障信息
++                getIndexError();
++                if (MapUtils.isNotEmpty(valueMapAppend) || MapUtils.isNotEmpty(valueMap)) {//有故障码
++                    return returnint;
++                }
+                 //关闭车库门
+                 if (carDoor(FN_RETURN_STATUS_ERROR) == NumberUtils.toInt(FN_RETURN_STATUS_SUCCESS)) {//车库门关门指令发送成功
+                     //等待车库门已关
+                     if (confirmStatus(4) == 0) {//车库门已经关闭
++                        //获取内置摄像头数据 // TODO: 12/01/2018 获取内置摄像头数据
++                        //写车牌
++                        stringBuilder = new StringBuilder();
++                        stringBuilder.append("00000102820BBB00000A");
++                        stringBuilder.append(StringUtils.rightPad(encode(carCode), 40, "0"));
++                        returnint = CommandExectue(PLC_COMMUNACAITON_HEAD_CAR_CODE, stringBuilder.toString(), null);
++                        if (returnint != 0) {//写车牌
++                        }
+                         if (confirmStatus(2) == 0) {//PLC是否空闲
+                             return NumberUtils.toInt(FN_RETURN_STATUS_SUCCESS);
+                         } else {
+@@ -536,26 +561,30 @@
+         if (MapUtils.isNotEmpty(this.valueMap)) {
+             for (Object o : valueMap.keySet()) {
+                 if (displayDetail) {
+-
++                    log.warn(valueMap.toString());
+                 }
+                 int pNum = (Integer) o;
+                 if (bType == 0) {//存车
+-                    if (pNum == 13) {//运行中状态
+-                        setDirectionBeforeTime(System.currentTimeMillis());//停车前,旋转计时开始
+-                        this.setStatusCheck(0);//运行中状态
+-                        return NumberUtils.toInt(FN_RETURN_STATUS_ERROR);
+-                    } else if (pNum == 14) {//运行完成状态
+-                        if (this.getStatusCheck() == 0) {//验证运行中状态存在
+-                            setDirectionBeforeTime(System.currentTimeMillis() - getFinishParkingTime());//停车前,旋转计时结束
+-                            // TODO: 14/08/2017 需要增加存车完成之后,最下方车位不是所需车位,告知PLC告警
+-                            this.setStatusCheck(1);//继续侦测运行空闲状态
+-                            return NumberUtils.toInt(FN_RETURN_STATUS_ERROR);
+-                        } else if (this.getStatusCheck() == -1) {//当前最下方已经是待旋转车位
+-                            setDirectionBeforeTime(0);//设置旋转计时为0
+-                            // TODO: 14/08/2017 需要增加存车完成之后,最下方车位不是所需车位,告知PLC告警
+-                            this.setStatusCheck(1);//继续侦测空闲状态
+-                            return NumberUtils.toInt(FN_RETURN_STATUS_ERROR);
+-                        }
++                    if (pNum == 14) {//运行完成状态
++//                        if (this.getStatusCheck() == 0) {//验证运行中状态存在
++//                            setDirectionBeforeTime(System.currentTimeMillis() - getFinishParkingTime());//停车前,旋转计时结束
++//                            // TODO: 14/08/2017 需要增加存车完成之后,最下方车位不是所需车位,告知PLC告警
++//                            this.setStatusCheck(1);//继续侦测运行空闲状态
++//                            return NumberUtils.toInt(FN_RETURN_STATUS_ERROR);
++//                        } else if (this.getStatusCheck() == -1) {//当前最下方已经是待旋转车位
++//                            setDirectionBeforeTime(0);//设置旋转计时为0
++//                            // TODO: 14/08/2017 需要增加存车完成之后,最下方车位不是所需车位,告知PLC告警
++//                            this.setStatusCheck(1);//继续侦测空闲状态
++//                            return NumberUtils.toInt(FN_RETURN_STATUS_ERROR);
++//                        } else if (this.getStatusCheck() == 1) {//验证运行完成状态存在
++//                            this.setStatusCheck(-1);//完成停车操作
++//                            try {
++//                                Thread.sleep(1000);//停车完成时,等待空闲,附加延迟1秒
++//                            } catch (InterruptedException e) {
++//                                e.printStackTrace();
++//                            }
++//                        }
++                        return NumberUtils.toInt(FN_RETURN_STATUS_SUCCESS);
+                     } else if (pNum == 10) {//停车完成状态
+                         if (this.getStatusCheck() == 1) {//验证运行完成状态存在
+                             this.setStatusCheck(-1);//完成停车操作
+@@ -596,12 +625,16 @@
+                             return NumberUtils.toInt(FN_RETURN_STATUS_SUCCESS);
+                         }
+                     }
+-                } else if (bType == 2) {//空闲状
+-                    if (pNum == 10) {//设备空闲
++                } else if (bType == 2) {//查询PLC状态
++                    if (pNum == 10) {//空闲
+                         return NumberUtils.toInt(FN_RETURN_STATUS_SUCCESS);
+                     }
+                 } else if (bType == 3) {//车库门打开状态
+-                    if (pNum == 7) {//设备空闲
++                    if (pNum == 7) {//车库门打开
++                        return NumberUtils.toInt(FN_RETURN_STATUS_SUCCESS);
++                    }
++                } else if (bType == 4) {//车库门关闭
++                    if (pNum == 8) {//车库门关闭
+                         return NumberUtils.toInt(FN_RETURN_STATUS_SUCCESS);
+                     }
+                 }
+@@ -639,7 +672,7 @@
+      * @throws SkyLotException
+      */
+     @Override
+-    public Map doParking(String carNumber) throws SkyLotException {
++    public Map doParking(String carNumber, boolean firstPark) throws SkyLotException {
+         Logger loggerParking = Logger.getLogger("Parking");
+         Map returnMap = new HashMap();
+         setTimeCounter(0);
+@@ -672,14 +705,17 @@
+             loggerParking.warn("当前时间:[" + SkylotUtils.getStrDate() + "],当前操作[存车],当前车辆是[" + carNumber + "],准备旋转方向:[" + (parkingLogic.getActionDirect() == 2 ? "反向" : "正向") + "]");
+             setTimeCounter(System.currentTimeMillis());//停车耗时计时器
+             returnMap.put(MAP_PARKING_LOCATION, parkingNumber);
+-            if (ParkingCar(parkingNumber, carNumber, parkingLogic) == 0) {
+-                setParkdirectionAfterTime(System.currentTimeMillis() - getTimeCounter());//停车之前,旋转耗时
+-                returnMap.put(MAP_PARKING_STATUS, 0);
+-                returnMap.put(MAP_ENERGY, getDirectionEnergy());
+-                setFinishParkingTime(System.currentTimeMillis() - getTimeCounter() - getDirectionBeforeTime());//实际完成停车耗时,等于当前时间减去旋转车台耗时,再减去开始计时的时间点
+-                returnMap.put(MAP_PARKING_DIRECTION, parkingLogic.getFinalPostionNumer());
++            if (firstPark) {
++                if (ParkingCar(parkingNumber, carNumber, parkingLogic) == 0) {
++                    setParkdirectionAfterTime(System.currentTimeMillis() - getTimeCounter());//停车之前,旋转耗时
++                    returnMap.put(MAP_PARKING_STATUS, 0);
++                    returnMap.put(MAP_ENERGY, getDirectionEnergy());
++                    setFinishParkingTime(System.currentTimeMillis() - getTimeCounter() - getDirectionBeforeTime());//实际完成停车耗时,等于当前时间减去旋转车台耗时,再减去开始计时的时间点
++                    returnMap.put(MAP_PARKING_DIRECTION, parkingLogic.getFinalPostionNumer());
++                }
++            } else {
+                 //停车确认
+-                if (ParkingCarConfirm() == 0) {
++                if (ParkingCarConfirm(carNumber) == 0) {
+                     loggerParking.warn("当前时间:[" + SkylotUtils.getStrDate() + "],当前操作[存车],当前车辆是[" + carNumber + "],存车操作完成!");
+                     loggerParking.warn("当前时间:[" + SkylotUtils.getStrDate() + "],当前操作[存车],存车耗费电量:[" + getDirectionEnergy() + "]");
+                     if (parkingLogic.getFinalPostionNumer() != parkingNumber && NumberUtils.toInt(parkingLogic.getFinalPostionNumer() + "", 0) != 0) {//判断是否需要再次旋转
+@@ -701,8 +737,8 @@
+                     returnMap.put(MAP_TIME_SPEND_DOING, (getFinishParkingTime()) / 1000);
+                     returnMap.put(MAP_TIME_SPEND_WEIGHT, (getDirectionAfterTime()) / 1000);
+                 }
+-
+             }
++
+         } catch (SkyLotException e) {
+             returnMap.put(MAP_PARKING_STATUS, -1);
+         } catch (JsonProcessingException e) {
+@@ -777,7 +813,7 @@
+     /**
+      * 确认是否可以
+      *
+-     * @param type 状态查询:2,查询停车:0,查询取车:1,车库门打开:3,车库门关闭:4,人行门打开:5
++     * @param type 状态查询:2,查询停车:0,查询取车:1,车库门打开:3,车库门关闭:4,人行门打开:5,获取整体状态:6
+      * @return
+      * @throws SkyLotException
+      */
+@@ -791,7 +827,11 @@
+                 if (looptimes > NumberUtils.toInt(opeartionTimeout)) {
+                     break;
+                 }
+-                a = getStatus(type);
++                if (type != 6) {
++                    a = getStatus(type);
++                } else {
++                    a = getIndexError();
++                }
+                 try {
+                     Thread.sleep(1000);
+                 } catch (InterruptedException e) {
+Index: src/main/java/com/fangda/skylot/mathine/service/parking/ParkingLogService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/com/fangda/skylot/mathine/service/parking/ParkingLogService.java	(revision 6809)
++++ src/main/java/com/fangda/skylot/mathine/service/parking/ParkingLogService.java	(date 1516068276000)
+@@ -31,9 +31,12 @@
+     /**
+      * 主停车方法
+      *
++     * @param parkingCar 待停车车牌
++     * @param firstPark 是否是首次停车吗,true is 是
+      * @return 0, 操作成功, 1, 有车正在进行停车, 2, 故障或者异常
++     * @throws Exception
+      */
+-    int parkingAction(String parkingCar) throws Exception;
++    int parkingAction(String parkingCar, boolean firstPark) throws Exception;
+ 
+     /**
+      * 处理消息的显示
+Index: src/main/java/com/fangda/skylot/mathine/service/sync/SyncService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/com/fangda/skylot/mathine/service/sync/SyncService.java	(revision 6809)
++++ src/main/java/com/fangda/skylot/mathine/service/sync/SyncService.java	(date 1516068276000)
+@@ -29,7 +29,7 @@
+      * @param carNumber 车牌
+      * @return iStatus:0, 停车成功, 1, 停车失败;iParkingLocation:停车位置;iDirection:待旋转到最下方车位;BaseNumber:操作之前最下方车位编号;iParkingStatus:当前停车状态
+      */
+-    Map parkCar(String carNumber) throws SkyLotException, Exception;
++    Map parkCar(String carNumber, boolean firstPark) throws SkyLotException, Exception;
+ 
+     /**
+      * 取车指令
+Index: src/main/java/com/fangda/skylot/mathine/service/SocketService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/com/fangda/skylot/mathine/service/SocketService.java	(revision 6809)
++++ src/main/java/com/fangda/skylot/mathine/service/SocketService.java	(date 1516068276000)
+@@ -38,7 +38,7 @@
+      * @return iStatus:0, 停车成功, 1, 停车失败;iParkingLocation:停车位置;iDirection:待旋转到最下方车位;BaseNumber:操作之前最下方车位编号;iParkingStatus:当前停车状态
+      *
+      */
+-    Map doParking(String carNumber) throws SkyLotException;
++    Map doParking(String carNumber, boolean firstPark) throws SkyLotException;
+ 
+     /**
+      * 进行取车
+Index: src/main/java/com/fangda/skylot/mathine/utils/constant/Constant.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/com/fangda/skylot/mathine/utils/constant/Constant.java	(revision 6842)
++++ src/main/java/com/fangda/skylot/mathine/utils/constant/Constant.java	(date 1516016688000)
+@@ -333,6 +333,10 @@
+      */
+     public static final String PLC_COMMUNACAITON_HEAD_ERROR_NORMAL_STATUS = "46494E530000001A000000020000000080000200010000";
+     /**
++     * PLC通信,头信息_故障状态
++     */
++    public static final String PLC_COMMUNACAITON_HEAD_ALL_INDEX_STATUS = "46494E530000001A000000020000000080000200010000";
++    /**
+      * PLC通信,模式改变
+      */
+     public static final String PLC_COMMUNACAITON_HEAD_MODEL_CHANGE = "46494E530000001C000000020000000080000200010000";
+Index: src/main/java/com/fangda/skylot/mathine/utils/socket/BaseCommander.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/com/fangda/skylot/mathine/utils/socket/BaseCommander.java	(revision 6842)
++++ src/main/java/com/fangda/skylot/mathine/utils/socket/BaseCommander.java	(date 1516068276000)
+@@ -66,7 +66,7 @@
+             stringBuilder = new StringBuilder();
+             stringBuilderto = new StringBuilder();
+             stringBuilder.append(HeadCommand.toUpperCase());//通信头
+-            stringBuilder.append(Integer.toHexString(NumberUtils.toInt(StringUtils.substringAfterLast(GetProperties.getProperties("system.properties", "skylot.machine.ip"), "."))).toUpperCase());// TODO: 01/07/2017 195环境ip写死
++            stringBuilder.append(StringUtils.leftPad(Integer.toHexString(NumberUtils.toInt(StringUtils.substringAfterLast(GetProperties.getProperties("system.properties", "skylot.machine.ip"), "."))).toUpperCase(), 2, "0"));// TODO: 01/07/2017 195环境ip写死
+ //            stringBuilder.append(Integer.toHexString(NumberUtils.toInt(StringUtils.substringAfterLast(SkylotUtils.resolveLocalIps().iterator().next().toString(), "."))).toUpperCase());//本地IP
+             stringBuilder.append(append_Command.toUpperCase());//附加命令
+             for (int i = 0; i <= stringBuilder.toString().length(); i++) {
+@@ -77,6 +77,8 @@
+                 }
+ 
+             }
++            System.out.println(stringBuilder);
++            System.out.println(stringBuilderto);
+             byte[] d;
+             if (StringUtils.isNotEmpty(stringBuilderto.toString())) {
+                 d = new byte[StringUtils.split(stringBuilderto.toString(), " ").length];
+@@ -98,6 +100,8 @@
+                         break;
+                     }
+                 }
++                System.out.println(stringBuilder);
++                System.out.println(stringBuilderto);
+                 stringBuilder = new StringBuilder();
+                 stringBuilderto = new StringBuilder();
+                 for (byte b : buffer) {
+Index: src/main/java/com/fangda/skylot/mathine/utils/HttpClientUtil.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/com/fangda/skylot/mathine/utils/HttpClientUtil.java	(revision 6809)
++++ src/main/java/com/fangda/skylot/mathine/utils/HttpClientUtil.java	(date 1516011353000)
+@@ -1,5 +1,7 @@
+ package com.fangda.skylot.mathine.utils;
+ 
++import com.google.common.collect.Lists;
++import org.apache.commons.lang3.StringUtils;
+ import org.apache.http.NameValuePair;
+ import org.apache.http.client.config.RequestConfig;
+ import org.apache.http.client.entity.UrlEncodedFormEntity;
+@@ -45,12 +47,19 @@
+         HttpPost httpPost = new HttpPost(httpUrl);
+         httpPost.setConfig(requestConfig);
+         List<NameValuePair> params = new ArrayList<NameValuePair>();
+-        Iterator it = maps.entrySet().iterator();
+-        while (it.hasNext()) {
+-            Map.Entry pair = (Map.Entry) it.next();
+-            params.add(new BasicNameValuePair(String.valueOf(pair.getKey()), String.valueOf(pair.getValue())));
+-            it.remove(); // avoids a ConcurrentModificationException
++        if (StringUtils.equals(httpUrl, GetProperties.getProperties("system.properties", "skylot.webservice.parking"))) {
++            List datalist = Lists.newArrayList();
++            datalist.add(maps);
++            params.add(new BasicNameValuePair("parkingLog", SingletonObjectMapper.getInstance().writeValueAsString(datalist)));
++        } else {
++            Iterator it = maps.entrySet().iterator();
++            while (it.hasNext()) {
++                Map.Entry pair = (Map.Entry) it.next();
++                params.add(new BasicNameValuePair(String.valueOf(pair.getKey()), String.valueOf(pair.getValue())));
++                it.remove(); // avoids a ConcurrentModificationException
++            }
+         }
++
+         httpPost.setEntity(new UrlEncodedFormEntity(params));
+         CloseableHttpResponse response = client.execute(httpPost);
+         client.close();
+Index: src/main/java/com/fangda/skylot/mathine/utils/SkylotUtils.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/com/fangda/skylot/mathine/utils/SkylotUtils.java	(revision 6842)
++++ src/main/java/com/fangda/skylot/mathine/utils/SkylotUtils.java	(date 1516010741000)
+@@ -20,6 +20,7 @@
+ import javax.crypto.spec.SecretKeySpec;
+ import java.beans.PropertyDescriptor;
+ import java.io.ByteArrayOutputStream;
++import java.io.IOException;
+ import java.lang.reflect.Field;
+ import java.lang.reflect.Method;
+ import java.net.InetAddress;
+@@ -235,6 +236,14 @@
+             }
+             return result;
+         } catch (Exception e) {
++            if (!StringUtils.isBlank(json)) {
++                try {
++                    List datalist = SingletonObjectMapper.getInstance().readValue(json, List.class);
++                    return (Map<String, String>) datalist.get(0);
++                } catch (IOException e1) {
++                    e1.printStackTrace();
++                }
++            }
+             throw new SkyLotException("PMSUtil-Exception-jsonToMap", e.getCause());
+         }
+     }
+Index: src/main/java/com/fangda/skylot/mathine/web/console/ParkCarController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/com/fangda/skylot/mathine/web/console/ParkCarController.java	(revision 6809)
++++ src/main/java/com/fangda/skylot/mathine/web/console/ParkCarController.java	(date 1516068276000)
+@@ -44,7 +44,7 @@
+         try {
+             Map subMap = Maps.newHashMap();
+             if (StringUtils.isNotEmpty(consoleParamater.getCarCode())) {
+-                Map dataMap = syncServiceImpl.parkCar(consoleParamater.getCarCode());
++                Map dataMap = syncServiceImpl.parkCar(consoleParamater.getCarCode(), false);
+                 StringBuilder message = ((ParkingLogService) serviceMap.get("parkinglogService")).layoutMessage(dataMap, BUSINESS_ACTION_TYPE_PULL);
+                 if (StringUtils.contains(message, "成功")) {
+                     result.setResultType(true);
+Index: src/main/java/com/fangda/skylot/mathine/web/IndexController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/com/fangda/skylot/mathine/web/IndexController.java	(revision 6809)
++++ src/main/java/com/fangda/skylot/mathine/web/IndexController.java	(date 1516022574000)
+@@ -13,6 +13,8 @@
+ import com.fangda.skylot.mathine.service.parking.ParkingLogService;
+ import com.fangda.skylot.mathine.utils.SingletonObjectMapper;
+ import com.fangda.skylot.mathine.utils.exception.SkyLotException;
++import com.fangda.skylot.mathine.utils.socket.WSThreadMgt;
++import com.google.common.collect.Maps;
+ import lombok.extern.slf4j.Slf4j;
+ import org.springframework.beans.factory.annotation.Autowired;
+ import org.springframework.stereotype.Controller;
+@@ -36,6 +38,8 @@
+ public class IndexController extends BaseController {
+     @Autowired
+     public Map<String, IBaseService> serviceMap;
++    @Autowired
++    private WSThreadMgt wsThreadMgt;
+     /**
+      * 监控摄像机发来的图片识别信息,HTTP方式
+      *
+@@ -58,9 +62,10 @@
+             } catch (Exception e) {
+                 throw new SkyLotException(e);
+             }
++            wsThreadMgt.putCommander(Maps.newHashMap());
+             Map map = SingletonObjectMapper.getInstance().readValue(jb.toString(), Map.class);
+             ((ParkingLogService) serviceMap.get("parkinglogService")).parkingFromCallbak(map);
+-
++            wsThreadMgt.getCommands();
+         } catch (Exception e) {
+             throw new SkyLotException(e);
+         }
+Index: src/main/resources/db/migration/V4__new_table.sql
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/resources/db/migration/V4__new_table.sql	(revision 6809)
++++ src/main/resources/db/migration/V4__new_table.sql	(date 1516068276000)
+@@ -73,3 +73,51 @@
+         NEW.tmpl_createdate
+     );
+   END;
++
++
++;
++;
++DELIMITER ;
++TRUNCATE TABLE iftb_item_customer;
++TRUNCATE TABLE iftb_machine_action;
++TRUNCATE TABLE iftb_schedule_action;
++TRUNCATE TABLE mstb_customer;
++TRUNCATE TABLE oftb_code_info;
++TRUNCATE TABLE oftb_customer_car;
++TRUNCATE TABLE oftb_mathine_item;
++TRUNCATE TABLE oftb_reserve_taking;
++TRUNCATE TABLE oftb_sync_log;
++TRUNCATE TABLE schema_version;
++TRUNCATE TABLE tstb_ftp_car_information;
++TRUNCATE TABLE tstb_log;
++TRUNCATE TABLE tstb_mathine_parking;
++TRUNCATE TABLE tstb_mathine_parking_log;
++
++
++;
++;
++DELIMITER ;
++ALTER TABLE tstb_ftp_car_information
++  ADD tfc_car_color VARCHAR(4) NULL
++COMMENT '车辆颜色';
++ALTER TABLE tstb_ftp_car_information
++  ADD tfc_car_type VARCHAR(1) NULL
++COMMENT '车辆类型
++0:小型
++1:中型
++2:大型';
++ALTER TABLE tstb_ftp_car_information
++  ADD tfc_car_in_code VARCHAR(20) NULL
++COMMENT '车台识别
++车辆牌照';
++ALTER TABLE tstb_ftp_car_information
++  ADD tfc_car_in_type VARCHAR(1) NULL
++COMMENT '车台识别
++车辆类型
++0:小型
++1:中型
++2:大型';
++ALTER TABLE tstb_ftp_car_information
++  ADD tfc_car_in_color VARCHAR(4) NULL
++COMMENT '车台识别
++车辆颜色';
+\ No newline at end of file
+Index: src/main/resources/spring-timertask.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/resources/spring-timertask.xml	(revision 6809)
++++ src/main/resources/spring-timertask.xml	(date 1516024476000)
+@@ -5,15 +5,15 @@
+            http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
+ 
+     <task:scheduler id="plcSync" pool-size="1"/>
+-    <task:scheduler id="serverSync" pool-size="2"/>
++    <task:scheduler id="serverSync" pool-size="1"/>
+ 
+     <task:scheduled-tasks scheduler="plcSync">
+-        <task:scheduled ref="syncHeartbeatPLCTask" method="syncPLC" cron="0/10 * * * * ?"/>
++        <task:scheduled ref="syncHeartbeatPLCTask" method="syncPLC" cron="0/11 * * * * ?"/>
+     </task:scheduled-tasks>
+ 
+     <task:scheduled-tasks scheduler="serverSync">
+-        <task:scheduled ref="syncParkingLogicServer" method="run" cron="0/10 * * * * ?"/>
+-        <task:scheduled ref="syncFTPUtil" method="ftp" cron="0/30 * * * * ?"/>
++        <!--<task:scheduled ref="syncParkingLogicServer" method="run" cron="0/10 * * * * ?"/>-->
++        <task:scheduled ref="syncFTPUtil" method="ftp" cron="0/15 * * * * ?"/>
+     </task:scheduled-tasks>
+ 
+ </beans>
+\ No newline at end of file
+Index: src/main/webapp/index.jsp
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/webapp/index.jsp	(revision 6809)
++++ src/main/webapp/index.jsp	(date 1516000328000)
+@@ -36,7 +36,7 @@
+     $(document).ready(function () {
+         // 指定websocket路径
+ //        var websocket = new WebSocket('ws://10.3.13.13:8080/skymachine/log');
+-        var websocket = new WebSocket('ws://10.8.0.060:8080/skylotmachine/log');
++        var websocket = new WebSocket('ws://192.168.10.3:8080/skymachine/log');
+         websocket.onmessage = function (event) {
+             // 接收服务端的实时日志并添加到HTML页面中
+             $("#log-container div").append(event.data + "<p> </p>");
+Index: src/main/filters-dev.properties
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>NATIVE_TO_ASCII_UTF-8
+===================================================================
+--- src/main/filters-dev.properties	(revision 6842)
++++ src/main/filters-dev.properties	(date 1516010373000)
+@@ -1,27 +1,27 @@
+ #database env
+-pom.jdbc.url=jdbc:mysql://10.8.0.190:3306/fangda_skylot_mathinemgt_test_02?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true
++pom.jdbc.url=jdbc:mysql://192.168.10.5:3306/fangda_skylot_mathinemgt_test_02?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true
+ pom.jdbc.username=root
+-pom.jdbc.password=123456
++pom.jdbc.password=123
+ #upload.filepath
+ pom.upload.file.path=/Users/Saul/Desktop
+ #upload.filepath
+ pom.download.file.path=/Users/Saul/Desktop/ftp
+ #sync path
+-pom.parking.machine.id=a2a29a34a1314a82ac0bb2382d505azz
+-pom.parking.machine.port=802
++pom.parking.machine.id=698c10d5b2214ba089d86c7f08482012
++pom.parking.machine.port=803
+ pom.parking.machine.address=123.207.244.20
+-pom.parking.url=http://wx.belimked.com/saas/machineActionSynchronize/heartbeat/login
+-pom.heartbeat.url=http://wx.belimked.com/saas/parkingLogSynchronize/update/login
++pom.heartbeat.url=http://wx-test02.belimked.com/saas02/machineActionSynchronize/heartbeat/login
++pom.parking.url=http://wx-test02.belimked.com/saas02/parkingLogSynchronize/update/login
+ #ftp env
+ #pom.ftp.ip=192.168.1.2
+-pom.ftp.ip=10.8.0.60
++pom.ftp.ip=192.168.10.5
+ pom.ftp.port=21
+ pom.ftp.username=yy
+ pom.ftp.password=1
+ #扩展名
+ pom.ftp.image.file.extension=.jpg
+ #存放目录
+-pom.ftp.image.file.directory=/f/IVS(10.8.0.221)/channel_0/plate/
++pom.ftp.image.file.directory=/f/IVS(192.168.10.119)/channel_0/plate/
+ #车牌文件分隔符
+ pom.ftp.image.file.split=_
+ #超时时间
+@@ -29,8 +29,8 @@
+ pom.machine.operation.timeout=60
+ #plc
+ #pom.plc.ip=192.168.1.189
+-pom.machine.ip=10.8.0.13
+-pom.plc.ip=10.8.0.220
++pom.machine.ip=192.168.10.3
++pom.plc.ip=192.168.10.250
+ pom.plc.port=9600
+ #console
+ pom.console.detail.status=true
+Index: src/test/java/TestU.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/test/java/TestU.java	(revision 6809)
++++ src/test/java/TestU.java	(date 1516018424000)
+@@ -159,6 +159,7 @@
+ //        ParkingLogic parkingLogic = new ParkingLogic();
+ //        parkingLogic.setActionDirect(2);
+ //        socketService.doDirection(1,parkingLogic);
++        socketService.getHighErrorStatus();
+         for (int i = 1; i <= 12; i++) {
+             socketService.getParkingStatus();
+             log.warn("未取车,当前车板停车状态:" + socketService.getValueMap());
+Index: pom.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- pom.xml	(revision 6809)
++++ pom.xml	(date 1515988775000)
+@@ -471,9 +471,9 @@
+                 <artifactId>flyway-maven-plugin</artifactId>
+                 <version>4.2.0</version>
+                 <configuration>
+-                    <url>jdbc:mysql://10.8.0.190:3306/fangda_skylot_mathinemgt_test_02?useUnicode=true&amp;characterEncoding=utf8&amp;allowMultiQueries=true</url>
+-                    <user>fangda</user>
+-                    <password>123456</password>
++                    <url>jdbc:mysql://192.168.10.4:3306/fangda_skylot_mathinemgt_test_02?useUnicode=true&amp;characterEncoding=utf8&amp;allowMultiQueries=true</url>
++                    <user>root</user>
++                    <password>123</password>
+                 </configuration>
+                 <dependencies>
+                     <dependency>

@@ -1,0 +1,2622 @@
+Index: src/main/java/com/fangda/skylot/mathine/mapper/customer/IftbItemCustomerMapper.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/com/fangda/skylot/mathine/mapper/customer/IftbItemCustomerMapper.xml	(revision 6809)
++++ src/main/java/com/fangda/skylot/mathine/mapper/customer/IftbItemCustomerMapper.xml	(date 1516245468000)
+@@ -265,6 +265,9 @@
+             <if test="record.iicUpdateuser != null">
+                 iic_updateuser = #{record.iicUpdateuser,jdbcType=VARCHAR},
+             </if>
++            <if test="record.iccCarCode != null">
++                icc_car_code = #{record.iccCarCode,jdbcType=VARCHAR},
++            </if>
+         </set>
+         <if test="_parameter != null">
+             <include refid="Update_By_Example_Where_Clause"/>
+@@ -283,7 +286,8 @@
+         iic_createdate = #{record.iicCreatedate,jdbcType=VARCHAR},
+         iic_createuser = #{record.iicCreateuser,jdbcType=VARCHAR},
+         iic_updatedate = #{record.iicUpdatedate,jdbcType=VARCHAR},
+-        iic_updateuser = #{record.iicUpdateuser,jdbcType=VARCHAR}
++        iic_updateuser = #{record.iicUpdateuser,jdbcType=VARCHAR},
++        icc_car_code = #{record.iccCarCode,jdbcType=VARCHAR}
+         <if test="_parameter != null">
+             <include refid="Update_By_Example_Where_Clause"/>
+         </if>
+@@ -324,6 +328,9 @@
+             <if test="iicUpdateuser != null">
+                 iic_updateuser = #{iicUpdateuser,jdbcType=VARCHAR},
+             </if>
++            <if test="iccCarCode != null">
++                icc_car_code = #{iccCarCode,jdbcType=VARCHAR},
++            </if>
+         </set>
+         where iic_id = #{iicId,jdbcType=INTEGER}
+     </update>
+@@ -339,7 +346,8 @@
+       iic_createdate = #{iicCreatedate,jdbcType=VARCHAR},
+       iic_createuser = #{iicCreateuser,jdbcType=VARCHAR},
+       iic_updatedate = #{iicUpdatedate,jdbcType=VARCHAR},
+-      iic_updateuser = #{iicUpdateuser,jdbcType=VARCHAR}
++        iic_updateuser = #{iicUpdateuser,jdbcType=VARCHAR},
++        icc_car_code = #{iccCarCode,jdbcType=VARCHAR}
+     where iic_id = #{iicId,jdbcType=INTEGER}
+   </update>
+ </mapper>
+\ No newline at end of file
+Index: src/main/java/com/fangda/skylot/mathine/mapper/parking/TstbFtpCarInformationMapper.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/com/fangda/skylot/mathine/mapper/parking/TstbFtpCarInformationMapper.xml	(revision 6809)
++++ src/main/java/com/fangda/skylot/mathine/mapper/parking/TstbFtpCarInformationMapper.xml	(date 1516240842000)
+@@ -1,262 +1,319 @@
+ <?xml version="1.0" encoding="UTF-8" ?>
+ <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+-<mapper namespace="com.fangda.skylot.mathine.dao.parking.TstbFtpCarInformationMapper" >
+-  <resultMap id="BaseResultMap" type="com.fangda.skylot.mathine.model.parking.TstbFtpCarInformation" >
+-    <id column="tfc_id" property="tfcId" jdbcType="INTEGER" />
+-    <result column="ima_id" property="imaId" jdbcType="VARCHAR"/>
+-    <result column="tfc_car_code" property="tfcCarCode" jdbcType="VARCHAR" />
+-    <result column="tfc_status" property="tfcStatus" jdbcType="INTEGER" />
+-    <result column="tfc_createtime" property="tfcCreatetime" jdbcType="VARCHAR" />
+-    <result column="tfc_createuser" property="tfcCreateuser" jdbcType="VARCHAR" />
+-    <result column="tfc_updatetime" property="tfcUpdatetime" jdbcType="VARCHAR" />
+-    <result column="tfc_updateuser" property="tfcUpdateuser" jdbcType="VARCHAR" />
+-  </resultMap>
+-  <sql id="Example_Where_Clause" >
+-    <where >
+-      <foreach collection="oredCriteria" item="criteria" separator="or" >
+-        <if test="criteria.valid" >
+-          <trim prefix="(" suffix=")" prefixOverrides="and" >
+-            <foreach collection="criteria.criteria" item="criterion" >
+-              <choose >
+-                <when test="criterion.noValue" >
+-                  and ${criterion.condition}
+-                </when>
+-                <when test="criterion.singleValue" >
+-                  and ${criterion.condition} #{criterion.value}
+-                </when>
+-                <when test="criterion.betweenValue" >
+-                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+-                </when>
+-                <when test="criterion.listValue" >
+-                  and ${criterion.condition}
+-                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+-                    #{listItem}
+-                  </foreach>
+-                </when>
+-              </choose>
+-            </foreach>
+-          </trim>
+-        </if>
+-      </foreach>
+-    </where>
+-  </sql>
+-  <sql id="Update_By_Example_Where_Clause" >
+-    <where >
+-      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+-        <if test="criteria.valid" >
+-          <trim prefix="(" suffix=")" prefixOverrides="and" >
+-            <foreach collection="criteria.criteria" item="criterion" >
+-              <choose >
+-                <when test="criterion.noValue" >
+-                  and ${criterion.condition}
+-                </when>
+-                <when test="criterion.singleValue" >
+-                  and ${criterion.condition} #{criterion.value}
+-                </when>
+-                <when test="criterion.betweenValue" >
+-                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+-                </when>
+-                <when test="criterion.listValue" >
+-                  and ${criterion.condition}
+-                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+-                    #{listItem}
+-                  </foreach>
+-                </when>
+-              </choose>
+-            </foreach>
+-          </trim>
+-        </if>
+-      </foreach>
+-    </where>
+-  </sql>
+-  <sql id="Base_Column_List" >
+-    tfc_id, ima_id, tfc_car_code, tfc_status, tfc_createtime, tfc_createuser, tfc_updatetime, 
+-    tfc_updateuser
+-  </sql>
+-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.fangda.skylot.mathine.model.parking.TstbFtpCarInformationCriteria" >
+-    select
+-    <if test="distinct" >
+-      distinct
+-    </if>
+-    <include refid="Base_Column_List" />
+-    from tstb_ftp_car_information
+-    <if test="_parameter != null" >
+-      <include refid="Example_Where_Clause" />
+-    </if>
+-    <if test="orderByClause != null" >
+-      order by ${orderByClause}
+-    </if>
+-    <if test="page != null" >
+-      limit #{page.begin} , #{page.length}
+-    </if>
+-  </select>
+-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+-    select 
+-    <include refid="Base_Column_List" />
+-    from tstb_ftp_car_information
+-    where tfc_id = #{tfcId,jdbcType=INTEGER}
+-  </select>
+-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+-    delete from tstb_ftp_car_information
+-    where tfc_id = #{tfcId,jdbcType=INTEGER}
+-  </delete>
+-  <delete id="deleteByExample" parameterType="com.fangda.skylot.mathine.model.parking.TstbFtpCarInformationCriteria" >
+-    delete from tstb_ftp_car_information
+-    <if test="_parameter != null" >
+-      <include refid="Example_Where_Clause" />
+-    </if>
+-  </delete>
+-  <insert id="insert" parameterType="com.fangda.skylot.mathine.model.parking.TstbFtpCarInformation" >
+-    insert into tstb_ftp_car_information (tfc_id, ima_id, tfc_car_code, 
+-      tfc_status, tfc_createtime, tfc_createuser, 
+-      tfc_updatetime, tfc_updateuser)
+-    values (#{tfcId,jdbcType=INTEGER}, #{imaId,jdbcType=VARCHAR}, #{tfcCarCode,jdbcType=VARCHAR},
+-      #{tfcStatus,jdbcType=INTEGER}, #{tfcCreatetime,jdbcType=VARCHAR}, #{tfcCreateuser,jdbcType=VARCHAR}, 
+-      #{tfcUpdatetime,jdbcType=VARCHAR}, #{tfcUpdateuser,jdbcType=VARCHAR})
+-  </insert>
+-  <insert id="insertSelective" parameterType="com.fangda.skylot.mathine.model.parking.TstbFtpCarInformation" >
+-    insert into tstb_ftp_car_information
+-    <trim prefix="(" suffix=")" suffixOverrides="," >
+-      <if test="tfcId != null" >
+-        tfc_id,
+-      </if>
+-      <if test="imaId != null" >
+-        ima_id,
+-      </if>
+-      <if test="tfcCarCode != null" >
+-        tfc_car_code,
+-      </if>
+-      <if test="tfcStatus != null" >
+-        tfc_status,
+-      </if>
+-      <if test="tfcCreatetime != null" >
+-        tfc_createtime,
+-      </if>
+-      <if test="tfcCreateuser != null" >
+-        tfc_createuser,
+-      </if>
+-      <if test="tfcUpdatetime != null" >
+-        tfc_updatetime,
+-      </if>
+-      <if test="tfcUpdateuser != null" >
+-        tfc_updateuser,
+-      </if>
+-    </trim>
+-    <trim prefix="values (" suffix=")" suffixOverrides="," >
+-      <if test="tfcId != null" >
+-        #{tfcId,jdbcType=INTEGER},
+-      </if>
+-      <if test="imaId != null" >
+-        #{imaId,jdbcType=VARCHAR},
+-      </if>
+-      <if test="tfcCarCode != null" >
+-        #{tfcCarCode,jdbcType=VARCHAR},
+-      </if>
+-      <if test="tfcStatus != null" >
+-        #{tfcStatus,jdbcType=INTEGER},
+-      </if>
+-      <if test="tfcCreatetime != null" >
+-        #{tfcCreatetime,jdbcType=VARCHAR},
+-      </if>
+-      <if test="tfcCreateuser != null" >
+-        #{tfcCreateuser,jdbcType=VARCHAR},
+-      </if>
+-      <if test="tfcUpdatetime != null" >
+-        #{tfcUpdatetime,jdbcType=VARCHAR},
+-      </if>
+-      <if test="tfcUpdateuser != null" >
+-        #{tfcUpdateuser,jdbcType=VARCHAR},
+-      </if>
+-    </trim>
+-  </insert>
+-  <select id="countByExample" parameterType="com.fangda.skylot.mathine.model.parking.TstbFtpCarInformationCriteria" resultType="java.lang.Integer" >
+-    select count(*) from tstb_ftp_car_information
+-    <if test="_parameter != null" >
+-      <include refid="Example_Where_Clause" />
+-    </if>
+-  </select>
+-  <update id="updateByExampleSelective" parameterType="map" >
+-    update tstb_ftp_car_information
+-    <set >
+-      <if test="record.tfcId != null" >
+-        tfc_id = #{record.tfcId,jdbcType=INTEGER},
+-      </if>
+-      <if test="record.imaId != null" >
+-        ima_id = #{record.imaId,jdbcType=VARCHAR},
+-      </if>
+-      <if test="record.tfcCarCode != null" >
+-        tfc_car_code = #{record.tfcCarCode,jdbcType=VARCHAR},
+-      </if>
+-      <if test="record.tfcStatus != null" >
+-        tfc_status = #{record.tfcStatus,jdbcType=INTEGER},
+-      </if>
+-      <if test="record.tfcCreatetime != null" >
+-        tfc_createtime = #{record.tfcCreatetime,jdbcType=VARCHAR},
+-      </if>
+-      <if test="record.tfcCreateuser != null" >
+-        tfc_createuser = #{record.tfcCreateuser,jdbcType=VARCHAR},
+-      </if>
+-      <if test="record.tfcUpdatetime != null" >
+-        tfc_updatetime = #{record.tfcUpdatetime,jdbcType=VARCHAR},
+-      </if>
+-      <if test="record.tfcUpdateuser != null" >
+-        tfc_updateuser = #{record.tfcUpdateuser,jdbcType=VARCHAR},
+-      </if>
+-    </set>
+-    <if test="_parameter != null" >
+-      <include refid="Update_By_Example_Where_Clause" />
+-    </if>
+-  </update>
+-  <update id="updateByExample" parameterType="map" >
+-    update tstb_ftp_car_information
+-    set tfc_id = #{record.tfcId,jdbcType=INTEGER},
+-    ima_id = #{record.imaId,jdbcType=VARCHAR},
+-      tfc_car_code = #{record.tfcCarCode,jdbcType=VARCHAR},
+-      tfc_status = #{record.tfcStatus,jdbcType=INTEGER},
+-      tfc_createtime = #{record.tfcCreatetime,jdbcType=VARCHAR},
+-      tfc_createuser = #{record.tfcCreateuser,jdbcType=VARCHAR},
+-      tfc_updatetime = #{record.tfcUpdatetime,jdbcType=VARCHAR},
+-      tfc_updateuser = #{record.tfcUpdateuser,jdbcType=VARCHAR}
+-    <if test="_parameter != null" >
+-      <include refid="Update_By_Example_Where_Clause" />
+-    </if>
+-  </update>
+-  <update id="updateByPrimaryKeySelective" parameterType="com.fangda.skylot.mathine.model.parking.TstbFtpCarInformation" >
+-    update tstb_ftp_car_information
+-    <set >
+-      <if test="imaId != null" >
+-        ima_id = #{imaId,jdbcType=VARCHAR},
+-      </if>
+-      <if test="tfcCarCode != null" >
+-        tfc_car_code = #{tfcCarCode,jdbcType=VARCHAR},
+-      </if>
+-      <if test="tfcStatus != null" >
+-        tfc_status = #{tfcStatus,jdbcType=INTEGER},
+-      </if>
+-      <if test="tfcCreatetime != null" >
+-        tfc_createtime = #{tfcCreatetime,jdbcType=VARCHAR},
+-      </if>
+-      <if test="tfcCreateuser != null" >
+-        tfc_createuser = #{tfcCreateuser,jdbcType=VARCHAR},
+-      </if>
+-      <if test="tfcUpdatetime != null" >
+-        tfc_updatetime = #{tfcUpdatetime,jdbcType=VARCHAR},
+-      </if>
+-      <if test="tfcUpdateuser != null" >
+-        tfc_updateuser = #{tfcUpdateuser,jdbcType=VARCHAR},
+-      </if>
+-    </set>
+-    where tfc_id = #{tfcId,jdbcType=INTEGER}
+-  </update>
+-  <update id="updateByPrimaryKey" parameterType="com.fangda.skylot.mathine.model.parking.TstbFtpCarInformation" >
+-    update tstb_ftp_car_information
+-    set ima_id = #{imaId,jdbcType=VARCHAR},
+-      tfc_car_code = #{tfcCarCode,jdbcType=VARCHAR},
+-      tfc_status = #{tfcStatus,jdbcType=INTEGER},
+-      tfc_createtime = #{tfcCreatetime,jdbcType=VARCHAR},
+-      tfc_createuser = #{tfcCreateuser,jdbcType=VARCHAR},
+-      tfc_updatetime = #{tfcUpdatetime,jdbcType=VARCHAR},
+-      tfc_updateuser = #{tfcUpdateuser,jdbcType=VARCHAR}
+-    where tfc_id = #{tfcId,jdbcType=INTEGER}
+-  </update>
++<mapper namespace="com.fangda.skylot.mathine.dao.parking.TstbFtpCarInformationMapper">
++    <resultMap id="BaseResultMap" type="com.fangda.skylot.mathine.model.parking.TstbFtpCarInformation">
++        <id column="tfc_id" property="tfcId" jdbcType="INTEGER"/>
++        <result column="ima_id" property="imaId" jdbcType="VARCHAR"/>
++        <result column="tfc_car_code" property="tfcCarCode" jdbcType="VARCHAR"/>
++        <result column="tfc_status" property="tfcStatus" jdbcType="INTEGER"/>
++        <result column="tfc_createtime" property="tfcCreatetime" jdbcType="VARCHAR"/>
++        <result column="tfc_createuser" property="tfcCreateuser" jdbcType="VARCHAR"/>
++        <result column="tfc_updatetime" property="tfcUpdatetime" jdbcType="VARCHAR"/>
++        <result column="tfc_updateuser" property="tfcUpdateuser" jdbcType="VARCHAR"/>
++        <result column="tfc_car_color" property="tfcCarColor" jdbcType="VARCHAR"/>
++        <result column="tfc_car_type" property="tfcCarType" jdbcType="VARCHAR"/>
++        <result column="tfc_car_action" property="tfcCarAction" jdbcType="VARCHAR"/>
++        <result column="tfc_car_in_code" property="tfcCarInCode" jdbcType="VARCHAR"/>
++        <result column="tfc_car_in_type" property="tfcCarInType" jdbcType="VARCHAR"/>
++        <result column="tfc_car_in_color" property="tfcCarInColor" jdbcType="VARCHAR"/>
++    </resultMap>
++    <sql id="Example_Where_Clause">
++        <where>
++            <foreach collection="oredCriteria" item="criteria" separator="or">
++                <if test="criteria.valid">
++                    <trim prefix="(" suffix=")" prefixOverrides="and">
++                        <foreach collection="criteria.criteria" item="criterion">
++                            <choose>
++                                <when test="criterion.noValue">
++                                    and ${criterion.condition}
++                                </when>
++                                <when test="criterion.singleValue">
++                                    and ${criterion.condition} #{criterion.value}
++                                </when>
++                                <when test="criterion.betweenValue">
++                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
++                                </when>
++                                <when test="criterion.listValue">
++                                    and ${criterion.condition}
++                                    <foreach collection="criterion.value" item="listItem" open="(" close=")"
++                                             separator=",">
++                                        #{listItem}
++                                    </foreach>
++                                </when>
++                            </choose>
++                        </foreach>
++                    </trim>
++                </if>
++            </foreach>
++        </where>
++    </sql>
++    <sql id="Update_By_Example_Where_Clause">
++        <where>
++            <foreach collection="example.oredCriteria" item="criteria" separator="or">
++                <if test="criteria.valid">
++                    <trim prefix="(" suffix=")" prefixOverrides="and">
++                        <foreach collection="criteria.criteria" item="criterion">
++                            <choose>
++                                <when test="criterion.noValue">
++                                    and ${criterion.condition}
++                                </when>
++                                <when test="criterion.singleValue">
++                                    and ${criterion.condition} #{criterion.value}
++                                </when>
++                                <when test="criterion.betweenValue">
++                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
++                                </when>
++                                <when test="criterion.listValue">
++                                    and ${criterion.condition}
++                                    <foreach collection="criterion.value" item="listItem" open="(" close=")"
++                                             separator=",">
++                                        #{listItem}
++                                    </foreach>
++                                </when>
++                            </choose>
++                        </foreach>
++                    </trim>
++                </if>
++            </foreach>
++        </where>
++    </sql>
++    <sql id="Base_Column_List">
++        tfc_id, ima_id, tfc_car_code, tfc_status, tfc_createtime, tfc_createuser, tfc_updatetime,
++        tfc_updateuser, tfc_car_color, tfc_car_type, tfc_car_in_code, tfc_car_in_type, tfc_car_in_color, tfc_car_action
++    </sql>
++    <select id="selectByExample" resultMap="BaseResultMap"
++            parameterType="com.fangda.skylot.mathine.model.parking.TstbFtpCarInformationCriteria">
++        select
++        <if test="distinct">
++            distinct
++        </if>
++        <include refid="Base_Column_List"/>
++        from tstb_ftp_car_information
++        <if test="_parameter != null">
++            <include refid="Example_Where_Clause"/>
++        </if>
++        <if test="orderByClause != null">
++            order by ${orderByClause}
++        </if>
++        <if test="page != null">
++            limit #{page.begin} , #{page.length}
++        </if>
++    </select>
++    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
++        select
++        <include refid="Base_Column_List"/>
++        from tstb_ftp_car_information
++        where tfc_id = #{tfcId,jdbcType=INTEGER}
++    </select>
++    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
++        DELETE FROM tstb_ftp_car_information
++        WHERE tfc_id = #{tfcId,jdbcType=INTEGER}
++    </delete>
++    <delete id="deleteByExample" parameterType="com.fangda.skylot.mathine.model.parking.TstbFtpCarInformationCriteria">
++        delete from tstb_ftp_car_information
++        <if test="_parameter != null">
++            <include refid="Example_Where_Clause"/>
++        </if>
++    </delete>
++    <insert id="insert" parameterType="com.fangda.skylot.mathine.model.parking.TstbFtpCarInformation">
++        INSERT INTO tstb_ftp_car_information (tfc_id, ima_id, tfc_car_code,
++                                              tfc_status, tfc_createtime, tfc_createuser,
++                                              tfc_updatetime, tfc_updateuser, tfc_car_action)
++        VALUES (#{tfcId,jdbcType=INTEGER}, #{imaId,jdbcType=VARCHAR}, #{tfcCarCode,jdbcType=VARCHAR},
++                #{tfcStatus,jdbcType=INTEGER}, #{tfcCreatetime,jdbcType=VARCHAR}, #{tfcCreateuser,jdbcType=VARCHAR},
++                #{tfcUpdatetime,jdbcType=VARCHAR}, #{tfcUpdateuser,jdbcType=VARCHAR}, #{tfcCarAction,jdbcType=VARCHAR})
++    </insert>
++    <insert id="insertSelective" parameterType="com.fangda.skylot.mathine.model.parking.TstbFtpCarInformation">
++        insert into tstb_ftp_car_information
++        <trim prefix="(" suffix=")" suffixOverrides=",">
++            <if test="tfcId != null">
++                tfc_id,
++            </if>
++            <if test="imaId != null">
++                ima_id,
++            </if>
++            <if test="tfcCarCode != null">
++                tfc_car_code,
++            </if>
++            <if test="tfcStatus != null">
++                tfc_status,
++            </if>
++            <if test="tfcCreatetime != null">
++                tfc_createtime,
++            </if>
++            <if test="tfcCreateuser != null">
++                tfc_createuser,
++            </if>
++            <if test="tfcUpdatetime != null">
++                tfc_updatetime,
++            </if>
++            <if test="tfcUpdateuser != null">
++                tfc_updateuser,
++            </if>
++            <if test="tfcCarAction != null">
++                tfc_car_action,
++            </if>
++        </trim>
++        <trim prefix="values (" suffix=")" suffixOverrides=",">
++            <if test="tfcId != null">
++                #{tfcId,jdbcType=INTEGER},
++            </if>
++            <if test="imaId != null">
++                #{imaId,jdbcType=VARCHAR},
++            </if>
++            <if test="tfcCarCode != null">
++                #{tfcCarCode,jdbcType=VARCHAR},
++            </if>
++            <if test="tfcStatus != null">
++                #{tfcStatus,jdbcType=INTEGER},
++            </if>
++            <if test="tfcCreatetime != null">
++                #{tfcCreatetime,jdbcType=VARCHAR},
++            </if>
++            <if test="tfcCreateuser != null">
++                #{tfcCreateuser,jdbcType=VARCHAR},
++            </if>
++            <if test="tfcUpdatetime != null">
++                #{tfcUpdatetime,jdbcType=VARCHAR},
++            </if>
++            <if test="tfcUpdateuser != null">
++                #{tfcUpdateuser,jdbcType=VARCHAR},
++            </if>
++            <if test="tfcCarAction != null">
++                #{tfcCarAction,jdbcType=VARCHAR},
++            </if>
++        </trim>
++    </insert>
++    <select id="countByExample" parameterType="com.fangda.skylot.mathine.model.parking.TstbFtpCarInformationCriteria"
++            resultType="java.lang.Integer">
++        select count(*) from tstb_ftp_car_information
++        <if test="_parameter != null">
++            <include refid="Example_Where_Clause"/>
++        </if>
++    </select>
++    <update id="updateByExampleSelective" parameterType="map">
++        update tstb_ftp_car_information
++        <set>
++            <if test="record.tfcId != null">
++                tfc_id = #{record.tfcId,jdbcType=INTEGER},
++            </if>
++            <if test="record.imaId != null">
++                ima_id = #{record.imaId,jdbcType=VARCHAR},
++            </if>
++            <if test="record.tfcCarCode != null">
++                tfc_car_code = #{record.tfcCarCode,jdbcType=VARCHAR},
++            </if>
++            <if test="record.tfcStatus != null">
++                tfc_status = #{record.tfcStatus,jdbcType=INTEGER},
++            </if>
++            <if test="record.tfcCreatetime != null">
++                tfc_createtime = #{record.tfcCreatetime,jdbcType=VARCHAR},
++            </if>
++            <if test="record.tfcCreateuser != null">
++                tfc_createuser = #{record.tfcCreateuser,jdbcType=VARCHAR},
++            </if>
++            <if test="record.tfcUpdatetime != null">
++                tfc_updatetime = #{record.tfcUpdatetime,jdbcType=VARCHAR},
++            </if>
++            <if test="record.tfcUpdateuser != null">
++                tfc_updateuser = #{record.tfcUpdateuser,jdbcType=VARCHAR},
++            </if>
++            <if test="record.tfcCarColor != null">
++                tfc_car_color = #{record.tfcCarColor,jdbcType=VARCHAR},
++            </if>
++            <if test="record.tfcCarType != null">
++                tfc_car_type = #{record.tfcCarType,jdbcType=VARCHAR},
++            </if>
++            <if test="record.tfcCarInCode != null">
++                tfc_car_in_code = #{record.tfcCarInCode,jdbcType=VARCHAR},
++            </if>
++            <if test="record.tfcCarInType != null">
++                tfc_car_in_type = #{record.tfcCarInType,jdbcType=VARCHAR},
++            </if>
++            <if test="record.tfcCarInColor != null">
++                tfc_car_in_color = #{record.tfcCarInColor,jdbcType=VARCHAR},
++            </if>
++        </set>
++        <if test="_parameter != null">
++            <include refid="Update_By_Example_Where_Clause"/>
++        </if>
++    </update>
++    <update id="updateByExample" parameterType="map">
++        update tstb_ftp_car_information
++        set tfc_id = #{record.tfcId,jdbcType=INTEGER},
++        ima_id = #{record.imaId,jdbcType=VARCHAR},
++        tfc_car_code = #{record.tfcCarCode,jdbcType=VARCHAR},
++        tfc_status = #{record.tfcStatus,jdbcType=INTEGER},
++        tfc_createtime = #{record.tfcCreatetime,jdbcType=VARCHAR},
++        tfc_createuser = #{record.tfcCreateuser,jdbcType=VARCHAR},
++        tfc_updatetime = #{record.tfcUpdatetime,jdbcType=VARCHAR},
++        tfc_updateuser = #{record.tfcUpdateuser,jdbcType=VARCHAR},
++        tfc_car_color = #{record.tfcCarColor,jdbcType=VARCHAR},
++        tfc_car_type = #{record.tfcCarType,jdbcType=VARCHAR},
++        tfc_car_in_code = #{record.tfcCarInCode,jdbcType=VARCHAR},
++        tfc_car_in_type = #{record.tfcCarInType,jdbcType=VARCHAR},
++        tfc_car_in_color = #{record.tfcCarInColor,jdbcType=VARCHAR}
++        <if test="_parameter != null">
++            <include refid="Update_By_Example_Where_Clause"/>
++        </if>
++    </update>
++    <update id="updateByPrimaryKeySelective"
++            parameterType="com.fangda.skylot.mathine.model.parking.TstbFtpCarInformation">
++        update tstb_ftp_car_information
++        <set>
++            <if test="imaId != null">
++                ima_id = #{imaId,jdbcType=VARCHAR},
++            </if>
++            <if test="tfcCarCode != null">
++                tfc_car_code = #{tfcCarCode,jdbcType=VARCHAR},
++            </if>
++            <if test="tfcStatus != null">
++                tfc_status = #{tfcStatus,jdbcType=INTEGER},
++            </if>
++            <if test="tfcCreatetime != null">
++                tfc_createtime = #{tfcCreatetime,jdbcType=VARCHAR},
++            </if>
++            <if test="tfcCreateuser != null">
++                tfc_createuser = #{tfcCreateuser,jdbcType=VARCHAR},
++            </if>
++            <if test="tfcUpdatetime != null">
++                tfc_updatetime = #{tfcUpdatetime,jdbcType=VARCHAR},
++            </if>
++            <if test="tfcUpdateuser != null">
++                tfc_updateuser = #{tfcUpdateuser,jdbcType=VARCHAR},
++            </if>
++            <if test="tfcCarColor != null">
++                tfc_car_color = #{tfcCarColor,jdbcType=VARCHAR},
++            </if>
++            <if test="tfcCarType != null">
++                tfc_car_type = #{tfcCarType,jdbcType=VARCHAR},
++            </if>
++            <if test="tfcCarInCode != null">
++                tfc_car_in_code = #{tfcCarInCode,jdbcType=VARCHAR},
++            </if>
++            <if test="tfcCarInType != null">
++                tfc_car_in_type = #{tfcCarInType,jdbcType=VARCHAR},
++            </if>
++            <if test="tfcCarInColor != null">
++                tfc_car_in_color = #{tfcCarInColor,jdbcType=VARCHAR},
++            </if>
++        </set>
++        where tfc_id = #{tfcId,jdbcType=INTEGER}
++    </update>
++    <update id="updateByPrimaryKey" parameterType="com.fangda.skylot.mathine.model.parking.TstbFtpCarInformation">
++        UPDATE tstb_ftp_car_information
++        SET ima_id           = #{imaId,jdbcType=VARCHAR},
++            tfc_car_code     = #{tfcCarCode,jdbcType=VARCHAR},
++            tfc_status       = #{tfcStatus,jdbcType=INTEGER},
++            tfc_createtime   = #{tfcCreatetime,jdbcType=VARCHAR},
++            tfc_createuser   = #{tfcCreateuser,jdbcType=VARCHAR},
++            tfc_updatetime   = #{tfcUpdatetime,jdbcType=VARCHAR},
++            tfc_updateuser   = #{tfcUpdateuser,jdbcType=VARCHAR},
++            tfc_car_color    = #{tfcCarColor,jdbcType=VARCHAR},
++            tfc_car_type     = #{tfcCarType,jdbcType=VARCHAR},
++            tfc_car_in_code  = #{tfcCarInCode,jdbcType=VARCHAR},
++            tfc_car_in_type  = #{tfcCarInType,jdbcType=VARCHAR},
++            tfc_car_in_color = #{tfcCarInColor,jdbcType=VARCHAR}
++        WHERE tfc_id = #{tfcId,jdbcType=INTEGER}
++    </update>
+ </mapper>
+\ No newline at end of file
+Index: src/main/java/com/fangda/skylot/mathine/model/parking/TstbFtpCarInformation.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/com/fangda/skylot/mathine/model/parking/TstbFtpCarInformation.java	(revision 6809)
++++ src/main/java/com/fangda/skylot/mathine/model/parking/TstbFtpCarInformation.java	(date 1516240549000)
+@@ -27,5 +27,11 @@
+     private String tfcUpdatetime;
+ 
+     private String tfcUpdateuser;
++    private String tfcCarColor;
++    private String tfcCarType;
++    private String tfcCarAction;
++    private String tfcCarInCode;
++    private String tfcCarInType;
++    private String tfcCarInColor;
+ 
+ }
+\ No newline at end of file
+Index: src/main/java/com/fangda/skylot/mathine/scheduler/springtask/MainThreadMgt.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/com/fangda/skylot/mathine/scheduler/springtask/MainThreadMgt.java	(date 1516245468000)
++++ src/main/java/com/fangda/skylot/mathine/scheduler/springtask/MainThreadMgt.java	(date 1516245468000)
+@@ -0,0 +1,268 @@
++package com.fangda.skylot.mathine.scheduler.springtask;
++
++import com.fangda.skylot.mathine.model.parking.TstbFtpCarInformation;
++import com.fangda.skylot.mathine.model.parking.TstbFtpCarInformationCriteria;
++import com.fangda.skylot.mathine.service.IBaseService;
++import com.fangda.skylot.mathine.service.SocketService;
++import com.fangda.skylot.mathine.service.sync.SyncService;
++import com.fangda.skylot.mathine.utils.GetProperties;
++import com.fangda.skylot.mathine.utils.SingletonObjectMapper;
++import com.fangda.skylot.mathine.utils.SkylotUtils;
++import com.fangda.skylot.mathine.utils.exception.SkyLotException;
++import com.fangda.skylot.mathine.utils.socket.WSThreadMgt;
++import com.google.common.collect.Maps;
++import lombok.Data;
++import org.apache.commons.collections.CollectionUtils;
++import org.apache.commons.collections.MapUtils;
++import org.apache.commons.lang3.StringUtils;
++import org.apache.commons.lang3.math.NumberUtils;
++import org.apache.log4j.Logger;
++import org.springframework.beans.factory.annotation.Autowired;
++import org.springframework.stereotype.Component;
++
++import java.util.HashMap;
++import java.util.List;
++import java.util.Map;
++
++import static com.fangda.skylot.mathine.utils.constant.Constant.*;
++
++/**
++ * 主线程控制器
++ */
++@Component
++@Data
++public class MainThreadMgt {
++    @Autowired
++    public Map<String, IBaseService> serviceMap;
++    @Autowired
++    private WSThreadMgt wsThreadMgt;
++    private TstbFtpCarInformation tstbFtpCarInformation;
++    @Autowired
++    private SyncService syncServiceImpl;
++    private Logger loggerParking = Logger.getLogger("Parking");
++    private boolean peopleDoor = false;
++    @Autowired
++    private SocketService socketService;
++
++    /**
++     * 主线程控制类
++     *
++     * @throws SkyLotException
++     */
++    public void go() throws SkyLotException {
++        try {
++            if (wsThreadMgt.checkCommander() == -1) {
++                wsThreadMgt.putCommander(Maps.newHashMap());
++                if (hasTasktodo()) {
++                    if (StringUtils.equals(PARKING_PULLING_STATUS_FINISH, tstbFtpCarInformation.getTfcCarAction())) {//当前状态是0,停车逻辑
++                        doParkingLogic();
++                    } else if (StringUtils.equals(PARKING_PULLING_STATUS_PROGRESS, tstbFtpCarInformation.getTfcCarAction())) {//当前状态是1,取车逻辑
++//                        doParkingLogic();
++                    }
++
++                }
++                wsThreadMgt.getCommands();
++            }
++        } catch (Exception e) {
++            throw new SkyLotException(e);
++        }
++    }
++
++    /**
++     * 将待停车对象,改完停车对象为停车确认状态
++     *
++     * @return 是, 否
++     * @throws SkyLotException skylot exception
++     */
++    private boolean confirmCar(TstbFtpCarInformation... carInformation) throws SkyLotException {
++        try {
++            TstbFtpCarInformationCriteria carInformationCriteria = new TstbFtpCarInformationCriteria();
++            carInformationCriteria.createCriteria().andTfcIdEqualTo(tstbFtpCarInformation.getTfcId());
++            if (carInformation != null && carInformation[0] != null) {
++                tstbFtpCarInformation.setTfcStatus(NumberUtils.toInt(SCHEDULEACTION_MODULEID_MACHINEITEM));//用户确认停车
++            } else {
++                tstbFtpCarInformation.setTfcStatus(NumberUtils.toInt(SCHEDULEACTION_MODULEID_ITEMCUSTOMER));//等待用户确认状态
++            }
++            serviceMap.get("ftpcarService").update(tstbFtpCarInformation, carInformationCriteria);
++            return true;
++        } catch (Exception e) {
++            throw new SkyLotException(e);
++        }
++    }
++
++    /**
++     * 用户界面确认停车
++     *
++     * @return 是, 否
++     * @throws SkyLotException skylot exception
++     */
++    public boolean userconfirmCar(TstbFtpCarInformation carInformation) throws SkyLotException {
++        try {
++            confirmCar(carInformation);
++            return true;
++        } catch (Exception e) {
++            throw new SkyLotException(e);
++        }
++    }
++
++    /**
++     * 检查是否有任务需要执行
++     *
++     * @return 是, 否
++     */
++    public boolean hasTasktodo() throws SkyLotException {
++        try {
++            TstbFtpCarInformationCriteria carInformationCriteria = new TstbFtpCarInformationCriteria();
++            carInformationCriteria.setOrderByClause("tfc_id asc");
++            List dataList = serviceMap.get("ftpcarService").queryForAll(carInformationCriteria);
++            if (CollectionUtils.isNotEmpty(dataList)) {
++                tstbFtpCarInformation = (TstbFtpCarInformation) dataList.get(0);
++                return true;
++            }
++        } catch (Exception e) {
++            throw new SkyLotException(e);
++        }
++        return false;
++    }
++
++    /**
++     * 更新PLC心跳数据
++     *
++     * @throws Exception skylot exception
++     */
++    private void heartBeatPLC() throws Exception {
++        Map scheduleMap = new HashMap();
++        scheduleMap.put(SCHEDULEACTION_TYPE_HEARTBEAT, SCHEDULEACTION_TYPE_HEARTBEAT_PLC);
++        scheduleMap.put(SCHEDULEACTION_TYPE_ITEM, 1 + "");
++        scheduleMap.put(SCHEDULEACTION_MESSAGE, SingletonObjectMapper.getInstance().writeValueAsString(socketService.getAllStatus()));
++        syncServiceImpl.updateSchedule(scheduleMap);
++    }
++
++    /**
++     * 检查人行门是否有开关
++     */
++    private void peopleDoorhadOpen() throws SkyLotException {
++        if (socketService.confirmStatus(5, true) == NumberUtils.toInt(FN_RETURN_STATUS_SUCCESS)) {
++            peopleDoor = true;
++        }
++    }
++
++
++    /**
++     * 处理停车逻辑
++     *
++     * @return true, false
++     */
++    private boolean doParkingLogic() throws Exception {
++        Map parkingMap = Maps.newHashMap();
++        Map valueMap = Maps.newHashMap();
++        Map resultMap = Maps.newHashMap();
++        int result = syncServiceImpl.checkPLC(3);
++        if (result == NumberUtils.toInt(FN_RETURN_STATUS_SUCCESS)) {
++            loggerParking.warn("当前时间:[" + SkylotUtils.getStrDate() + "],当前操作[存车],当前车辆是[" + tstbFtpCarInformation.getTfcCarCode() + "],PLC设备可用,准备停车!");
++            //首先,旋转到位,打开车库门
++            int s = 1;
++
++            while (s == 1) {//旋转,开门
++                heartBeatPLC();
++                parkingMap = socketService.doParking(tstbFtpCarInformation.getTfcCarCode(), true);
++                loggerParking.warn("当前时间:[" + SkylotUtils.getStrDate() + "],当前操作[存车],旋转车台,打开车库门");
++                s = MapUtils.getIntValue(parkingMap, MAP_PARKING_STATUS);
++                resultMap = parkingMap;
++                if (s == 0) {
++                    break;
++                }
++
++            }
++            //其次,判断内部摄像头是否已经识别到车辆车牌,30秒延迟判断
++            int a = 0;
++            while (StringUtils.isEmpty(tstbFtpCarInformation.getTfcCarInCode())) {
++                heartBeatPLC();
++                Thread.sleep(1000);
++                hasTasktodo();
++                peopleDoorhadOpen();
++                loggerParking.warn("当前时间:[" + SkylotUtils.getStrDate() + "],当前操作[存车],读取内部摄像头数据");
++                a++;
++                if (a > NumberUtils.toInt(GetProperties.getProperties("system.properties", "pom.plc.thread.timeout"))) {//内部识别时间大于30秒,跳出循环,以外部识别到车牌为准
++                    break;
++                }
++            }
++            //最后判断,人行门开关一次
++            while (!peopleDoor) {
++                loggerParking.warn("当前时间:[" + SkylotUtils.getStrDate() + "],当前操作[存车],读取人行门开关数据");
++                heartBeatPLC();
++                peopleDoorhadOpen();
++                Thread.sleep(1000);
++            }
++            s = 1;
++            //判断1005的状态
++            while (s == 1) {
++                loggerParking.warn("当前时间:[" + SkylotUtils.getStrDate() + "],当前操作[存车],读取1005数据");
++                socketService.getIndexError();
++                valueMap = socketService.getAllStatus(true);
++                if (MapUtils.isEmpty(MapUtils.getMap(valueMap, "valueMap")) && MapUtils.isEmpty(MapUtils.getMap(valueMap, "valueAppendMap"))) {
++                    s = 0;
++                }
++                Thread.sleep(1000);
++            }
++            //全部执行完成之后,将当前停车车辆的状态置为停车确认状态
++            confirmCar();
++            //继续等待,等待用户发送确认指令,用户发送停车确认指令,状态置为3
++            while (StringUtils.equals(SCHEDULEACTION_MODULEID_ITEMCUSTOMER, tstbFtpCarInformation.getTfcStatus() + "")) {
++                loggerParking.warn("当前时间:[" + SkylotUtils.getStrDate() + "],当前操作[存车],判断是否人为确认停车");
++                heartBeatPLC();
++                hasTasktodo();
++                Thread.sleep(1000);
++            }
++            //关车库门,写车牌
++            s = 1;
++            while (s == 1) {//关门,写车牌
++                loggerParking.warn("当前时间:[" + SkylotUtils.getStrDate() + "],当前操作[存车],关车门,写车牌");
++                parkingMap = socketService.doParking(tstbFtpCarInformation.getTfcCarCode(), false);
++                heartBeatPLC();
++                s = MapUtils.getIntValue(parkingMap, MAP_PARKING_STATUS);
++                if (s == 0) {
++                    break;
++                }
++                Thread.sleep(1000);
++            }
++            syncServiceImpl.createParkinglog(tstbFtpCarInformation.getTfcCarCode(), resultMap, 0);
++            TstbFtpCarInformationCriteria carInformationCriteria = new TstbFtpCarInformationCriteria();
++            carInformationCriteria.createCriteria().andTfcCarCodeEqualTo(tstbFtpCarInformation.getTfcCarCode());
++            serviceMap.get("ftpcarService").delete(carInformationCriteria);
++            return true;
++        } else {
++            if (result == 2) {//没有可用车位可以停车
++                loggerParking.warn("当前时间:[" + SkylotUtils.getStrDate() + "],当前操作[存车],当前车辆是[" + tstbFtpCarInformation.getTfcCarCode() + "],PLC设备已经没有可用停车位置,本次停车失败!");
++            } else {
++                loggerParking.warn("当前时间:[" + SkylotUtils.getStrDate() + "],当前操作[存车],当前车辆是[" + tstbFtpCarInformation.getTfcCarCode() + "],PLC设备故障,本次停车失败!");
++            }
++            return false;
++        }
++    }
++
++    /**
++     * 处理取车逻辑
++     *
++     * @return true, false
++     */
++    private boolean doExtractLogic() throws Exception {
++        Map extractMap = Maps.newHashMap();
++        Map valueMap = Maps.newHashMap();
++        Map resultMap = Maps.newHashMap();
++        int result = syncServiceImpl.checkPLC(3);
++        if (result == NumberUtils.toInt(FN_RETURN_STATUS_SUCCESS)) {
++            loggerParking.warn("当前时间:[" + SkylotUtils.getStrDate() + "],当前操作[取车],当前车辆是[" + tstbFtpCarInformation.getTfcCarCode() + "],PLC设备可用,准备取车!");
++            //首先,旋转到位
++            int s = 1;
++            return true;
++        } else {
++            if (result == 2) {//没有可用车位可以停车
++                loggerParking.warn("当前时间:[" + SkylotUtils.getStrDate() + "],当前操作[存车],当前车辆是[" + tstbFtpCarInformation.getTfcCarCode() + "],PLC设备已经没有可用停车位置,本次停车失败!");
++            } else {
++                loggerParking.warn("当前时间:[" + SkylotUtils.getStrDate() + "],当前操作[存车],当前车辆是[" + tstbFtpCarInformation.getTfcCarCode() + "],PLC设备故障,本次停车失败!");
++            }
++            return false;
++        }
++    }
++}
+Index: src/main/java/com/fangda/skylot/mathine/scheduler/springtask/SyncFTPUtil.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/com/fangda/skylot/mathine/scheduler/springtask/SyncFTPUtil.java	(revision 6809)
++++ src/main/java/com/fangda/skylot/mathine/scheduler/springtask/SyncFTPUtil.java	(date 1516245465000)
+@@ -21,7 +21,7 @@
+ import java.text.SimpleDateFormat;
+ import java.util.*;
+ 
+-import static com.fangda.skylot.mathine.utils.constant.Constant.PARKING_PULLING_STATUS_PROGRESS;
++import static com.fangda.skylot.mathine.utils.constant.Constant.FN_RETURN_STATUS_ERROR;
+ 
+ /**
+  * Created by Saul on 16/06/2017.
+@@ -73,7 +73,7 @@
+                     loggerParking.warn("当前时间:[" + SkylotUtils.getStrDate() + "],当前操作车辆序号[" + strings[0] + "],当前车辆是[" + strings[2] + "]");
+                     if (strings[1].equals("存车")) {
+                         loggerParking.warn("当前时间:[" + SkylotUtils.getStrDate() + "],当前操作[存车],当前车辆是[" + strings[2] + "]");
+-                        statusMap = syncServiceImpl.parkCar(StringUtils.remove(strings[2], " "));
++                        statusMap = syncServiceImpl.parkCar(StringUtils.remove(strings[2], " "), false);
+ 
+                     } else if (strings[1].equals("取车")) {
+                         loggerParking.warn("当前时间:[" + SkylotUtils.getStrDate() + "],当前操作[取车],当前车辆是[" + strings[2] + "]");
+@@ -103,8 +103,9 @@
+                     FTPFile file = ftpFiles[i];
+                     //直接将获取到车牌对象插入到数据中
+                     String actualName = StringUtils.substringBeforeLast(StringUtils.substringAfterLast(file.getName(), GetProperties.getProperties("system.properties", "ftp.image.file.split")), GetProperties.getProperties("system.properties", "ftp.image.file.extention"));
+-                    int result = ((ParkingLogService) serviceMap.get("parkinglogService")).parkingAction(actualName);
+-                    if (result == NumberUtils.toInt(PARKING_PULLING_STATUS_PROGRESS)) {
++                    int result = ((ParkingLogService) serviceMap.get("parkinglogService")).parkingAction(actualName, true);
++//                    ftpUtils.removeFile(actualName);
++                    if (result == NumberUtils.toInt(FN_RETURN_STATUS_ERROR)) {
+                         errorList.add(file.getName());
+                     }
+                 }
+Index: src/main/java/com/fangda/skylot/mathine/scheduler/springtask/SyncHeartbeatPLCTask.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/com/fangda/skylot/mathine/scheduler/springtask/SyncHeartbeatPLCTask.java	(revision 6809)
++++ src/main/java/com/fangda/skylot/mathine/scheduler/springtask/SyncHeartbeatPLCTask.java	(date 1516245465000)
+@@ -2,14 +2,12 @@
+ 
+ import com.fangda.skylot.mathine.service.sync.SyncService;
+ import com.fangda.skylot.mathine.utils.exception.SkyLotException;
++import com.fangda.skylot.mathine.utils.socket.WSThreadMgt;
++import com.google.common.collect.Maps;
+ import lombok.extern.slf4j.Slf4j;
+ import org.springframework.beans.factory.annotation.Autowired;
+ import org.springframework.stereotype.Component;
+ 
+-import java.text.DateFormat;
+-import java.text.SimpleDateFormat;
+-import java.util.Date;
+-
+ /**
+  * 心跳同步类,进行PLC心跳同步,每个10秒运行一次
+  * Created by damon on 2016/12/30.
+@@ -19,15 +17,19 @@
+ public class SyncHeartbeatPLCTask {
+     @Autowired
+     private SyncService syncServiceImpl;
++    @Autowired
++    private WSThreadMgt wsThreadMgt;
+ 
+     public void syncPLC() throws SkyLotException {
+         int result = 0;
+         try {
+-            result = syncServiceImpl.heartbeatSyncPLC();
++            if (wsThreadMgt.checkCommander() == -1) {
++                wsThreadMgt.putCommander(Maps.newHashMap());
++                result = syncServiceImpl.heartbeatSyncPLC();
++                wsThreadMgt.getCommands();
++            }
+         } catch (Exception e) {
+             throw new SkyLotException(e);
+         }
+-        DateFormat df = new SimpleDateFormat("HH:mm:ss");
+-        log.warn(df.format(new Date()) + "********syncPLC 任务执行完毕****** 执行结果: " + result);
+     }
+ }
+Index: src/main/java/com/fangda/skylot/mathine/service/impl/parking/ParkingLogServiceImpl.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/com/fangda/skylot/mathine/service/impl/parking/ParkingLogServiceImpl.java	(revision 6809)
++++ src/main/java/com/fangda/skylot/mathine/service/impl/parking/ParkingLogServiceImpl.java	(date 1516245468000)
+@@ -1,15 +1,20 @@
+ package com.fangda.skylot.mathine.service.impl.parking;
+ 
+ import com.fangda.skylot.mathine.dao.parking.TstbMathineParkingLogDAO;
+-import com.fangda.skylot.mathine.model.parking.*;
++import com.fangda.skylot.mathine.model.parking.TstbFtpCarInformation;
++import com.fangda.skylot.mathine.model.parking.TstbFtpCarInformationCriteria;
++import com.fangda.skylot.mathine.model.parking.TstbMathineParkingLog;
++import com.fangda.skylot.mathine.model.parking.TstbMathineParkingLogCriteria;
+ import com.fangda.skylot.mathine.service.impl.BaseServiceImpl;
+ import com.fangda.skylot.mathine.service.parking.ParkingLogService;
+ import com.fangda.skylot.mathine.service.sync.SyncService;
++import com.fangda.skylot.mathine.utils.DateUtil;
+ import com.fangda.skylot.mathine.utils.GetProperties;
+ import com.fangda.skylot.mathine.utils.SkylotUtils;
+ import com.fangda.skylot.mathine.utils.exception.SkyLotException;
+ import com.fangda.skylot.mathine.utils.ftp.FtpUtils;
+ import lombok.extern.slf4j.Slf4j;
++import org.apache.commons.collections.CollectionUtils;
+ import org.apache.commons.collections.MapUtils;
+ import org.apache.commons.lang3.StringUtils;
+ import org.apache.commons.lang3.math.NumberUtils;
+@@ -18,7 +23,7 @@
+ import org.springframework.stereotype.Service;
+ import org.springframework.transaction.annotation.Transactional;
+ 
+-import java.util.HashMap;
++import java.util.List;
+ import java.util.Map;
+ import java.util.regex.Pattern;
+ 
+@@ -54,7 +59,16 @@
+                         if (!Pattern.compile(rex).matcher(actualName).find()) {//// TODO: 21/12/2017 车牌验证规则需要更新,如果武警和使馆
+                             return 1;
+                         } else {
+-                            return parkingAction(actualName);
++                            TstbFtpCarInformationCriteria carInformationCriteria = new TstbFtpCarInformationCriteria();
++                            carInformationCriteria.setOrderByClause("tfc_id asc");
++                            List dataList = serviceMap.get("ftpcarService").queryForAll(carInformationCriteria);
++                            if (CollectionUtils.isNotEmpty(dataList)) {
++                                TstbFtpCarInformation tstbFtpCarInformation = (TstbFtpCarInformation) dataList.get(0);
++                                tstbFtpCarInformation.setTfcCarInCode(actualName);
++                                tstbFtpCarInformation.setTfcUpdatetime(DateUtil.getNowDate());
++                                carInformationCriteria.createCriteria().andTfcIdEqualTo(tstbFtpCarInformation.getTfcId());
++                                serviceMap.get("ftpcarService").update(tstbFtpCarInformation, carInformationCriteria);
++                            }
+                         }
+                     }
+                 }
+@@ -64,12 +78,13 @@
+     }
+ 
+     @Override
+-    public int parkingAction(String parkingCar) throws Exception {
++    public int parkingAction(String parkingCar, boolean firstPark) throws Exception {
+         TstbFtpCarInformationCriteria carInformationCriteria = new TstbFtpCarInformationCriteria();
+         TstbFtpCarInformation tstbFtpCarInformation = TstbFtpCarInformation.builder().build();
+         tstbFtpCarInformation.setTfcCarCode(parkingCar);
+         tstbFtpCarInformation.setTfcCreatetime(SkylotUtils.getStrDate());
+         tstbFtpCarInformation.setTfcStatus(NumberUtils.toInt(PARKING_PULLING_STATUS_PROGRESS));//进入停车流程
++        tstbFtpCarInformation.setTfcCarAction(PARKING_PULLING_STATUS_FINISH);
+         tstbFtpCarInformation.setTfcCreateuser("auto");
+         tstbFtpCarInformation.setImaId(GetProperties.getProperties("system.properties", "skylot.machine.id"));
+         //验证车牌号
+@@ -84,37 +99,28 @@
+             if (null != ftpCarInformation && !StringUtils.equals(ftpCarInformation.getTfcCarCode(), parkingCar)) {
+                 loggerParking.warn("当前已有车辆正在停车,请稍后");
+                 ftpUtils.removeFile(parkingCar);
+-                return NumberUtils.toInt(PARKING_PULLING_STATUS_PROGRESS);
+             }
+-            serviceMap.get("ftpcarService").add(tstbFtpCarInformation);//存储识别到的车牌号
++            if (syncServiceImpl.checkCarFromDB(parkingCar) == NumberUtils.toInt(FN_RETURN_STATUS_SUCCESS)) {//检查车辆是否授权
++                if (syncServiceImpl.getParkingPhysicalCode(parkingCar) == NumberUtils.toInt(FN_RETURN_STATUS_SUCCESS)) {//检查车辆是否已经停车
++                    serviceMap.get("ftpcarService").add(tstbFtpCarInformation);//存储识别到的车牌号
++
++                } else {
++                    loggerParking.warn("当前时间:[" + SkylotUtils.getStrDate() + "],车牌[" + parkingCar + "],不能重复停车");
++                    return NumberUtils.toInt(FN_RETURN_STATUS_HANDLE);//车辆已经在停车台上
++                }
++            } else {
++                loggerParking.warn("当前时间:[" + SkylotUtils.getStrDate() + "],车牌[" + parkingCar + "]没有授权");
++                return NumberUtils.toInt(FN_RETURN_STATUS_ERROR);
++            }
++
+         } catch (Exception e) {
+-            if (StringUtils.contains(e.getMessage(), "tstb_ftp_car_information_tfc_car_code_uindex")) {//出现唯一车牌信息
+-                //判断当前车牌是否已经停车
+-                TstbMathineParkingCriteria tstbMathineParkingCriteria = new TstbMathineParkingCriteria();
+-                tstbMathineParkingCriteria = new TstbMathineParkingCriteria();
+-                tstbMathineParkingCriteria.createCriteria().andTmpCarCodeEqualTo(parkingCar);
+-                if (null == serviceMap.get("parkingService").query(tstbMathineParkingCriteria)) {
+-                    //二次识别正常,车辆可以放行停车
+-                    Map statusMap = new HashMap();
+-                    loggerParking.warn("正常停车模式,开始停车");
+-                    loggerParking.warn("当前时间:[" + SkylotUtils.getStrDate() + "],,当前车辆是[" + parkingCar + "]");
+-                    statusMap = syncServiceImpl.parkCar(StringUtils.remove(parkingCar, " "));
+-                    if (MapUtils.getIntValue(statusMap, MAP_PARKING_STATUS) == NumberUtils.toInt(PARKING_PULLING_STATUS_FINISH)) {
+-                        tstbFtpCarInformation = TstbFtpCarInformation.builder().build();
+-                        tstbFtpCarInformation.setTfcStatus(NumberUtils.toInt(PARKING_PULLING_STATUS_FINISH));
+-                        tstbFtpCarInformation.setTfcUpdatetime(SkylotUtils.getStrDate());
+-                        tstbFtpCarInformation.setTfcUpdateuser("auto");
+-                        carInformationCriteria = new TstbFtpCarInformationCriteria();
+-                        carInformationCriteria.createCriteria().andTfcStatusEqualTo(NumberUtils.toInt(PARKING_PULLING_STATUS_PROGRESS)).andTfcCarCodeEqualTo(parkingCar);
+-                        serviceMap.get("ftpcarService").update(tstbFtpCarInformation, carInformationCriteria);
+-                    }
+-                    layoutMessage(statusMap, "存车");
+-                }
+-
++            if (StringUtils.contains(e.getMessage(), "HY400")) {//可以识别的车辆大于2
++                loggerParking.warn("无法处理大于数量2的停车请求");
+             } else {
+                 throw new SkyLotException(e);
+             }
+-
++        } finally {
++            ftpUtils.removeFile(parkingCar);
+         }
+         return 0;
+     }
+Index: src/main/java/com/fangda/skylot/mathine/service/impl/sync/SyncServiceImpl.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/com/fangda/skylot/mathine/service/impl/sync/SyncServiceImpl.java	(revision 6842)
++++ src/main/java/com/fangda/skylot/mathine/service/impl/sync/SyncServiceImpl.java	(date 1516245468000)
+@@ -105,7 +105,7 @@
+                 return 2;
+             }
+         }
+-        if (checkPLC(0) != 0) {//PLC心跳正常
++        if (checkPLC(9) != 0) {//PLC心跳正常
+             plcStatus = 1;
+         }
+         try {
+@@ -124,7 +124,7 @@
+     }
+ 
+     @Override
+-    public Map parkCar(String carNumber) throws Exception {
++    public Map parkCar(String carNumber, boolean firstPark) throws Exception {
+         Map parkingMap = new HashMap();
+         Logger loggerParking = Logger.getLogger("Parking");
+         try {
+@@ -134,7 +134,7 @@
+                 if (parkingStatus == 0) {//PLC是否准备好停车
+                     loggerParking.warn("当前时间:[" + SkylotUtils.getStrDate() + "],当前操作[存车],当前车辆是[" + carNumber + "],PLC设备可用,准备停车!");
+                     if (getParkingPhysicalCode(carNumber) == 0) {//车牌已经停车,不能再存
+-                        parkingMap = socketService.doParking(carNumber);
++                        parkingMap = socketService.doParking(carNumber, firstPark);
+                         if (MapUtils.getIntValue(parkingMap, MAP_PARKING_STATUS) == 0) {
+                             if (createParkinglog(carNumber, parkingMap, 0) == 0) {
+                                 ((TstbMathineParkingLogDAO) this.daoMap.get("tstbMathineParkingLogDao")).save(this.getTmpl());
+@@ -236,7 +236,7 @@
+      * @param carNumber 车牌
+      * @return 0, 已授权, 1, 未授权,其中临停设备,可以直接停车
+      */
+-    private int checkCarFromDB(String carNumber) throws Exception {
++    public int checkCarFromDB(String carNumber) throws Exception {
+         try {
+             //增加临时车牌停车逻辑,验证当前设备是否是临停设备
+             IftbMachineActionCriteria iftbMachineActionCriteria = new IftbMachineActionCriteria();
+@@ -249,7 +249,7 @@
+             }
+             OftbCustomerCarCriteria customerCarCriteria = new OftbCustomerCarCriteria();
+             customerCarCriteria.createCriteria().andOccCodeEqualTo(carNumber);
+-            OftbCustomerCar customerCar = ((OftbCustomerCarDAO) this.daoMap.get("oftbCustomerCarDao")).ReadSingle(customerCarCriteria);
++            OftbCustomerCar customerCar = ((OftbCustomerCarDAO) this.daoMap.get("customerCarDao")).ReadSingle(customerCarCriteria);
+             if (customerCar != null) {//车牌是否存在
+                 MstbCustomerCriteria customerCriteria = new MstbCustomerCriteria();
+                 customerCriteria.createCriteria().andMcIdEqualTo(customerCar.getMcId());
+@@ -306,7 +306,7 @@
+      * @param carNumber 车牌
+      * @return 0, 没有位置, 其他就是位置信息
+      */
+-    private int getParkingPhysicalCode(String carNumber) throws Exception {
++    public int getParkingPhysicalCode(String carNumber) throws Exception {
+         try {
+             TstbMathineParkingCriteria criteria = new TstbMathineParkingCriteria();
+             criteria.createCriteria().andTmpCarCodeEqualTo(carNumber).andImaIdEqualTo(getMaId());
+@@ -325,20 +325,26 @@
+     /**
+      * 检查PLC的状态
+      *
+-     * @param checkType 检查类型,0,状态检查,1,状态和空闲车位检查
++     * @param checkType 检查类型,0,状态检查,1,状态和空闲车位检查,9:心跳检查
+      * @return 0, 检查成功, 1, 检查失败,2,没有空位可以停车
+      * @throws Exception
+      */
+-    private int checkPLC(int checkType) throws Exception {
+-        if (socketService.confirmStatus(2) == 0) {//设备状态是否正常
+-            if (checkType == 1) {//是否有可用车位可以进行停车
+-                if (socketService.enableParking() == 0) {
+-                    return 0;
+-                } else {
+-                    return 2;
++    public int checkPLC(int checkType) throws Exception {
++        if (checkType == 3 || checkType == 9) {
++            if (socketService.confirmStatus(9) == NumberUtils.toInt(FN_RETURN_STATUS_SUCCESS)) {//设备心跳查询
++                return NumberUtils.toInt(FN_RETURN_STATUS_SUCCESS);
++            }
++        } else {
++            if (socketService.confirmStatus(2) == NumberUtils.toInt(FN_RETURN_STATUS_SUCCESS)) {//设备状态是否正常
++                if (checkType == 1) {//是否有可用车位可以进行停车
++                    if (socketService.enableParking() == NumberUtils.toInt(FN_RETURN_STATUS_SUCCESS)) {
++                        return NumberUtils.toInt(FN_RETURN_STATUS_SUCCESS);
++                    } else {
++                        return 2;
++                    }
+                 }
++                return NumberUtils.toInt(FN_RETURN_STATUS_SUCCESS);
+             }
+-            return 0;
+         }
+         return 1;
+     }
+@@ -351,14 +357,14 @@
+      * @param isParking
+      * @return 0, 成功, 1, 失败
+      */
+-    private int createParkinglog(String carNumber, Map parkingMap, int isParking) {
++    public int createParkinglog(String carNumber, Map parkingMap, int isParking) {
+         try {
+             TstbMathineParkingLog tstbMathineParkingLog = TstbMathineParkingLog.builder().build();
+             tstbMathineParkingLog.setImaId(getMaId());
+             tstbMathineParkingLog.setTmplCreatedate(DateUtil.getNowDate());
+             tstbMathineParkingLog.setTmplCar(carNumber);
+             tstbMathineParkingLog.setTmplPhysicalCode(MapUtils.getIntValue(parkingMap, MAP_PARKING_LOCATION) == 0 ? "" : MapUtils.getIntValue(parkingMap, MAP_PARKING_LOCATION) + "");
+-            tstbMathineParkingLog.setTmplCustomer(this.getMstbCustomer().getMcNameCn());
++            tstbMathineParkingLog.setTmplCustomer("");
+             tstbMathineParkingLog.setTmplType(isParking == 0 ? MACHINEPARKING_TYPE_PARK : MACHINEPARKING_TYPE_TAKE);
+             tstbMathineParkingLog.setTmplStatus(PARKING_PULLING_STATUS_FINISH);
+             tstbMathineParkingLog.setTmplDiectionCode(MapUtils.getString(parkingMap, MACHINEACTION_DIRECTION_CODE));
+@@ -368,7 +374,11 @@
+             tstbMathineParkingLog.setTmplOperationDuriationWeighting(MapUtils.getString(parkingMap, MAP_TIME_SPEND_WEIGHT));
+             tstbMathineParkingLog.setTmplOperationEnergyCost(MapUtils.getString(parkingMap, MAP_ENERGY));
+             this.setTmpl(tstbMathineParkingLog);
++            ((TstbMathineParkingLogDAO) this.daoMap.get("tstbMathineParkingLogDao")).save(this.getTmpl());
++            CommandSchedule();
++
+             return 0;
++
+         } catch (Exception e) {
+             e.printStackTrace();
+             return 1;
+@@ -381,7 +391,7 @@
+      * @param scheduleMap 同步日程Map对象
+      * @throws JsonProcessingException
+      */
+-    private void updateSchedule(Map scheduleMap) throws JsonProcessingException, Exception {
++    public void updateSchedule(Map scheduleMap) throws JsonProcessingException, Exception {
+         ScheduleService scheduleService = (ScheduleService) serviceMap.get("scheduleService");
+         //01.删除已经同步完成的对象
+ 
+@@ -413,6 +423,7 @@
+                 scheduleService.update(iftbScheduleAction, iftbScheduleActionCriteria);
+             }
+         } else {
++            iftbScheduleAction.setIsaBusinessObj(SCHEDULEACTION_BUSINESSOBJ_CUSTOMER);
+             scheduleService.add(iftbScheduleAction);
+         }
+ 
+@@ -625,6 +636,12 @@
+                 try {
+                     wsThreadMgtSend.putCommander(next);
+                     String data = sendSync(next);
++                    if (StringUtils.equals(data, FN_RETURN_STATUS_SUCCESS)) {
++                        iftbScheduleActionCriteria.createCriteria().andIsaIdEqualTo(next.getIsaId());
++                        next.setIsaStatus(SCHEDULEACTION_STATUS_FINISH);
++                        ((ScheduleService) serviceMap.get("scheduleService")).update(next, iftbScheduleActionCriteria);
++                    }
++
+                     wsThreadMgtSend.getCommands();
+                 } catch (Exception e) {//已有队列正在运行e
+                     throw new SkyLotException(e);
+@@ -646,11 +663,11 @@
+                 new FutureTask<Integer>(new Callable<Integer>() {//使用Callable接口作为构造参数
+                     public Integer call() throws SkyLotException, IOException {
+                         Map maps = new HashMap();
+-                        System.out.println(iftbScheduleAction.getIsaScheduleMessage());
+                         maps = SkylotUtils.jsonToMap(iftbScheduleAction.getIsaScheduleMessage());
+-                        String url = GetProperties.getProperties("system.properties", "skylot.webservice.heartbeat");
++                        String url = GetProperties.getProperties("system.properties", "skylot.webservice.parking");
+                         if (StringUtils.equals(iftbScheduleAction.getIsaBusinessObj(), SCHEDULEACTION_BUSINESSOBJ_MACHINE)) {
+-                            url = GetProperties.getProperties("system.properties", "skylot.webservice.parking");
++
++                            url = GetProperties.getProperties("system.properties", "skylot.webservice.heartbeat");
+                         }
+                         HttpClientUtil.getInstance()
+                                 .sendHttpPost(url, maps);
+Index: src/main/java/com/fangda/skylot/mathine/service/impl/BaseCommandUtils.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/com/fangda/skylot/mathine/service/impl/BaseCommandUtils.java	(revision 6809)
++++ src/main/java/com/fangda/skylot/mathine/service/impl/BaseCommandUtils.java	(date 1516022574000)
+@@ -77,21 +77,23 @@
+      * @param returnStr PLC返回的字符串
+      */
+     protected void convertArraytoCalc(String returnStr) throws SkyLotException {
++        StringBuilder stringBuildernew = new StringBuilder();
+         if (StringUtils.split(returnStr, " ").length == 32) {
+-            stringBuilder = new StringBuilder();
+-            stringBuilder.append(StringUtils.leftPad(StringUtils.split(returnStr, " ")[30], 2, "0"));
+-            stringBuilder.append(StringUtils.leftPad(StringUtils.split(returnStr, " ")[31], 2, "0"));
+-            calculateStatus(stringBuilder.toString());
+-        } else if (StringUtils.split(returnStr, " ").length == 34) {//获取故障代码相关长度
+-            stringBuilder = new StringBuilder();
+-            stringBuilder.append(StringUtils.leftPad(StringUtils.split(returnStr, " ")[32], 2, "0"));
+-            stringBuilder.append(StringUtils.leftPad(StringUtils.split(returnStr, " ")[33], 2, "0"));
+-            calculateStatus(stringBuilder.toString());
++            stringBuildernew = new StringBuilder();
++            stringBuildernew.append(StringUtils.leftPad(StringUtils.split(returnStr, " ")[30], 2, "0"));
++            stringBuildernew.append(StringUtils.leftPad(StringUtils.split(returnStr, " ")[31], 2, "0"));
++            calculateStatus(stringBuildernew.toString());
++        } else if (StringUtils.split(returnStr, " ").length == 34) {//获取故障代码相关长度,状态信息
++            stringBuildernew = new StringBuilder();
++            stringBuildernew.append(StringUtils.leftPad(StringUtils.split(returnStr, " ")[32], 2, "0"));
++            stringBuildernew.append(StringUtils.leftPad(StringUtils.split(returnStr, " ")[33], 2, "0"));
++            calculateStatus(stringBuildernew.toString());
+             setValueMapAppend(this.valueMap);
+-            stringBuilder = new StringBuilder();
+-            stringBuilder.append(StringUtils.leftPad(StringUtils.split(returnStr, " ")[30], 2, "0"));
+-            stringBuilder.append(StringUtils.leftPad(StringUtils.split(returnStr, " ")[31], 2, "0"));
+-            calculateStatus(stringBuilder.toString());
++            stringBuildernew = null;
++            stringBuildernew = new StringBuilder();
++            stringBuildernew.append(StringUtils.leftPad(StringUtils.split(returnStr, " ")[30], 2, "0"));
++            stringBuildernew.append(StringUtils.leftPad(StringUtils.split(returnStr, " ")[31], 2, "0"));
++            calculateStatus(stringBuildernew.toString());
+         } else {
+             throw new SkyLotException(PLC_EXCEPTION_COMMUNACAITON_LENGTH_ERROR);
+         }
+Index: src/main/java/com/fangda/skylot/mathine/service/impl/SocketServiceImpl.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/com/fangda/skylot/mathine/service/impl/SocketServiceImpl.java	(revision 6842)
++++ src/main/java/com/fangda/skylot/mathine/service/impl/SocketServiceImpl.java	(date 1516245341000)
+@@ -78,6 +78,7 @@
+     private byte[] buffer = null;
+     @Autowired
+     private BaseCommander baseCommander;
++    private Logger loggerParking = Logger.getLogger("Parking");
+ 
+ 
+     /**
+@@ -95,7 +96,7 @@
+             if (StringUtils.equals(actionType, "0")) {
+                 stringBuilder.append("01");
+             } else {
+-                stringBuilder.append("10");
++                stringBuilder.append("02");
+             }
+             returnint = CommandExectue(PLC_COMMUNACAITON_HEAD_CAR_DOOR, stringBuilder.toString());
+             convertArraytoCalc(stringBuilderto.toString());
+@@ -105,6 +106,45 @@
+         return returnint;
+     }
+ 
++    /**
++     * 获取告警信息之和1005位置
++     *
++     * @return 0, 操作成功,-1操作失败,-2,操作超时
++     * @throws SkyLotException
++     */
++    public int getIndexError() throws SkyLotException {
++        int returnint = -1;
++        try {
++            StringBuilder stringBuilder = new StringBuilder();
++            stringBuilder.append("000001018203ED000002");
++            returnint = CommandExectue(PLC_COMMUNACAITON_HEAD_ALL_INDEX_STATUS, stringBuilder.toString());
++            convertArraytoCalc(stringBuilderto.toString());
++
++        } catch (Exception e) {
++            log.error(e.getMessage());
++        }
++        return returnint;
++    }
++
++    /**
++     * 获取告警信息之和1007位置
++     *
++     * @return 0, 操作成功,-1操作失败,-2,操作超时
++     * @throws SkyLotException
++     */
++    public int pullIndexError() throws SkyLotException {
++        int returnint = -1;
++        try {
++            StringBuilder stringBuilder = new StringBuilder();
++            stringBuilder.append("000001018203EF000002");
++            returnint = CommandExectue(PLC_COMMUNACAITON_HEAD_ALL_INDEX_STATUS, stringBuilder.toString());
++            convertArraytoCalc(stringBuilderto.toString());
++        } catch (Exception e) {
++            log.error(e.getMessage());
++        }
++        return returnint;
++    }
++
+     /**
+      * 行人门,操作
+      *
+@@ -120,7 +160,7 @@
+             if (StringUtils.equals(actionType, "0")) {
+                 stringBuilder.append("01");
+             } else {
+-                stringBuilder.append("10");
++                stringBuilder.append("02");
+             }
+             returnint = CommandExectue(PLC_COMMUNACAITON_HEAD_PEOPLE_DOOR, stringBuilder.toString());
+             convertArraytoCalc(stringBuilderto.toString());
+@@ -156,7 +196,7 @@
+         try {
+             StringBuilder stringBuilder = new StringBuilder();
+             //一般
+-            stringBuilder.append("000001018203EB000002");
++            stringBuilder.append("000001018203EC000001");
+             returnint = CommandExectue(PLC_COMMUNACAITON_HEAD_ERROR_NORMAL_STATUS, stringBuilder.toString());
+             convertArraytoCalc(stringBuilderto.toString());
+         } catch (Exception e) {
+@@ -217,7 +257,7 @@
+         try {
+             StringBuilder stringBuilder = new StringBuilder();
+             //整体故障
+-            stringBuilder.append("000001018203E9000002");
++            stringBuilder.append("000001018203EA000002");
+             returnint = CommandExectue(PLC_COMMUNACAITON_HEAD_ERROR_STATUS, stringBuilder.toString());
+             convertArraytoCalc(stringBuilderto.toString());
+         } catch (Exception e) {
+@@ -237,7 +277,7 @@
+         try {
+             StringBuilder stringBuilder = new StringBuilder();
+             //整体状态
+-            stringBuilder.append("000001018203E8000001");
++            stringBuilder.append("000001018203E8000002");
+             returnint = CommandExectue(PLC_COMMUNACAITON_HEAD_STATUS, stringBuilder.toString());
+             convertArraytoCalc(stringBuilderto.toString());
+         } catch (Exception e) {
+@@ -354,7 +394,9 @@
+             returnint = CommandExectue(PLC_COMMUNACAITON_HEAD_PARKING, stringBuilder.toString(), null);//旋转车台
+             if (returnint == 0) {//存车
+                 if (confirmStatus(0) == 0) {//设备旋转完成
+-                    getEnergy();//获取旋转电量
++                    log.warn("设备旋转完成");
++                    loggerParking.warn("当前时间:[" + SkylotUtils.getStrDate() + "],当前操作[存车],设备旋转完成");
++//                    getEnergy();//获取旋转电量
+                     //旋转车台结束,进行计时
+                     if (getDirectionBeforeTime() == 0) {
+                         setDirectionBeforeTime(0);
+@@ -365,17 +407,14 @@
+ 
+                     //打开车库门
+                     if (carDoor(FN_RETURN_STATUS_SUCCESS) == NumberUtils.toInt(FN_RETURN_STATUS_SUCCESS)) {//车库门开门指令发送成功
++                        log.warn("车库门打开指令已发,等待车库门打开");
++                        loggerParking.warn("当前时间:[" + SkylotUtils.getStrDate() + "],当前操作[存车],车库门打开指令已发,等待车库门打开");
+                         //等待车库门已开
+                         if (confirmStatus(3) == 0) {//车库门已经打开
+-                            //获取内置摄像头数据 // TODO: 12/01/2018 获取内置摄像头数据
+-                            //写车牌
+-                            stringBuilder = new StringBuilder();
+-                            stringBuilder.append("00000102820BBB00000A");
+-                            stringBuilder.append(StringUtils.rightPad(encode(carCode), 40, "0"));
+-                            returnint = CommandExectue(PLC_COMMUNACAITON_HEAD_CAR_CODE, stringBuilder.toString(), null);
+-                            if (returnint != 0) {//写车牌
+-                                return returnint;
+-                            }
++                            log.warn("车库门打开完成");
++                            loggerParking.warn("当前时间:[" + SkylotUtils.getStrDate() + "],当前操作[存车],车库门打开完成!");
++                            return returnint;
++
+                         } else {
+                             return returnint;
+                         }
+@@ -401,18 +440,26 @@
+      * @param parkingLogic
+      * @return -1.故障信息,0,可以继续停车
+      */
+-    public int ParkingCarConfirm() {
++    public int ParkingCarConfirm(String carCode) {
+         int returnint = -1;
+         try {
+             getHighErrorStatus();//查询是否有故障码
+             if (MapUtils.isNotEmpty(valueMapAppend) || MapUtils.isNotEmpty(valueMap)) {//有故障码
+                 return returnint;
+             }
+-            if (confirmStatus(2) == 0) {//PLC是否空闲
+-                //关闭车库门
++            if (confirmStatus(3) == 0) {//车库门打开状态
++                //获取当前设备是否有主要故障信息
+                 if (carDoor(FN_RETURN_STATUS_ERROR) == NumberUtils.toInt(FN_RETURN_STATUS_SUCCESS)) {//车库门关门指令发送成功
+                     //等待车库门已关
+                     if (confirmStatus(4) == 0) {//车库门已经关闭
++                        //获取内置摄像头数据 // TODO: 12/01/2018 获取内置摄像头数据
++                        //写车牌
++                        stringBuilder = new StringBuilder();
++                        stringBuilder.append("00000102820BBB00000A");
++                        stringBuilder.append(StringUtils.rightPad(encode(carCode), 40, "0"));
++                        returnint = CommandExectue(PLC_COMMUNACAITON_HEAD_CAR_CODE, stringBuilder.toString(), null);
++                        if (returnint != 0) {//写车牌
++                        }
+                         if (confirmStatus(2) == 0) {//PLC是否空闲
+                             return NumberUtils.toInt(FN_RETURN_STATUS_SUCCESS);
+                         } else {
+@@ -534,28 +581,35 @@
+     private int getStatus(int bType) throws SkyLotException {
+         getStatusPrivate();
+         if (MapUtils.isNotEmpty(this.valueMap)) {
++            if (bType == 9) {
++                return NumberUtils.toInt(FN_RETURN_STATUS_SUCCESS);
++            }
+             for (Object o : valueMap.keySet()) {
+                 if (displayDetail) {
+-
++                    log.warn(valueMap.toString());
+                 }
+                 int pNum = (Integer) o;
+                 if (bType == 0) {//存车
+-                    if (pNum == 13) {//运行中状态
+-                        setDirectionBeforeTime(System.currentTimeMillis());//停车前,旋转计时开始
+-                        this.setStatusCheck(0);//运行中状态
+-                        return NumberUtils.toInt(FN_RETURN_STATUS_ERROR);
+-                    } else if (pNum == 14) {//运行完成状态
+-                        if (this.getStatusCheck() == 0) {//验证运行中状态存在
+-                            setDirectionBeforeTime(System.currentTimeMillis() - getFinishParkingTime());//停车前,旋转计时结束
+-                            // TODO: 14/08/2017 需要增加存车完成之后,最下方车位不是所需车位,告知PLC告警
+-                            this.setStatusCheck(1);//继续侦测运行空闲状态
+-                            return NumberUtils.toInt(FN_RETURN_STATUS_ERROR);
+-                        } else if (this.getStatusCheck() == -1) {//当前最下方已经是待旋转车位
+-                            setDirectionBeforeTime(0);//设置旋转计时为0
+-                            // TODO: 14/08/2017 需要增加存车完成之后,最下方车位不是所需车位,告知PLC告警
+-                            this.setStatusCheck(1);//继续侦测空闲状态
+-                            return NumberUtils.toInt(FN_RETURN_STATUS_ERROR);
+-                        }
++                    if (pNum == 14) {//运行完成状态
++//                        if (this.getStatusCheck() == 0) {//验证运行中状态存在
++//                            setDirectionBeforeTime(System.currentTimeMillis() - getFinishParkingTime());//停车前,旋转计时结束
++//                            // TODO: 14/08/2017 需要增加存车完成之后,最下方车位不是所需车位,告知PLC告警
++//                            this.setStatusCheck(1);//继续侦测运行空闲状态
++//                            return NumberUtils.toInt(FN_RETURN_STATUS_ERROR);
++//                        } else if (this.getStatusCheck() == -1) {//当前最下方已经是待旋转车位
++//                            setDirectionBeforeTime(0);//设置旋转计时为0
++//                            // TODO: 14/08/2017 需要增加存车完成之后,最下方车位不是所需车位,告知PLC告警
++//                            this.setStatusCheck(1);//继续侦测空闲状态
++//                            return NumberUtils.toInt(FN_RETURN_STATUS_ERROR);
++//                        } else if (this.getStatusCheck() == 1) {//验证运行完成状态存在
++//                            this.setStatusCheck(-1);//完成停车操作
++//                            try {
++//                                Thread.sleep(1000);//停车完成时,等待空闲,附加延迟1秒
++//                            } catch (InterruptedException e) {
++//                                e.printStackTrace();
++//                            }
++//                        }
++                        return NumberUtils.toInt(FN_RETURN_STATUS_SUCCESS);
+                     } else if (pNum == 10) {//停车完成状态
+                         if (this.getStatusCheck() == 1) {//验证运行完成状态存在
+                             this.setStatusCheck(-1);//完成停车操作
+@@ -596,12 +650,20 @@
+                             return NumberUtils.toInt(FN_RETURN_STATUS_SUCCESS);
+                         }
+                     }
+-                } else if (bType == 2) {//空闲状
+-                    if (pNum == 10) {//设备空闲
++                } else if (bType == 2) {//查询PLC状态
++                    if (pNum == 10) {//空闲
+                         return NumberUtils.toInt(FN_RETURN_STATUS_SUCCESS);
+                     }
+                 } else if (bType == 3) {//车库门打开状态
+-                    if (pNum == 7) {//设备空闲
++                    if (pNum == 7) {//车库门打开
++                        return NumberUtils.toInt(FN_RETURN_STATUS_SUCCESS);
++                    }
++                } else if (bType == 4) {//车库门关闭
++                    if (pNum == 8) {//车库门关闭
++                        return NumberUtils.toInt(FN_RETURN_STATUS_SUCCESS);
++                    }
++                } else if (bType == 5) {//人行门开
++                    if (pNum == 9) {//人行门开
+                         return NumberUtils.toInt(FN_RETURN_STATUS_SUCCESS);
+                     }
+                 }
+@@ -639,7 +701,7 @@
+      * @throws SkyLotException
+      */
+     @Override
+-    public Map doParking(String carNumber) throws SkyLotException {
++    public Map doParking(String carNumber, boolean firstPark) throws SkyLotException {
+         Logger loggerParking = Logger.getLogger("Parking");
+         Map returnMap = new HashMap();
+         setTimeCounter(0);
+@@ -647,39 +709,44 @@
+         setDirectionAfterTime(0);
+         setFinishParkingTime(0);
+         try {
+-            getParkingStatus();
+-            //首先检查,PLC状态是否可以停车
+-            if (confirmStatus(2) > 0) {
+-                returnMap.put(MAP_PARKING_STATUS, 1);
+-                return returnMap;
+-            }
+-            ParkingLogic parkingLogic = new ParkingLogic();
+-            //判断系统是否可以进行存取车
+-            getBaseNumber();//获取最下方停车板编号
+-            loggerParking.warn("当前时间:[" + SkylotUtils.getStrDate() + "],当前操作[存车],当前车辆是[" + carNumber + "],当前最下方车位:[" + getBaseNum() + "]");
+-            log.warn("当前最下方车位:" + getBaseNum());
+-            getParkingStatus();//获取停车状态
+-            returnMap.put(MAP_PARKING_BASENUMBER, getBaseNum());
+-            returnMap.put("basenumber_save", tempCSVbasenum);
+-            parkingLogic.setBaseNum(getBaseNum());
+-            parkingLogic.setMachineTotalItmes(MACHINEPARKING_QUANTITY);
+-            returnMap.put(MAP_PARKING_CAR_PARKING_STATUS, SingletonObjectMapper.getInstance().writeValueAsString(this.getValueMap()));
+-            parkingLogic.setParkingStatusMap(this.getValueMap());
+-            int parkingNumber = parkingLogic.getStoreNum(0);
+-            log.warn("准备停车位置:" + parkingNumber);
+-            loggerParking.warn("当前时间:[" + SkylotUtils.getStrDate() + "],当前操作[存车],当前车辆是[" + carNumber + "],准备停车位置:[" + parkingNumber + "]");
+-            log.warn(parkingLogic.getActionDirect() + "旋转方向:" + (parkingLogic.getActionDirect() == 2 ? "反向" : "正向"));
+-            loggerParking.warn("当前时间:[" + SkylotUtils.getStrDate() + "],当前操作[存车],当前车辆是[" + carNumber + "],准备旋转方向:[" + (parkingLogic.getActionDirect() == 2 ? "反向" : "正向") + "]");
+-            setTimeCounter(System.currentTimeMillis());//停车耗时计时器
+-            returnMap.put(MAP_PARKING_LOCATION, parkingNumber);
+-            if (ParkingCar(parkingNumber, carNumber, parkingLogic) == 0) {
+-                setParkdirectionAfterTime(System.currentTimeMillis() - getTimeCounter());//停车之前,旋转耗时
+-                returnMap.put(MAP_PARKING_STATUS, 0);
+-                returnMap.put(MAP_ENERGY, getDirectionEnergy());
+-                setFinishParkingTime(System.currentTimeMillis() - getTimeCounter() - getDirectionBeforeTime());//实际完成停车耗时,等于当前时间减去旋转车台耗时,再减去开始计时的时间点
+-                returnMap.put(MAP_PARKING_DIRECTION, parkingLogic.getFinalPostionNumer());
++
++            ParkingLogic parkingLogic = new ParkingLogic();
++            int parkingNumber = 0;
++            if (firstPark) {
++                getParkingStatus();
++                //首先检查,PLC状态是否可以停车
++                if (confirmStatus(2) > 0) {
++                    returnMap.put(MAP_PARKING_STATUS, 1);
++                    return returnMap;
++                }
++                //判断系统是否可以进行存取车
++                getBaseNumber();//获取最下方停车板编号
++                loggerParking.warn("当前时间:[" + SkylotUtils.getStrDate() + "],当前操作[存车],当前车辆是[" + carNumber + "],当前最下方车位:[" + getBaseNum() + "]");
++                log.warn("当前最下方车位:" + getBaseNum());
++                getParkingStatus();//获取停车状态
++                returnMap.put(MAP_PARKING_BASENUMBER, getBaseNum());
++                returnMap.put("basenumber_save", tempCSVbasenum);
++                parkingLogic.setBaseNum(getBaseNum());
++                parkingLogic.setMachineTotalItmes(MACHINEPARKING_QUANTITY);
++                returnMap.put(MAP_PARKING_CAR_PARKING_STATUS, SingletonObjectMapper.getInstance().writeValueAsString(this.getValueMap()));
++                parkingLogic.setParkingStatusMap(this.getValueMap());
++                parkingNumber = parkingLogic.getStoreNum(0);
++                log.warn("准备停车位置:" + parkingNumber);
++                loggerParking.warn("当前时间:[" + SkylotUtils.getStrDate() + "],当前操作[存车],当前车辆是[" + carNumber + "],准备停车位置:[" + parkingNumber + "]");
++                log.warn(parkingLogic.getActionDirect() + "旋转方向:" + (parkingLogic.getActionDirect() == 2 ? "反向" : "正向"));
++                loggerParking.warn("当前时间:[" + SkylotUtils.getStrDate() + "],当前操作[存车],当前车辆是[" + carNumber + "],准备旋转方向:[" + (parkingLogic.getActionDirect() == 2 ? "反向" : "正向") + "]");
++                setTimeCounter(System.currentTimeMillis());//停车耗时计时器
++                returnMap.put(MAP_PARKING_LOCATION, parkingNumber);
++                if (ParkingCar(parkingNumber, carNumber, parkingLogic) == 0) {
++                    setParkdirectionAfterTime(System.currentTimeMillis() - getTimeCounter());//停车之前,旋转耗时
++                    returnMap.put(MAP_PARKING_STATUS, 0);
++                    returnMap.put(MAP_ENERGY, getDirectionEnergy());
++                    setFinishParkingTime(System.currentTimeMillis() - getTimeCounter() - getDirectionBeforeTime());//实际完成停车耗时,等于当前时间减去旋转车台耗时,再减去开始计时的时间点
++                    returnMap.put(MAP_PARKING_DIRECTION, parkingLogic.getFinalPostionNumer());
++                }
++            } else {
+                 //停车确认
+-                if (ParkingCarConfirm() == 0) {
++                if (ParkingCarConfirm(carNumber) == 0) {
+                     loggerParking.warn("当前时间:[" + SkylotUtils.getStrDate() + "],当前操作[存车],当前车辆是[" + carNumber + "],存车操作完成!");
+                     loggerParking.warn("当前时间:[" + SkylotUtils.getStrDate() + "],当前操作[存车],存车耗费电量:[" + getDirectionEnergy() + "]");
+                     if (parkingLogic.getFinalPostionNumer() != parkingNumber && NumberUtils.toInt(parkingLogic.getFinalPostionNumer() + "", 0) != 0) {//判断是否需要再次旋转
+@@ -701,8 +768,8 @@
+                     returnMap.put(MAP_TIME_SPEND_DOING, (getFinishParkingTime()) / 1000);
+                     returnMap.put(MAP_TIME_SPEND_WEIGHT, (getDirectionAfterTime()) / 1000);
+                 }
+-
+             }
++
+         } catch (SkyLotException e) {
+             returnMap.put(MAP_PARKING_STATUS, -1);
+         } catch (JsonProcessingException e) {
+@@ -777,11 +844,11 @@
+     /**
+      * 确认是否可以
+      *
+-     * @param type 状态查询:2,查询停车:0,查询取车:1,车库门打开:3,车库门关闭:4,人行门打开:5
++     * @param type 状态查询:2,查询停车:0,查询取车:1,车库门打开:3,车库门关闭:4,人行门打开:5,获取整体状态:6,心跳查询:9
+      * @return
+      * @throws SkyLotException
+      */
+-    public int confirmStatus(int type) throws SkyLotException {
++    public int confirmStatus(int type, boolean... followLoop) throws SkyLotException {
+         int a = 1;
+         int looptimes = 0;
+         setStatusCheck(-1);
+@@ -791,13 +858,20 @@
+                 if (looptimes > NumberUtils.toInt(opeartionTimeout)) {
+                     break;
+                 }
+-                a = getStatus(type);
++                if (type != 6) {
++                    a = getStatus(type);
++                } else {
++                    a = getIndexError();
++                }
+                 try {
+                     Thread.sleep(1000);
+                 } catch (InterruptedException e) {
+                     throw new SkyLotException(e);
+                 }
+                 looptimes++;
++                if (followLoop != null && followLoop.length > 0) {
++                    a = 0;
++                }
+             }
+             if (looptimes > NumberUtils.toInt(opeartionTimeout)) {
+                 return -1;
+@@ -815,26 +889,26 @@
+      * @throws SkyLotException
+      */
+     @Override
+-    public Map getAllStatus() throws SkyLotException {
++    public Map getAllStatus(boolean... getDirection) throws SkyLotException {
+         String operationStatus = "0";
+         String businessStatus = "0";
+         try {
+-            getStatusPrivate();
+-        } catch (SkyLotException e) {
+-        }
+-        //获取当前PLC运行状态
+-        if (null == MapUtils.getString(this.valueMap, 10)) {
+-            if (null != MapUtils.getString(this.valueMap, 5) || null != MapUtils.getString(this.valueMap, 6)) {
+-                businessStatus = null != MapUtils.getString(this.valueMap, 5) ? "0" : "1";
+-                operationStatus = "1";
+-            } else if (null != MapUtils.getString(this.valueMap, 11) || null != MapUtils.getString(this.valueMap, 12)) {
+-                operationStatus = "2";
++            if (getDirection.length == 0) {
++                getStatusPrivate();
++                //获取当前PLC运行状态
++                if (null == MapUtils.getString(this.valueMap, 10)) {
++                    if (null != MapUtils.getString(this.valueMap, 5) || null != MapUtils.getString(this.valueMap, 6)) {
++                        businessStatus = null != MapUtils.getString(this.valueMap, 5) ? "0" : "1";
++                        operationStatus = "1";
++                    } else if (null != MapUtils.getString(this.valueMap, 11) || null != MapUtils.getString(this.valueMap, 12)) {
++                        operationStatus = "2";
++                    }
++                }
+             }
++        } catch (SkyLotException e) {
+         }
+         Map resultMap = new HashMap();
+         Map returnMap = Maps.newHashMap();
+-        resultMap.put("operationStatus", operationStatus);
+-        resultMap.put("businessStatus", businessStatus);
+         IftbMachineAction iftbMachineAction = IftbMachineAction.builder().build();
+         iftbMachineAction.setImaAddress(GetProperties.getProperties("system.properties", "skylot.machine.address"));
+         iftbMachineAction.setImaId(SkylotUtils.imaId);
+@@ -843,8 +917,11 @@
+             iftbMachineAction.setImaStatus(SingletonObjectMapper.getInstance().writeValueAsString(resultMap));
+             iftbMachineAction.setImaCreatetime(SkylotUtils.getStrDate());
+             iftbMachineAction.setImaStatus(FN_RETURN_STATUS_SUCCESS);
+-
+             returnMap = SkylotUtils.beanToMap(iftbMachineAction);
++            returnMap.put("valueMap", this.valueMap);
++            returnMap.put("valueAppendMap", this.valueMapAppend);
++            resultMap.put("operationStatus", operationStatus);
++            resultMap.put("businessStatus", businessStatus);
+             SkylotUtils.removeNullValue(returnMap);
+         } catch (JsonProcessingException e) {
+             throw new SkyLotException(e);
+Index: src/main/java/com/fangda/skylot/mathine/service/parking/ParkingLogService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/com/fangda/skylot/mathine/service/parking/ParkingLogService.java	(revision 6809)
++++ src/main/java/com/fangda/skylot/mathine/service/parking/ParkingLogService.java	(date 1516068276000)
+@@ -31,9 +31,12 @@
+     /**
+      * 主停车方法
+      *
++     * @param parkingCar 待停车车牌
++     * @param firstPark 是否是首次停车吗,true is 是
+      * @return 0, 操作成功, 1, 有车正在进行停车, 2, 故障或者异常
++     * @throws Exception
+      */
+-    int parkingAction(String parkingCar) throws Exception;
++    int parkingAction(String parkingCar, boolean firstPark) throws Exception;
+ 
+     /**
+      * 处理消息的显示
+Index: src/main/java/com/fangda/skylot/mathine/service/sync/SyncService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/com/fangda/skylot/mathine/service/sync/SyncService.java	(revision 6809)
++++ src/main/java/com/fangda/skylot/mathine/service/sync/SyncService.java	(date 1516245468000)
+@@ -29,7 +29,7 @@
+      * @param carNumber 车牌
+      * @return iStatus:0, 停车成功, 1, 停车失败;iParkingLocation:停车位置;iDirection:待旋转到最下方车位;BaseNumber:操作之前最下方车位编号;iParkingStatus:当前停车状态
+      */
+-    Map parkCar(String carNumber) throws SkyLotException, Exception;
++    Map parkCar(String carNumber, boolean firstPark) throws SkyLotException, Exception;
+ 
+     /**
+      * 取车指令
+@@ -37,4 +37,48 @@
+      * @return iStatus:0, 停车成功, 1, 停车失败;iParkingLocation:停车位置;iDirection:待旋转到最下方车位;BaseNumber:操作之前最下方车位编号;iParkingStatus:当前停车状态
+      */
+     Map pullCar(String carNumber) throws SkyLotException, Exception;
++
++    /**
++     * 检查车辆是否授权
++     *
++     * @param carNumber 车牌号
++     * @return 0, 车辆已授权, 1, 车辆非经授权
++     * @throws Exception
++     */
++    int checkCarFromDB(String carNumber) throws Exception;
++
++    /**
++     * 检查PLC状态
++     *
++     * @param checkType 检查类型,0,状态检查,1,状态和空闲车位检查,9:心跳检查
++     * @return 0, 检查成功, 1, 检查失败,2,没有空位可以停车
++     * @throws Exception
++     */
++    int checkPLC(int checkType) throws Exception;
++
++    /**
++     * 获取待取车的停车位置
++     *
++     * @param carNumber 车牌
++     * @return 0, 没有位置, 其他就是位置信息
++     */
++    int getParkingPhysicalCode(String carNumber) throws Exception;
++
++    /**
++     * 更新同步日程
++     *
++     * @param scheduleMap
++     * @throws Exception
++     */
++    void updateSchedule(Map scheduleMap) throws Exception;
++
++    /**
++     * 创建存取车流程
++     *
++     * @param carNumber
++     * @param parkingMap
++     * @param isParking
++     * @return
++     */
++    int createParkinglog(String carNumber, Map parkingMap, int isParking);
+ }
+Index: src/main/java/com/fangda/skylot/mathine/service/SocketService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/com/fangda/skylot/mathine/service/SocketService.java	(revision 6809)
++++ src/main/java/com/fangda/skylot/mathine/service/SocketService.java	(date 1516245468000)
+@@ -11,11 +11,12 @@
+     /**
+      * 获取当前PLC的状态
+      *
+-     * @param bType 定义查询业务的类型,0,停车,1,取车,2,空闲状态
++     * @param bType 状态查询:2,查询停车:0,查询取车:1,车库门打开:3,车库门关闭:4,人行门打开:5,获取整体状态:6,心跳查询:9
++     * @param followLoop 是否使用自身循环
+      * @return 0, 正常, 1, 无法使用
+      * @throws SkyLotException
+      */
+-    int confirmStatus(int bType) throws SkyLotException;
++    int confirmStatus(int bType, boolean... followLoop) throws SkyLotException;
+ 
+     /**
+      * 获取当前PLC设备的全部状态
+@@ -23,7 +24,7 @@
+      * @return operationStatus:{0,空闲;1:运作中;2:异常故障},businessStatus:{0,停车中;1:取车中;2:荷载中}
+      * @throws SkyLotException
+      */
+-    Map getAllStatus() throws SkyLotException;
++    Map getAllStatus(boolean... getDirection) throws SkyLotException;
+ 
+     /**
+      * 获取当前停车状态
+@@ -38,7 +39,7 @@
+      * @return iStatus:0, 停车成功, 1, 停车失败;iParkingLocation:停车位置;iDirection:待旋转到最下方车位;BaseNumber:操作之前最下方车位编号;iParkingStatus:当前停车状态
+      *
+      */
+-    Map doParking(String carNumber) throws SkyLotException;
++    Map doParking(String carNumber, boolean firstPark) throws SkyLotException;
+ 
+     /**
+      * 进行取车
+@@ -46,4 +47,21 @@
+      * @return iStatus:0, 停车成功, 1, 停车失败;iDirection:待旋转到最下方车位;BaseNumber:操作之前最下方车位编号;iParkingStatus:当前停车状态
+      */
+     Map doPulling(String positionNumber) throws SkyLotException;
++
++
++    /**
++     * 获取1005号位置的,错误信息,依据此判断是否可以进行存车完成状态
++     *
++     * @return
++     * @throws SkyLotException
++     */
++    int getIndexError() throws SkyLotException;
++
++    /**
++     * * 获取1007号位置的,错误信息,依据此判断是否可以进行存车完成状态
++     *
++     * @return
++     * @throws SkyLotException
++     */
++    int pullIndexError() throws SkyLotException;
+ }
+Index: src/main/java/com/fangda/skylot/mathine/utils/constant/Constant.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/com/fangda/skylot/mathine/utils/constant/Constant.java	(revision 6842)
++++ src/main/java/com/fangda/skylot/mathine/utils/constant/Constant.java	(date 1516016688000)
+@@ -333,6 +333,10 @@
+      */
+     public static final String PLC_COMMUNACAITON_HEAD_ERROR_NORMAL_STATUS = "46494E530000001A000000020000000080000200010000";
+     /**
++     * PLC通信,头信息_故障状态
++     */
++    public static final String PLC_COMMUNACAITON_HEAD_ALL_INDEX_STATUS = "46494E530000001A000000020000000080000200010000";
++    /**
+      * PLC通信,模式改变
+      */
+     public static final String PLC_COMMUNACAITON_HEAD_MODEL_CHANGE = "46494E530000001C000000020000000080000200010000";
+Index: src/main/java/com/fangda/skylot/mathine/utils/socket/BaseCommander.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/com/fangda/skylot/mathine/utils/socket/BaseCommander.java	(revision 6842)
++++ src/main/java/com/fangda/skylot/mathine/utils/socket/BaseCommander.java	(date 1516096563000)
+@@ -66,7 +66,7 @@
+             stringBuilder = new StringBuilder();
+             stringBuilderto = new StringBuilder();
+             stringBuilder.append(HeadCommand.toUpperCase());//通信头
+-            stringBuilder.append(Integer.toHexString(NumberUtils.toInt(StringUtils.substringAfterLast(GetProperties.getProperties("system.properties", "skylot.machine.ip"), "."))).toUpperCase());// TODO: 01/07/2017 195环境ip写死
++            stringBuilder.append(StringUtils.leftPad(Integer.toHexString(NumberUtils.toInt(StringUtils.substringAfterLast(GetProperties.getProperties("system.properties", "skylot.machine.ip"), "."))).toUpperCase(), 2, "0"));// TODO: 01/07/2017 195环境ip写死
+ //            stringBuilder.append(Integer.toHexString(NumberUtils.toInt(StringUtils.substringAfterLast(SkylotUtils.resolveLocalIps().iterator().next().toString(), "."))).toUpperCase());//本地IP
+             stringBuilder.append(append_Command.toUpperCase());//附加命令
+             for (int i = 0; i <= stringBuilder.toString().length(); i++) {
+Index: src/main/java/com/fangda/skylot/mathine/utils/socket/WSThreadMgt.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/com/fangda/skylot/mathine/utils/socket/WSThreadMgt.java	(revision 6809)
++++ src/main/java/com/fangda/skylot/mathine/utils/socket/WSThreadMgt.java	(date 1516069386000)
+@@ -1,6 +1,10 @@
+ package com.fangda.skylot.mathine.utils.socket;
+ 
++import com.fangda.skylot.mathine.utils.GetProperties;
++import com.fangda.skylot.mathine.utils.exception.SkyLotException;
+ import lombok.extern.slf4j.Slf4j;
++import org.apache.commons.collections.MapUtils;
++import org.apache.commons.lang3.math.NumberUtils;
+ import org.springframework.stereotype.Component;
+ 
+ import java.util.Map;
+@@ -20,30 +24,43 @@
+     private BlockingQueue<Map> connection = new ArrayBlockingQueue(1);
+ 
+     /**
+-     * 将执行命令放入连接池
++     * 将执行命令放入连接池,阻塞
+      *
+      * @param map
+      */
+     public void putCommander(Map map) throws Exception {
+         try {
+-            connection.put(map);
++            connection.offer(map, NumberUtils.toLong(GetProperties.getProperties("system.properties", "skylot.plc.thread.timeout")), TimeUnit.SECONDS);
+         } catch (Exception e) {
+-            throw e;
++            throw new SkyLotException(e);
+         }
+         log.warn("当前命令已经成功放入线程池,等待执行完毕");
+     }
+ 
++    /**
++     * 检查队列中是否有执行命令
++     *
++     * @return 0>no,1>yes
++     */
++    public int checkCommander() {
++        try {
++            return MapUtils.isNotEmpty(connection.element()) ? 1 : 0;
++        } catch (Exception e) {
++            return -1;
++        }
++    }
++
+     /**
+      * 获取已经在执行的命令
+      *
+      * @return 命令名称
+      */
+-    public Map getCommands() {
++    public Map getCommands() throws SkyLotException {
+         Map map = null;
+         try {
+-            map = connection.poll(1, TimeUnit.SECONDS);//从线程池中拿出一个命令
+-        } catch (InterruptedException e) {
+-            e.printStackTrace();
++            map = connection.poll(NumberUtils.toInt(GetProperties.getProperties("system.properties", "skylot.plc.thread.timeout")), TimeUnit.SECONDS);//从线程池中拿出一个命令
++        } catch (Exception e) {
++            throw new SkyLotException(e);
+         }
+         if (map != null) {
+             log.warn("最后一条命令已经成功取出");
+Index: src/main/java/com/fangda/skylot/mathine/utils/socket/WSThreadMgtSend.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/com/fangda/skylot/mathine/utils/socket/WSThreadMgtSend.java	(revision 6809)
++++ src/main/java/com/fangda/skylot/mathine/utils/socket/WSThreadMgtSend.java	(date 1516098037000)
+@@ -30,7 +30,6 @@
+         } catch (Exception e) {
+             throw e;
+         }
+-        log.warn("当前命令已经成功放入线程池,等待执行完毕");
+     }
+ 
+     /**
+@@ -46,9 +45,7 @@
+             e.printStackTrace();
+         }
+         if (map != null) {
+-            log.warn("最后一条命令已经成功取出");
+         } else {
+-            log.warn("命令池没有存放的命令");
+         }
+         return map;
+     }
+Index: src/main/java/com/fangda/skylot/mathine/utils/HttpClientUtil.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/com/fangda/skylot/mathine/utils/HttpClientUtil.java	(revision 6809)
++++ src/main/java/com/fangda/skylot/mathine/utils/HttpClientUtil.java	(date 1516243264000)
+@@ -1,5 +1,7 @@
+ package com.fangda.skylot.mathine.utils;
+ 
++import com.google.common.collect.Lists;
++import org.apache.commons.lang3.StringUtils;
+ import org.apache.http.NameValuePair;
+ import org.apache.http.client.config.RequestConfig;
+ import org.apache.http.client.entity.UrlEncodedFormEntity;
+@@ -8,6 +10,7 @@
+ import org.apache.http.impl.client.CloseableHttpClient;
+ import org.apache.http.impl.client.HttpClients;
+ import org.apache.http.message.BasicNameValuePair;
++import org.apache.http.protocol.HTTP;
+ 
+ import java.io.IOException;
+ import java.util.ArrayList;
+@@ -45,16 +48,24 @@
+         HttpPost httpPost = new HttpPost(httpUrl);
+         httpPost.setConfig(requestConfig);
+         List<NameValuePair> params = new ArrayList<NameValuePair>();
+-        Iterator it = maps.entrySet().iterator();
+-        while (it.hasNext()) {
+-            Map.Entry pair = (Map.Entry) it.next();
+-            params.add(new BasicNameValuePair(String.valueOf(pair.getKey()), String.valueOf(pair.getValue())));
+-            it.remove(); // avoids a ConcurrentModificationException
++        if (StringUtils.equals(httpUrl, GetProperties.getProperties("system.properties", "skylot.webservice.parking"))) {
++            List datalist = Lists.newArrayList();
++            datalist.add(maps);
++            params.add(new BasicNameValuePair("parkingLog", SingletonObjectMapper.getInstance().writeValueAsString(datalist)));
++        } else {
++            Iterator it = maps.entrySet().iterator();
++            while (it.hasNext()) {
++                Map.Entry pair = (Map.Entry) it.next();
++                params.add(new BasicNameValuePair(String.valueOf(pair.getKey()), String.valueOf(pair.getValue())));
++                it.remove(); // avoids a ConcurrentModificationException
++            }
+         }
+-        httpPost.setEntity(new UrlEncodedFormEntity(params));
++        UrlEncodedFormEntity entity = new UrlEncodedFormEntity(params, HTTP.UTF_8);
++        httpPost.setEntity(entity);
++//        httpPost.setHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+         CloseableHttpResponse response = client.execute(httpPost);
+         client.close();
+-        return null;
++        return "0";
+     }
+ 
+ 
+Index: src/main/java/com/fangda/skylot/mathine/utils/SkylotUtils.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/com/fangda/skylot/mathine/utils/SkylotUtils.java	(revision 6842)
++++ src/main/java/com/fangda/skylot/mathine/utils/SkylotUtils.java	(date 1516010741000)
+@@ -20,6 +20,7 @@
+ import javax.crypto.spec.SecretKeySpec;
+ import java.beans.PropertyDescriptor;
+ import java.io.ByteArrayOutputStream;
++import java.io.IOException;
+ import java.lang.reflect.Field;
+ import java.lang.reflect.Method;
+ import java.net.InetAddress;
+@@ -235,6 +236,14 @@
+             }
+             return result;
+         } catch (Exception e) {
++            if (!StringUtils.isBlank(json)) {
++                try {
++                    List datalist = SingletonObjectMapper.getInstance().readValue(json, List.class);
++                    return (Map<String, String>) datalist.get(0);
++                } catch (IOException e1) {
++                    e1.printStackTrace();
++                }
++            }
+             throw new SkyLotException("PMSUtil-Exception-jsonToMap", e.getCause());
+         }
+     }
+Index: src/main/java/com/fangda/skylot/mathine/web/console/ParkCarController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/com/fangda/skylot/mathine/web/console/ParkCarController.java	(revision 6809)
++++ src/main/java/com/fangda/skylot/mathine/web/console/ParkCarController.java	(date 1516245468000)
+@@ -1,12 +1,11 @@
+ package com.fangda.skylot.mathine.web.console;
+ 
++import com.fangda.skylot.mathine.model.parking.TstbFtpCarInformation;
+ import com.fangda.skylot.mathine.model.utils.ConsoleParamater;
+ import com.fangda.skylot.mathine.model.utils.ErrorCode;
+ import com.fangda.skylot.mathine.model.utils.JsonDataResult;
+ import com.fangda.skylot.mathine.model.utils.JsonResult;
+-import com.fangda.skylot.mathine.service.IBaseService;
+-import com.fangda.skylot.mathine.service.parking.ParkingLogService;
+-import com.fangda.skylot.mathine.service.sync.SyncService;
++import com.fangda.skylot.mathine.scheduler.springtask.MainThreadMgt;
+ import com.fangda.skylot.mathine.utils.SkylotUtils;
+ import com.fangda.skylot.mathine.utils.exception.SkyLotException;
+ import com.google.common.collect.Maps;
+@@ -19,7 +18,6 @@
+ 
+ import java.util.Map;
+ 
+-import static com.fangda.skylot.mathine.utils.constant.Constant.BUSINESS_ACTION_TYPE_PULL;
+ import static com.fangda.skylot.mathine.utils.constant.Constant.STR_EXCEPTION_BUSINESS_CODE;
+ 
+ @RestController
+@@ -27,9 +25,7 @@
+ @Slf4j
+ public class ParkCarController {
+     @Autowired
+-    private Map<String, IBaseService> serviceMap;
+-    @Autowired
+-    private SyncService syncServiceImpl;
++    private MainThreadMgt mainThreadMgt;
+     @Autowired
+     private ErrorCode code;
+ 
+@@ -44,14 +40,15 @@
+         try {
+             Map subMap = Maps.newHashMap();
+             if (StringUtils.isNotEmpty(consoleParamater.getCarCode())) {
+-                Map dataMap = syncServiceImpl.parkCar(consoleParamater.getCarCode());
+-                StringBuilder message = ((ParkingLogService) serviceMap.get("parkinglogService")).layoutMessage(dataMap, BUSINESS_ACTION_TYPE_PULL);
+-                if (StringUtils.contains(message, "成功")) {
+-                    result.setResultType(true);
+-                    jsonDataResult.setResult("0");
+-                } else {
+-                    exceptionBuilder.append("request.user.parking.fail");
+-                    throw new SkyLotException(exceptionBuilder.toString());
++                if (mainThreadMgt.hasTasktodo()) {
++                    TstbFtpCarInformation tstbFtpCarInformation = mainThreadMgt.getTstbFtpCarInformation();
++                    if (mainThreadMgt.userconfirmCar(tstbFtpCarInformation)) {
++                        result.setResultType(true);
++                        jsonDataResult.setResult("0");
++                    } else {
++                        exceptionBuilder.append("request.user.parking.fail");
++                        throw new SkyLotException(exceptionBuilder.toString());
++                    }
+                 }
+             }
+             subMap = SkylotUtils.beanToHashMap(jsonDataResult);
+Index: src/main/java/com/fangda/skylot/mathine/web/console/StatusController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/com/fangda/skylot/mathine/web/console/StatusController.java	(revision 6809)
++++ src/main/java/com/fangda/skylot/mathine/web/console/StatusController.java	(date 1516245465000)
+@@ -1,33 +1,33 @@
+ package com.fangda.skylot.mathine.web.console;
+ 
+-import com.fangda.skylot.mathine.model.utils.*;
+-import com.fangda.skylot.mathine.service.IBaseService;
+-import com.fangda.skylot.mathine.service.utils.ScheduleService;
+-import com.fangda.skylot.mathine.utils.SingletonObjectMapper;
++import com.fangda.skylot.mathine.model.parking.TstbFtpCarInformation;
++import com.fangda.skylot.mathine.model.utils.ConsoleParamater;
++import com.fangda.skylot.mathine.model.utils.ErrorCode;
++import com.fangda.skylot.mathine.model.utils.JsonDataResult;
++import com.fangda.skylot.mathine.model.utils.JsonResult;
++import com.fangda.skylot.mathine.scheduler.springtask.MainThreadMgt;
+ import com.fangda.skylot.mathine.utils.SkylotUtils;
+ import com.fangda.skylot.mathine.utils.exception.SkyLotException;
+ import com.google.common.collect.Maps;
+ import lombok.extern.slf4j.Slf4j;
+-import org.apache.commons.collections.MapUtils;
+ import org.apache.commons.lang3.StringUtils;
+ import org.springframework.beans.factory.annotation.Autowired;
+ import org.springframework.web.bind.annotation.RequestMapping;
+ import org.springframework.web.bind.annotation.RequestMethod;
+ import org.springframework.web.bind.annotation.RestController;
+ 
+-import java.util.HashMap;
+ import java.util.Map;
+ 
+-import static com.fangda.skylot.mathine.utils.constant.Constant.SCHEDULEACTION_TYPE_HEARTBEAT_PLC;
++import static com.fangda.skylot.mathine.utils.constant.Constant.*;
+ 
+ @RestController
+ @RequestMapping(value = "/console")
+ @Slf4j
+ public class StatusController {
+-    @Autowired
+-    private Map<String, IBaseService> serviceMap;
+     @Autowired
+     private ErrorCode code;
++    @Autowired
++    private MainThreadMgt mainThreadMgt;
+ 
+     @RequestMapping(value = "/status", method = RequestMethod.POST,
+             produces = "application/json")
+@@ -38,16 +38,27 @@
+         try {
+             Map subMap = Maps.newHashMap();
+             result.setResultType(true);
+-            ScheduleService scheduleService = (ScheduleService) serviceMap.get("scheduleService");
+-            IftbScheduleActionCriteria iftbScheduleActionCriteria = new IftbScheduleActionCriteria();
+-            iftbScheduleActionCriteria.createCriteria().andIsaScheduleTypeEqualTo(SCHEDULEACTION_TYPE_HEARTBEAT_PLC);
+-            IftbScheduleAction scheduleAction = scheduleService.query(iftbScheduleActionCriteria);
+-            String message = scheduleAction.getIsaScheduleMessage();
+-            Map messageMap = SingletonObjectMapper.getInstance().readValue(message, Map.class);
+-            Map machineStatusMap = new HashMap();
+-            machineStatusMap = SingletonObjectMapper.getInstance().readValue(MapUtils.getString(messageMap, "isaScheduleMessage"), Map.class);
+-            jsonDataResult.setMachineStatus(MapUtils.getString(machineStatusMap, "businessStatus"));
+-            jsonDataResult.setOperatingType(MapUtils.getString(machineStatusMap, "operationStatus"));
++            String operationType = null;
++            String machineStatus = "0";
++            String carCode = null;
++            if (mainThreadMgt.hasTasktodo()) {
++                operationType = "0";
++                machineStatus = "1";
++                TstbFtpCarInformation tstbFtpCarInformation = mainThreadMgt.getTstbFtpCarInformation();
++                carCode = tstbFtpCarInformation.getTfcCarCode();
++                if (StringUtils.equals(tstbFtpCarInformation.getTfcCarAction(), PARKING_PULLING_STATUS_PROGRESS)) {
++                    operationType = PARKING_PULLING_STATUS_PROGRESS;
++                } else if (StringUtils.equals(tstbFtpCarInformation.getTfcCarAction(), SCHEDULEACTION_TYPE_HEARTBEAT_PLC)) {
++                    operationType = SCHEDULEACTION_TYPE_HEARTBEAT_PLC;
++                } else if (StringUtils.equals(tstbFtpCarInformation.getTfcStatus() + "", SCHEDULEACTION_TYPE_HEARTBEAT_PLC)) {
++                    operationType = SCHEDULEACTION_MODULEID_MACHINEITEM;
++                }
++
++
++            }
++            jsonDataResult.setMachineStatus(machineStatus);
++            jsonDataResult.setOperatingType(operationType);
++            jsonDataResult.setCarCode(carCode);
+             subMap = SkylotUtils.beanToHashMap(jsonDataResult);
+             SkylotUtils.removeNullValue(subMap);
+             result.setData(subMap);
+Index: src/main/java/com/fangda/skylot/mathine/web/IndexController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/com/fangda/skylot/mathine/web/IndexController.java	(revision 6809)
++++ src/main/java/com/fangda/skylot/mathine/web/IndexController.java	(date 1516245465000)
+@@ -13,6 +13,7 @@
+ import com.fangda.skylot.mathine.service.parking.ParkingLogService;
+ import com.fangda.skylot.mathine.utils.SingletonObjectMapper;
+ import com.fangda.skylot.mathine.utils.exception.SkyLotException;
++import com.fangda.skylot.mathine.utils.socket.WSThreadMgt;
+ import lombok.extern.slf4j.Slf4j;
+ import org.springframework.beans.factory.annotation.Autowired;
+ import org.springframework.stereotype.Controller;
+@@ -36,6 +37,8 @@
+ public class IndexController extends BaseController {
+     @Autowired
+     public Map<String, IBaseService> serviceMap;
++    @Autowired
++    private WSThreadMgt wsThreadMgt;
+     /**
+      * 监控摄像机发来的图片识别信息,HTTP方式
+      *
+@@ -60,7 +63,6 @@
+             }
+             Map map = SingletonObjectMapper.getInstance().readValue(jb.toString(), Map.class);
+             ((ParkingLogService) serviceMap.get("parkinglogService")).parkingFromCallbak(map);
+-
+         } catch (Exception e) {
+             throw new SkyLotException(e);
+         }
+Index: src/main/resources/db/migration/V3__test_data.sql
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/resources/db/migration/V3__test_data.sql	(revision 6809)
++++ src/main/resources/db/migration/V3__test_data.sql	(date 1516245468000)
+@@ -205,6 +205,41 @@
+ DELIMITER ;
+ 
+ 
++DROP TRIGGER IF EXISTS TR_after_save_tstb_ftp_car_carinformation;
++CREATE TRIGGER TR_after_save_tstb_ftp_car_carinformation
++  AFTER INSERT
++  ON tstb_ftp_car_information
++  FOR EACH ROW
++  BEGIN
++
++    CALL sp_tstb_ftp_car_information(
++
++    );
++  END;
++;
++;
++DELIMITER ;
++
++
++DROP PROCEDURE IF EXISTS sp_tstb_ftp_car_information;
++CREATE PROCEDURE sp_tstb_ftp_car_information()
++  BEGIN
++    -- 验证当前停车表是否拥有的记录数大于2条
++    DECLARE tmp_count INT;
++
++    SET tmp_count = (SELECT count(*)
++                     FROM tstb_ftp_car_information);
++    IF (tmp_count > 2)
++    THEN
++      SIGNAL SQLSTATE 'HY000'
++      SET MESSAGE_TEXT = 'allow_parking_count_over';
++    END IF;
++  END;
++
++;
++;
++DELIMITER ;
++
+ DROP TABLE IF EXISTS iftb_schedule_action;
+ DELIMITER ;;
+ CREATE TABLE iftb_schedule_action
+Index: src/main/resources/db/migration/V4__new_table.sql
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/resources/db/migration/V4__new_table.sql	(revision 6809)
++++ src/main/resources/db/migration/V4__new_table.sql	(date 1516245468000)
+@@ -73,3 +73,68 @@
+         NEW.tmpl_createdate
+     );
+   END;
++
++
++;
++;
++DELIMITER ;
++TRUNCATE TABLE iftb_item_customer;
++TRUNCATE TABLE iftb_machine_action;
++TRUNCATE TABLE iftb_schedule_action;
++TRUNCATE TABLE mstb_customer;
++TRUNCATE TABLE oftb_code_info;
++TRUNCATE TABLE oftb_customer_car;
++TRUNCATE TABLE oftb_mathine_item;
++TRUNCATE TABLE oftb_reserve_taking;
++TRUNCATE TABLE oftb_sync_log;
++TRUNCATE TABLE schema_version;
++TRUNCATE TABLE tstb_ftp_car_information;
++TRUNCATE TABLE tstb_log;
++TRUNCATE TABLE tstb_mathine_parking;
++TRUNCATE TABLE tstb_mathine_parking_log;
++
++
++;
++;
++DELIMITER ;
++ALTER TABLE tstb_ftp_car_information
++  ADD tfc_car_color VARCHAR(4) NULL
++COMMENT '车辆颜色';
++ALTER TABLE tstb_ftp_car_information
++  ADD tfc_car_type VARCHAR(1) NULL
++COMMENT '车辆类型
++0:小型
++1:中型
++2:大型';
++ALTER TABLE tstb_ftp_car_information
++  ADD tfc_car_in_code VARCHAR(20) NULL
++COMMENT '车台识别
++车辆牌照';
++ALTER TABLE tstb_ftp_car_information
++  ADD tfc_car_in_type VARCHAR(1) NULL
++COMMENT '车台识别
++车辆类型
++0:小型
++1:中型
++2:大型';
++ALTER TABLE tstb_ftp_car_information
++  ADD tfc_car_in_color VARCHAR(4) NULL
++COMMENT '车台识别
++车辆颜色';
++
++
++ALTER TABLE tstb_ftp_car_information
++  ADD tfc_car_action VARCHAR(1) NULL
++COMMENT '停取车判断
++0:停车
++1:取车';
++ALTER TABLE tstb_ftp_car_information
++  MODIFY COLUMN tfc_car_action VARCHAR(1) COMMENT '停取车判断
++0:停车
++1:取车'
++  AFTER tfc_car_color;
++ALTER TABLE tstb_ftp_car_information
++  MODIFY tfc_car_action VARCHAR(1) COMMENT '停取车判断
++0:停车
++1:取车
++2:预约取车';
+\ No newline at end of file
+Index: src/main/resources/spring-timertask.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/resources/spring-timertask.xml	(revision 6809)
++++ src/main/resources/spring-timertask.xml	(date 1516074918000)
+@@ -5,15 +5,24 @@
+            http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
+ 
+     <task:scheduler id="plcSync" pool-size="1"/>
+-    <task:scheduler id="serverSync" pool-size="2"/>
+-
++    <task:scheduler id="serverSync" pool-size="1"/>
++    <task:scheduler id="ftpProcess" pool-size="1"/>
++    <task:scheduler id="mainThread" pool-size="1"/>
++    <!-- PLC 心跳定期任务 -->
+     <task:scheduled-tasks scheduler="plcSync">
+-        <task:scheduled ref="syncHeartbeatPLCTask" method="syncPLC" cron="0/10 * * * * ?"/>
++        <task:scheduled ref="syncHeartbeatPLCTask" method="syncPLC" cron="0/30 * * * * ?"/>
+     </task:scheduled-tasks>
+-
++    <!-- SaaS后台定期任务 -->
+     <task:scheduled-tasks scheduler="serverSync">
+         <task:scheduled ref="syncParkingLogicServer" method="run" cron="0/10 * * * * ?"/>
+-        <task:scheduled ref="syncFTPUtil" method="ftp" cron="0/30 * * * * ?"/>
++    </task:scheduled-tasks>
++    <!-- FTP 定期扫描 -->
++    <task:scheduled-tasks scheduler="ftpProcess">
++        <task:scheduled ref="syncFTPUtil" method="ftp" cron="0/5 * * * * ?"/>
++    </task:scheduled-tasks>
++    <!-- 停取车主线程 -->
++    <task:scheduled-tasks scheduler="mainThread">
++        <task:scheduled ref="mainThreadMgt" method="go" cron="0/3 * * * * ?"/>
+     </task:scheduled-tasks>
+ 
+ </beans>
+\ No newline at end of file
+Index: src/main/resources/system.properties
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>NATIVE_TO_ASCII_UTF-8
+===================================================================
+--- src/main/resources/system.properties	(revision 6809)
++++ src/main/resources/system.properties	(date 1516068961000)
+@@ -9,6 +9,7 @@
+ skylot.plc.ip=${pom.plc.ip}
+ skylot.plc.port=${pom.plc.port}
+ skylot.plc.operation.timeout=${pom.plc.operation.timeout}
++skylot.plc.thread.timeout=${pom.plc.thread.timeout}
+ skylot.machine.operation.timeout=${pom.machine.operation.timeout}
+ 
+ 
+Index: src/main/webapp/index.jsp
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/webapp/index.jsp	(revision 6809)
++++ src/main/webapp/index.jsp	(date 1516242747000)
+@@ -36,7 +36,7 @@
+     $(document).ready(function () {
+         // 指定websocket路径
+ //        var websocket = new WebSocket('ws://10.3.13.13:8080/skymachine/log');
+-        var websocket = new WebSocket('ws://10.8.0.060:8080/skylotmachine/log');
++        var websocket = new WebSocket('ws://192.168.10.3:8080/skymachine/log');
+         websocket.onmessage = function (event) {
+             // 接收服务端的实时日志并添加到HTML页面中
+             $("#log-container div").append(event.data + "<p> </p>");
+Index: src/main/filters-dev.properties
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>NATIVE_TO_ASCII_UTF-8
+===================================================================
+--- src/main/filters-dev.properties	(revision 6842)
++++ src/main/filters-dev.properties	(date 1516241262000)
+@@ -1,36 +1,38 @@
+ #database env
+-pom.jdbc.url=jdbc:mysql://10.8.0.190:3306/fangda_skylot_mathinemgt_test_02?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true
++pom.jdbc.url=jdbc:mysql://192.168.10.2:3306/fangda_skylot_mathinemgt_test_02?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true
+ pom.jdbc.username=root
+-pom.jdbc.password=123456
++pom.jdbc.password=123
+ #upload.filepath
+ pom.upload.file.path=/Users/Saul/Desktop
+ #upload.filepath
+ pom.download.file.path=/Users/Saul/Desktop/ftp
+ #sync path
+-pom.parking.machine.id=a2a29a34a1314a82ac0bb2382d505azz
+-pom.parking.machine.port=802
++pom.parking.machine.id=327e2d2bea7c4b06931b3c883017494b
++pom.parking.machine.port=803
+ pom.parking.machine.address=123.207.244.20
+-pom.parking.url=http://wx.belimked.com/saas/machineActionSynchronize/heartbeat/login
+-pom.heartbeat.url=http://wx.belimked.com/saas/parkingLogSynchronize/update/login
++pom.heartbeat.url=http://wx-test02.belimked.com/saas02/machineActionSynchronize/heartbeat/login
++pom.parking.url=http://wx-test02.belimked.com/saas02/parkingLogSynchronize/update/login
+ #ftp env
+ #pom.ftp.ip=192.168.1.2
+-pom.ftp.ip=10.8.0.60
++pom.ftp.ip=192.168.10.2
+ pom.ftp.port=21
+ pom.ftp.username=yy
+ pom.ftp.password=1
+ #扩展名
+ pom.ftp.image.file.extension=.jpg
+ #存放目录
+-pom.ftp.image.file.directory=/f/IVS(10.8.0.221)/channel_0/plate/
++pom.ftp.image.file.directory=/f/IVS(192.168.10.119)/channel_0/plate/
+ #车牌文件分隔符
+ pom.ftp.image.file.split=_
+-#超时时间
++#超时时间-PLC连接,并且执行超时时间
+ pom.plc.operation.timeout=240
++#超时时间-主线程,阻塞队列排队时间
++pom.plc.thread.timeout=30
+ pom.machine.operation.timeout=60
+ #plc
+ #pom.plc.ip=192.168.1.189
+-pom.machine.ip=10.8.0.13
+-pom.plc.ip=10.8.0.220
++pom.machine.ip=192.168.10.5
++pom.plc.ip=192.168.10.250
+ pom.plc.port=9600
+ #console
+ pom.console.detail.status=true
+Index: src/test/java/TestU.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/test/java/TestU.java	(revision 6809)
++++ src/test/java/TestU.java	(date 1516018424000)
+@@ -159,6 +159,7 @@
+ //        ParkingLogic parkingLogic = new ParkingLogic();
+ //        parkingLogic.setActionDirect(2);
+ //        socketService.doDirection(1,parkingLogic);
++        socketService.getHighErrorStatus();
+         for (int i = 1; i <= 12; i++) {
+             socketService.getParkingStatus();
+             log.warn("未取车,当前车板停车状态:" + socketService.getValueMap());
+Index: pom.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- pom.xml	(revision 6809)
++++ pom.xml	(date 1515988775000)
+@@ -471,9 +471,9 @@
+                 <artifactId>flyway-maven-plugin</artifactId>
+                 <version>4.2.0</version>
+                 <configuration>
+-                    <url>jdbc:mysql://10.8.0.190:3306/fangda_skylot_mathinemgt_test_02?useUnicode=true&amp;characterEncoding=utf8&amp;allowMultiQueries=true</url>
+-                    <user>fangda</user>
+-                    <password>123456</password>
++                    <url>jdbc:mysql://192.168.10.4:3306/fangda_skylot_mathinemgt_test_02?useUnicode=true&amp;characterEncoding=utf8&amp;allowMultiQueries=true</url>
++                    <user>root</user>
++                    <password>123</password>
+                 </configuration>
+                 <dependencies>
+                     <dependency>

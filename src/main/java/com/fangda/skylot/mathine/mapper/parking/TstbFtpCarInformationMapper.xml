@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fangda.skylot.mathine.dao.parking.TstbFtpCarInformationMapper">
+    <resultMap id="BaseResultMap" type="com.fangda.skylot.mathine.model.parking.TstbFtpCarInformation">
+        <id column="tfc_id" property="tfcId" jdbcType="INTEGER"/>
+        <result column="ima_id" property="imaId" jdbcType="VARCHAR"/>
+        <result column="tfc_car_code" property="tfcCarCode" jdbcType="VARCHAR"/>
+        <result column="tfc_status" property="tfcStatus" jdbcType="INTEGER"/>
+        <result column="tfc_createtime" property="tfcCreatetime" jdbcType="VARCHAR"/>
+        <result column="tfc_createuser" property="tfcCreateuser" jdbcType="VARCHAR"/>
+        <result column="tfc_updatetime" property="tfcUpdatetime" jdbcType="VARCHAR"/>
+        <result column="tfc_updateuser" property="tfcUpdateuser" jdbcType="VARCHAR"/>
+        <result column="tfc_car_color" property="tfcCarColor" jdbcType="VARCHAR"/>
+        <result column="tfc_car_type" property="tfcCarType" jdbcType="VARCHAR"/>
+        <result column="tfc_car_action" property="tfcCarAction" jdbcType="VARCHAR"/>
+        <result column="tfc_car_in_code" property="tfcCarInCode" jdbcType="VARCHAR"/>
+        <result column="tfc_car_in_type" property="tfcCarInType" jdbcType="VARCHAR"/>
+        <result column="tfc_car_in_color" property="tfcCarInColor" jdbcType="VARCHAR"/>
+        <result column="tfc_is_canceled" property="tfcIsCanceled" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Example_Where_Clause">
+        <where>
+            <foreach collection="oredCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" suffix=")" prefixOverrides="and">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach collection="criterion.value" item="listItem" open="(" close=")"
+                                             separator=",">
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+    <sql id="Update_By_Example_Where_Clause">
+        <where>
+            <foreach collection="example.oredCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" suffix=")" prefixOverrides="and">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach collection="criterion.value" item="listItem" open="(" close=")"
+                                             separator=",">
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+    <sql id="Base_Column_List">
+        tfc_id, ima_id, tfc_car_code, tfc_status, tfc_createtime, tfc_createuser, tfc_updatetime,
+        tfc_updateuser, tfc_car_color, tfc_car_type, tfc_car_in_code, tfc_car_in_type, tfc_car_in_color, tfc_car_action, tfc_is_canceled
+    </sql>
+    <select id="selectByExample" resultMap="BaseResultMap"
+            parameterType="com.fangda.skylot.mathine.model.parking.TstbFtpCarInformationCriteria">
+        select
+        <if test="distinct">
+            distinct
+        </if>
+        <include refid="Base_Column_List"/>
+        from tstb_ftp_car_information
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+        <if test="page != null">
+            limit #{page.begin} , #{page.length}
+        </if>
+    </select>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from tstb_ftp_car_information
+        where tfc_id = #{tfcId,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        DELETE FROM tstb_ftp_car_information
+        WHERE tfc_id = #{tfcId,jdbcType=INTEGER}
+    </delete>
+    <delete id="deleteByExample" parameterType="com.fangda.skylot.mathine.model.parking.TstbFtpCarInformationCriteria">
+        delete from tstb_ftp_car_information
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+    </delete>
+    <insert id="insert" parameterType="com.fangda.skylot.mathine.model.parking.TstbFtpCarInformation">
+        INSERT INTO tstb_ftp_car_information (tfc_id, ima_id, tfc_car_code,
+                                              tfc_status, tfc_createtime, tfc_createuser,
+                                              tfc_updatetime, tfc_updateuser, tfc_car_action, tfc_is_canceled)
+        VALUES (#{tfcId,jdbcType=INTEGER}, #{imaId,jdbcType=VARCHAR}, #{tfcCarCode,jdbcType=VARCHAR},
+                #{tfcStatus,jdbcType=INTEGER}, #{tfcCreatetime,jdbcType=VARCHAR}, #{tfcCreateuser,jdbcType=VARCHAR},
+                #{tfcUpdatetime,jdbcType=VARCHAR}, #{tfcUpdateuser,jdbcType=VARCHAR}, #{tfcCarAction,jdbcType=VARCHAR},
+                #{tfcIsCanceled,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.fangda.skylot.mathine.model.parking.TstbFtpCarInformation">
+        insert into tstb_ftp_car_information
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="tfcId != null">
+                tfc_id,
+            </if>
+            <if test="imaId != null">
+                ima_id,
+            </if>
+            <if test="tfcCarCode != null">
+                tfc_car_code,
+            </if>
+            <if test="tfcStatus != null">
+                tfc_status,
+            </if>
+            <if test="tfcCreatetime != null">
+                tfc_createtime,
+            </if>
+            <if test="tfcCreateuser != null">
+                tfc_createuser,
+            </if>
+            <if test="tfcUpdatetime != null">
+                tfc_updatetime,
+            </if>
+            <if test="tfcUpdateuser != null">
+                tfc_updateuser,
+            </if>
+            <if test="tfcCarAction != null">
+                tfc_car_action,
+            </if>
+            <if test="tfcIsCanceled != null">
+                tfc_is_canceled,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="tfcId != null">
+                #{tfcId,jdbcType=INTEGER},
+            </if>
+            <if test="imaId != null">
+                #{imaId,jdbcType=VARCHAR},
+            </if>
+            <if test="tfcCarCode != null">
+                #{tfcCarCode,jdbcType=VARCHAR},
+            </if>
+            <if test="tfcStatus != null">
+                #{tfcStatus,jdbcType=INTEGER},
+            </if>
+            <if test="tfcCreatetime != null">
+                #{tfcCreatetime,jdbcType=VARCHAR},
+            </if>
+            <if test="tfcCreateuser != null">
+                #{tfcCreateuser,jdbcType=VARCHAR},
+            </if>
+            <if test="tfcUpdatetime != null">
+                #{tfcUpdatetime,jdbcType=VARCHAR},
+            </if>
+            <if test="tfcUpdateuser != null">
+                #{tfcUpdateuser,jdbcType=VARCHAR},
+            </if>
+            <if test="tfcCarAction != null">
+                #{tfcCarAction,jdbcType=VARCHAR},
+            </if>
+            <if test="tfcIsCanceled != null">
+                #{tfcIsCanceled,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <select id="countByExample" parameterType="com.fangda.skylot.mathine.model.parking.TstbFtpCarInformationCriteria"
+            resultType="java.lang.Integer">
+        select count(*) from tstb_ftp_car_information
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+    </select>
+    <update id="updateByExampleSelective" parameterType="map">
+        update tstb_ftp_car_information
+        <set>
+            <if test="record.tfcId != null">
+                tfc_id = #{record.tfcId,jdbcType=INTEGER},
+            </if>
+            <if test="record.imaId != null">
+                ima_id = #{record.imaId,jdbcType=VARCHAR},
+            </if>
+            <if test="record.tfcCarCode != null">
+                tfc_car_code = #{record.tfcCarCode,jdbcType=VARCHAR},
+            </if>
+            <if test="record.tfcStatus != null">
+                tfc_status = #{record.tfcStatus,jdbcType=INTEGER},
+            </if>
+            <if test="record.tfcCreatetime != null">
+                tfc_createtime = #{record.tfcCreatetime,jdbcType=VARCHAR},
+            </if>
+            <if test="record.tfcCreateuser != null">
+                tfc_createuser = #{record.tfcCreateuser,jdbcType=VARCHAR},
+            </if>
+            <if test="record.tfcUpdatetime != null">
+                tfc_updatetime = #{record.tfcUpdatetime,jdbcType=VARCHAR},
+            </if>
+            <if test="record.tfcUpdateuser != null">
+                tfc_updateuser = #{record.tfcUpdateuser,jdbcType=VARCHAR},
+            </if>
+            <if test="record.tfcCarColor != null">
+                tfc_car_color = #{record.tfcCarColor,jdbcType=VARCHAR},
+            </if>
+            <if test="record.tfcCarType != null">
+                tfc_car_type = #{record.tfcCarType,jdbcType=VARCHAR},
+            </if>
+            <if test="record.tfcCarInCode != null">
+                tfc_car_in_code = #{record.tfcCarInCode,jdbcType=VARCHAR},
+            </if>
+            <if test="record.tfcCarInType != null">
+                tfc_car_in_type = #{record.tfcCarInType,jdbcType=VARCHAR},
+            </if>
+            <if test="record.tfcCarInColor != null">
+                tfc_car_in_color = #{record.tfcCarInColor,jdbcType=VARCHAR},
+            </if>
+            <if test="record.tfcIsCanceled != null">
+                tfc_is_canceled = #{record.tfcIsCanceled,jdbcType=VARCHAR},
+            </if>
+        </set>
+        <if test="_parameter != null">
+            <include refid="Update_By_Example_Where_Clause"/>
+        </if>
+    </update>
+    <update id="updateByExample" parameterType="map">
+        update tstb_ftp_car_information
+        set tfc_id = #{record.tfcId,jdbcType=INTEGER},
+        ima_id = #{record.imaId,jdbcType=VARCHAR},
+        tfc_car_code = #{record.tfcCarCode,jdbcType=VARCHAR},
+        tfc_status = #{record.tfcStatus,jdbcType=INTEGER},
+        tfc_createtime = #{record.tfcCreatetime,jdbcType=VARCHAR},
+        tfc_createuser = #{record.tfcCreateuser,jdbcType=VARCHAR},
+        tfc_updatetime = #{record.tfcUpdatetime,jdbcType=VARCHAR},
+        tfc_updateuser = #{record.tfcUpdateuser,jdbcType=VARCHAR},
+        tfc_car_color = #{record.tfcCarColor,jdbcType=VARCHAR},
+        tfc_car_type = #{record.tfcCarType,jdbcType=VARCHAR},
+        tfc_car_in_code = #{record.tfcCarInCode,jdbcType=VARCHAR},
+        tfc_car_in_type = #{record.tfcCarInType,jdbcType=VARCHAR},
+        tfc_car_in_color = #{record.tfcCarInColor,jdbcType=VARCHAR},
+        tfc_is_canceled = #{record.tfcIsCanceled,jdbcType=VARCHAR}
+        <if test="_parameter != null">
+            <include refid="Update_By_Example_Where_Clause"/>
+        </if>
+    </update>
+    <update id="updateByPrimaryKeySelective"
+            parameterType="com.fangda.skylot.mathine.model.parking.TstbFtpCarInformation">
+        update tstb_ftp_car_information
+        <set>
+            <if test="imaId != null">
+                ima_id = #{imaId,jdbcType=VARCHAR},
+            </if>
+            <if test="tfcCarCode != null">
+                tfc_car_code = #{tfcCarCode,jdbcType=VARCHAR},
+            </if>
+            <if test="tfcStatus != null">
+                tfc_status = #{tfcStatus,jdbcType=INTEGER},
+            </if>
+            <if test="tfcCreatetime != null">
+                tfc_createtime = #{tfcCreatetime,jdbcType=VARCHAR},
+            </if>
+            <if test="tfcCreateuser != null">
+                tfc_createuser = #{tfcCreateuser,jdbcType=VARCHAR},
+            </if>
+            <if test="tfcUpdatetime != null">
+                tfc_updatetime = #{tfcUpdatetime,jdbcType=VARCHAR},
+            </if>
+            <if test="tfcUpdateuser != null">
+                tfc_updateuser = #{tfcUpdateuser,jdbcType=VARCHAR},
+            </if>
+            <if test="tfcCarColor != null">
+                tfc_car_color = #{tfcCarColor,jdbcType=VARCHAR},
+            </if>
+            <if test="tfcCarType != null">
+                tfc_car_type = #{tfcCarType,jdbcType=VARCHAR},
+            </if>
+            <if test="tfcCarInCode != null">
+                tfc_car_in_code = #{tfcCarInCode,jdbcType=VARCHAR},
+            </if>
+            <if test="tfcCarInType != null">
+                tfc_car_in_type = #{tfcCarInType,jdbcType=VARCHAR},
+            </if>
+            <if test="tfcCarInColor != null">
+                tfc_car_in_color = #{tfcCarInColor,jdbcType=VARCHAR},
+            </if>
+            <if test="tfcIsCanceled != null">
+                tfc_is_canceled = #{tfcCarInColor,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where tfc_id = #{tfcId,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.fangda.skylot.mathine.model.parking.TstbFtpCarInformation">
+        UPDATE tstb_ftp_car_information
+        SET ima_id           = #{imaId,jdbcType=VARCHAR},
+            tfc_car_code     = #{tfcCarCode,jdbcType=VARCHAR},
+            tfc_status       = #{tfcStatus,jdbcType=INTEGER},
+            tfc_createtime   = #{tfcCreatetime,jdbcType=VARCHAR},
+            tfc_createuser   = #{tfcCreateuser,jdbcType=VARCHAR},
+            tfc_updatetime   = #{tfcUpdatetime,jdbcType=VARCHAR},
+            tfc_updateuser   = #{tfcUpdateuser,jdbcType=VARCHAR},
+            tfc_car_color    = #{tfcCarColor,jdbcType=VARCHAR},
+            tfc_car_type     = #{tfcCarType,jdbcType=VARCHAR},
+            tfc_car_in_code  = #{tfcCarInCode,jdbcType=VARCHAR},
+            tfc_car_in_type  = #{tfcCarInType,jdbcType=VARCHAR},
+            tfc_car_in_color = #{tfcCarInColor,jdbcType=VARCHAR},
+            tfc_is_canceled  = #{tfcIsCanceled,jdbcType=VARCHAR}
+        WHERE tfc_id = #{tfcId,jdbcType=INTEGER}
+    </update>
+</mapper>

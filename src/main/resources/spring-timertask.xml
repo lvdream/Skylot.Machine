@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:task="http://www.springframework.org/schema/task" xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
+
+    <task:scheduler id="plcSync" pool-size="1"/>
+    <task:scheduler id="serverSync" pool-size="1"/>
+    <task:scheduler id="ftpProcess" pool-size="1"/>
+    <task:scheduler id="mainThread" pool-size="1"/>
+    <!-- PLC 心跳定期任务 -->
+    <task:scheduled-tasks scheduler="plcSync">
+        <task:scheduled ref="syncHeartbeatPLCTask" method="syncPLC" cron="0/30 * * * * ?"/>
+    </task:scheduled-tasks>
+    <!-- SaaS后台定期任务 -->
+    <task:scheduled-tasks scheduler="serverSync">
+        <task:scheduled ref="syncParkingLogicServer" method="run" cron="0/10 * * * * ?"/>
+    </task:scheduled-tasks>
+    <!-- FTP 定期扫描 -->
+    <task:scheduled-tasks scheduler="ftpProcess">
+        <task:scheduled ref="syncFTPUtil" method="ftp" cron="0/5 * * * * ?"/>
+    </task:scheduled-tasks>
+    <!-- 停取车主线程 -->
+    <task:scheduled-tasks scheduler="mainThread">
+        <task:scheduled ref="mainThreadMgt" method="go" cron="0/3 * * * * ?"/>
+    </task:scheduled-tasks>
+
+</beans>

@@ -1,0 +1,30 @@
+
+osquid:S1450"ZRemove the "commandList" field and declare it as a local variable in the relevant methods.(ğ¤¸
+Hsquid:S2095"3Close this "FileInputStream" in a "finally" clause.(Ú‰õû
+Isquid:S2095"4Close this "FileOutputStream" in a "finally" clause.(”ªÏ¾
+Esquid:S1481"+Remove this unused "result" local variable.(ĞĞî…ıÿÿÿÿ
+@squid:S1075"&Remove this hard-coded path-delimiter.(½óíÄüÿÿÿÿ
+asquid:S2677"LUse or store the value returned from "readLine" instead of throwing it away.(Ãäƒú
+fsquid:S1192"RDefine a constant instead of duplicating this literal "system.properties" 8 times.(§ís
+Hsquid:S2095"3Close this "FileInputStream" in a "finally" clause.(Òóá÷
+hsquid:S1192"SDefine a constant instead of duplicating this literal "download.file.path" 4 times.(ÊÙ¹³
+=squid:S1148"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+T
+squid:S899";Do something with the "boolean" value returned by "delete".(é‘‚©úÿÿÿÿ
+[
+squid:S899"BDo something with the "boolean" value returned by "createNewFile".(ôü¿Ÿÿÿÿÿÿ
+Isquid:S1066"/Merge this if statement with the enclosing one.(ÌÆ³æşÿÿÿÿ
+=squid:S1148"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+R
+squid:S106"9Replace this use of System.out or System.err by a logger.(åÕÔÍüÿÿÿÿ
+;squid:S1075"&Remove this hard-coded path-delimiter.(­ÈÏ
+;squid:S1075"&Remove this hard-coded path-delimiter.(£‰ñ™
+;squid:S1075"&Remove this hard-coded path-delimiter.(£‰ñ™
+Nsquid:S2095"4Close this "FileOutputStream" in a "finally" clause.(ğ‹äİûÿÿÿÿ
+=squid:S1148"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+T
+squid:S899";Do something with the "boolean" value returned by "delete".(²Œ­ûÿÿÿÿ
+=squid:S1148"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+T
+squid:S899";Do something with the "boolean" value returned by "delete".(é‘‚©úÿÿÿÿ
+Osquid:S1854":Remove this useless assignment to local variable "result".(áÕŸÁ

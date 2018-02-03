@@ -1,0 +1,46 @@
+
+Osquid:S1141"5Extract this nested try block into a separate method.(¡»¢üùÿÿÿÿ
+Csquid:S1905")Remove this unnecessary cast to "Method".(ÄÙ×Şùÿÿÿÿ
+tsquid:S1149"_Replace the synchronized class "StringBuffer" by an unsynchronized one such as "StringBuilder".(í…Ò‰
+=squid:S2129"#Remove this "Character" constructor(©¥·Şûÿÿÿÿ
+Csquid:S1905")Remove this unnecessary cast to "Method".(ÄÙ×Şùÿÿÿÿ
+Csquid:S1905")Remove this unnecessary cast to "Method".(ÄÙ×Şùÿÿÿÿ
+Csquid:S1905")Remove this unnecessary cast to "Method".(ÄÙ×Şùÿÿÿÿ
+6squid:S1659"!Declare "tmp" on a separate line.(—ı¸
+Csquid:S1905")Remove this unnecessary cast to "Method".(ÄÙ×Şùÿÿÿÿ
+=squid:S1148"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+Csquid:S1905")Remove this unnecessary cast to "Method".(ÄÙ×Şùÿÿÿÿ
+Csquid:S1905")Remove this unnecessary cast to "Method".(ÄÙ×Şùÿÿÿÿ
+Csquid:S1905")Remove this unnecessary cast to "Method".(ÄÙ×Şùÿÿÿÿ
+Nsquid:S1854"9Remove this useless assignment to local variable "numOf".(‚ŠÃ
+lsquid:S3776"RRefactor this method to reduce its Cognitive Complexity from 68 to the 15 allowed.(ñĞì£ûÿÿÿÿ
+6squid:S1643"Use a StringBuilder instead.(ëÀ¶Èøÿÿÿÿ
+usquid:S1488"[Immediately return this expression instead of assigning it to the temporary variable "str".(ö×®Œûÿÿÿÿ
+Csquid:S1905")Remove this unnecessary cast to "Method".(ÄÙ×Şùÿÿÿÿ
+Csquid:S1905")Remove this unnecessary cast to "Method".(ÄÙ×Şùÿÿÿÿ
+1squid:S1643"Use a StringBuilder instead.(Ö ÃÈ
+=squid:S1148"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+\squid:S1192"GDefine a constant instead of duplicating this literal "isnull" 3 times.(›¬¡Ò
+gsquid:S00117"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(è‹ˆ
+Csquid:S1905")Remove this unnecessary cast to "Method".(ÄÙ×Şùÿÿÿÿ
+asquid:S00112"FDefine and throw a dedicated exception instead of using a generic one.(ñĞì£ûÿÿÿÿ
+Csquid:S1905")Remove this unnecessary cast to "Method".(ÄÙ×Şùÿÿÿÿ
+esquid:CommentedOutCodeLine"<This block of commented-out lines of code should be removed.(š•İüÿÿÿÿ
+›squid:S1158"€Call the static method Character.toString(...) instead of instantiating a temporary object to perform this to string conversion.(©¥·Şûÿÿÿÿ
+Csquid:S1905")Remove this unnecessary cast to "Method".(ÄÙ×Şùÿÿÿÿ
+;squid:S2131"!Use "Character.toString" instead.(©¥·Şûÿÿÿÿ
+Csquid:S1905")Remove this unnecessary cast to "Method".(ÄÙ×Şùÿÿÿÿ
+Vsquid:S1126"AReplace this if-then-else statement by a single return statement.(»°’
+Csquid:S1905")Remove this unnecessary cast to "Method".(ÄÙ×Şùÿÿÿÿ
+Csquid:S1905")Remove this unnecessary cast to "Method".(ÄÙ×Şùÿÿÿÿ
+`squid:S1192"FDefine a constant instead of duplicating this literal "notIn" 3 times.(÷ğ•Äıÿÿÿÿ
+Isquid:S1313"4Make this IP "255.255.255.255" address configurable.(íºåæ
+ysquid:S1149"_Replace the synchronized class "StringBuffer" by an unsynchronized one such as "StringBuilder".(¬Ç§±ûÿÿÿÿ
+Csquid:S1905")Remove this unnecessary cast to "Method".(ÄÙ×Şùÿÿÿÿ
+?squid:S1481"*Remove this unused "numOf" local variable.(‚ŠÃ
+Csquid:S1905")Remove this unnecessary cast to "Method".(ÄÙ×Şùÿÿÿÿ
+‡squid:S1319"mThe return type of this method should be an interface such as "Map" rather than the implementation "HashMap".(›¸³Æüÿÿÿÿ
+Csquid:S1905")Remove this unnecessary cast to "Method".(ÄÙ×Şùÿÿÿÿ
+ª%squid:RedundantThrowsDeclarationCheck"vRemove the declaration of thrown exception 'java.lang.SecurityException' which is a subclass of 'java.lang.Exception'.(ñĞì£ûÿÿÿÿ
+Csquid:S1905")Remove this unnecessary cast to "Method".(ÄÙ×Şùÿÿÿÿ
+]squid:S1858"H"value" is already a string, there's no need to call "toString()" on it.(Şš³ç

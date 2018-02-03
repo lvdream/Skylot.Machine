@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fangda.skylot.mathine.dao.customer.IftbItemCustomerMapper">
+    <resultMap id="BaseResultMap" type="com.fangda.skylot.mathine.model.customer.IftbItemCustomer">
+        <id column="iic_id" property="iicId" jdbcType="INTEGER"/>
+        <result column="mc_id" property="mcId" jdbcType="INTEGER"/>
+        <result column="omi_id" property="omiId" jdbcType="INTEGER"/>
+        <result column="iiic_status" property="iiicStatus" jdbcType="VARCHAR"/>
+        <result column="iic_startdate" property="iicStartdate" jdbcType="VARCHAR"/>
+        <result column="iic_enddate" property="iicEnddate" jdbcType="VARCHAR"/>
+        <result column="iic_cost" property="iicCost" jdbcType="VARCHAR"/>
+        <result column="iic_formula" property="iicFormula" jdbcType="VARCHAR"/>
+        <result column="iic_createdate" property="iicCreatedate" jdbcType="VARCHAR"/>
+        <result column="iic_createuser" property="iicCreateuser" jdbcType="VARCHAR"/>
+        <result column="iic_updatedate" property="iicUpdatedate" jdbcType="VARCHAR"/>
+        <result column="iic_updatedate" property="iicUpdatedate" jdbcType="VARCHAR"/>
+        <result column="icc_car_code" property="iccCarCode" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Example_Where_Clause">
+        <where>
+            <foreach collection="oredCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" suffix=")" prefixOverrides="and">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach collection="criterion.value" item="listItem" open="(" close=")"
+                                             separator=",">
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+    <sql id="Update_By_Example_Where_Clause">
+        <where>
+            <foreach collection="example.oredCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" suffix=")" prefixOverrides="and">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach collection="criterion.value" item="listItem" open="(" close=")"
+                                             separator=",">
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+    <sql id="Base_Column_List">
+    iic_id, mc_id, omi_id, iiic_status, iic_startdate, iic_enddate, iic_cost, iic_formula, 
+    iic_createdate, iic_createuser, iic_updatedate, iic_updateuser,icc_car_code
+  </sql>
+    <select id="selectByExample" resultMap="BaseResultMap"
+            parameterType="com.fangda.skylot.mathine.model.customer.IftbItemCustomerCriteria">
+        select
+        <if test="distinct">
+            distinct
+        </if>
+        <include refid="Base_Column_List"/>
+        from iftb_item_customer
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+        <if test="page != null">
+            limit #{page.begin} , #{page.length}
+        </if>
+    </select>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from iftb_item_customer
+        where iic_id = #{iicId,jdbcType=INTEGER}
+    </select>
+
+    <select id="selectByMcId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from iftb_item_customer
+        where mc_id = #{mcId,jdbcType=INTEGER}
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from iftb_item_customer
+    where iic_id = #{iicId,jdbcType=INTEGER}
+  </delete>
+    <delete id="deleteByExample" parameterType="com.fangda.skylot.mathine.model.customer.IftbItemCustomerCriteria">
+        delete from iftb_item_customer
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+    </delete>
+    <insert id="insert" parameterType="com.fangda.skylot.mathine.model.customer.IftbItemCustomer">
+    insert into iftb_item_customer (iic_id, mc_id, omi_id, 
+      iiic_status, iic_startdate, iic_enddate, 
+      iic_cost, iic_formula, iic_createdate, 
+      iic_createuser, iic_updatedate, iic_updateuser,icc_car_code
+      )
+    values (#{iicId,jdbcType=INTEGER}, #{mcId,jdbcType=INTEGER}, #{omiId,jdbcType=INTEGER}, 
+      #{iiicStatus,jdbcType=VARCHAR}, #{iicStartdate,jdbcType=VARCHAR}, #{iicEnddate,jdbcType=VARCHAR}, 
+      #{iicCost,jdbcType=VARCHAR}, #{iicFormula,jdbcType=VARCHAR}, #{iicCreatedate,jdbcType=VARCHAR}, 
+      #{iicCreateuser,jdbcType=VARCHAR}, #{iicUpdatedate,jdbcType=VARCHAR}, #{iicUpdateuser,jdbcType=VARCHAR}, #{iccCarCode,jdbcType=VARCHAR}
+      )
+  </insert>
+    <insert id="insertSelective" parameterType="com.fangda.skylot.mathine.model.customer.IftbItemCustomer">
+        insert into iftb_item_customer
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="iicId != null">
+                iic_id,
+            </if>
+            <if test="mcId != null">
+                mc_id,
+            </if>
+            <if test="omiId != null">
+                omi_id,
+            </if>
+            <if test="iiicStatus != null">
+                iiic_status,
+            </if>
+            <if test="iicStartdate != null">
+                iic_startdate,
+            </if>
+            <if test="iicEnddate != null">
+                iic_enddate,
+            </if>
+            <if test="iicCost != null">
+                iic_cost,
+            </if>
+            <if test="iicFormula != null">
+                iic_formula,
+            </if>
+            <if test="iicCreatedate != null">
+                iic_createdate,
+            </if>
+            <if test="iicCreateuser != null">
+                iic_createuser,
+            </if>
+            <if test="iicUpdatedate != null">
+                iic_updatedate,
+            </if>
+            <if test="iicUpdateuser != null">
+                iic_updateuser,
+            </if>
+            <if test="iccCarCode != null">
+                ,icc_car_code,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="iicId != null">
+                #{iicId,jdbcType=INTEGER},
+            </if>
+            <if test="mcId != null">
+                #{mcId,jdbcType=INTEGER},
+            </if>
+            <if test="omiId != null">
+                #{omiId,jdbcType=INTEGER},
+            </if>
+            <if test="iiicStatus != null">
+                #{iiicStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="iicStartdate != null">
+                #{iicStartdate,jdbcType=VARCHAR},
+            </if>
+            <if test="iicEnddate != null">
+                #{iicEnddate,jdbcType=VARCHAR},
+            </if>
+            <if test="iicCost != null">
+                #{iicCost,jdbcType=VARCHAR},
+            </if>
+            <if test="iicFormula != null">
+                #{iicFormula,jdbcType=VARCHAR},
+            </if>
+            <if test="iicCreatedate != null">
+                #{iicCreatedate,jdbcType=VARCHAR},
+            </if>
+            <if test="iicCreateuser != null">
+                #{iicCreateuser,jdbcType=VARCHAR},
+            </if>
+            <if test="iicUpdatedate != null">
+                #{iicUpdatedate,jdbcType=VARCHAR},
+            </if>
+            <if test="iicUpdateuser != null">
+                #{iicUpdateuser,jdbcType=VARCHAR},
+            </if>
+            <if test="iccCarCode != null">
+                #{iccCarCode,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <select id="countByExample" parameterType="com.fangda.skylot.mathine.model.customer.IftbItemCustomerCriteria"
+            resultType="java.lang.Integer">
+        select count(*) from iftb_item_customer
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+    </select>
+    <update id="updateByExampleSelective" parameterType="map">
+        update iftb_item_customer
+        <set>
+            <if test="record.iicId != null">
+                iic_id = #{record.iicId,jdbcType=INTEGER},
+            </if>
+            <if test="record.mcId != null">
+                mc_id = #{record.mcId,jdbcType=INTEGER},
+            </if>
+            <if test="record.omiId != null">
+                omi_id = #{record.omiId,jdbcType=INTEGER},
+            </if>
+            <if test="record.iiicStatus != null">
+                iiic_status = #{record.iiicStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="record.iicStartdate != null">
+                iic_startdate = #{record.iicStartdate,jdbcType=VARCHAR},
+            </if>
+            <if test="record.iicEnddate != null">
+                iic_enddate = #{record.iicEnddate,jdbcType=VARCHAR},
+            </if>
+            <if test="record.iicCost != null">
+                iic_cost = #{record.iicCost,jdbcType=VARCHAR},
+            </if>
+            <if test="record.iicFormula != null">
+                iic_formula = #{record.iicFormula,jdbcType=VARCHAR},
+            </if>
+            <if test="record.iicCreatedate != null">
+                iic_createdate = #{record.iicCreatedate,jdbcType=VARCHAR},
+            </if>
+            <if test="record.iicCreateuser != null">
+                iic_createuser = #{record.iicCreateuser,jdbcType=VARCHAR},
+            </if>
+            <if test="record.iicUpdatedate != null">
+                iic_updatedate = #{record.iicUpdatedate,jdbcType=VARCHAR},
+            </if>
+            <if test="record.iicUpdateuser != null">
+                iic_updateuser = #{record.iicUpdateuser,jdbcType=VARCHAR},
+            </if>
+            <if test="record.iccCarCode != null">
+                icc_car_code = #{record.iccCarCode,jdbcType=VARCHAR},
+            </if>
+        </set>
+        <if test="_parameter != null">
+            <include refid="Update_By_Example_Where_Clause"/>
+        </if>
+    </update>
+    <update id="updateByExample" parameterType="map">
+        update iftb_item_customer
+        set iic_id = #{record.iicId,jdbcType=INTEGER},
+        mc_id = #{record.mcId,jdbcType=INTEGER},
+        omi_id = #{record.omiId,jdbcType=INTEGER},
+        iiic_status = #{record.iiicStatus,jdbcType=VARCHAR},
+        iic_startdate = #{record.iicStartdate,jdbcType=VARCHAR},
+        iic_enddate = #{record.iicEnddate,jdbcType=VARCHAR},
+        iic_cost = #{record.iicCost,jdbcType=VARCHAR},
+        iic_formula = #{record.iicFormula,jdbcType=VARCHAR},
+        iic_createdate = #{record.iicCreatedate,jdbcType=VARCHAR},
+        iic_createuser = #{record.iicCreateuser,jdbcType=VARCHAR},
+        iic_updatedate = #{record.iicUpdatedate,jdbcType=VARCHAR},
+        iic_updateuser = #{record.iicUpdateuser,jdbcType=VARCHAR},
+        icc_car_code = #{record.iccCarCode,jdbcType=VARCHAR}
+        <if test="_parameter != null">
+            <include refid="Update_By_Example_Where_Clause"/>
+        </if>
+    </update>
+    <update id="updateByPrimaryKeySelective" parameterType="com.fangda.skylot.mathine.model.customer.IftbItemCustomer">
+        update iftb_item_customer
+        <set>
+            <if test="mcId != null">
+                mc_id = #{mcId,jdbcType=INTEGER},
+            </if>
+            <if test="omiId != null">
+                omi_id = #{omiId,jdbcType=INTEGER},
+            </if>
+            <if test="iiicStatus != null">
+                iiic_status = #{iiicStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="iicStartdate != null">
+                iic_startdate = #{iicStartdate,jdbcType=VARCHAR},
+            </if>
+            <if test="iicEnddate != null">
+                iic_enddate = #{iicEnddate,jdbcType=VARCHAR},
+            </if>
+            <if test="iicCost != null">
+                iic_cost = #{iicCost,jdbcType=VARCHAR},
+            </if>
+            <if test="iicFormula != null">
+                iic_formula = #{iicFormula,jdbcType=VARCHAR},
+            </if>
+            <if test="iicCreatedate != null">
+                iic_createdate = #{iicCreatedate,jdbcType=VARCHAR},
+            </if>
+            <if test="iicCreateuser != null">
+                iic_createuser = #{iicCreateuser,jdbcType=VARCHAR},
+            </if>
+            <if test="iicUpdatedate != null">
+                iic_updatedate = #{iicUpdatedate,jdbcType=VARCHAR},
+            </if>
+            <if test="iicUpdateuser != null">
+                iic_updateuser = #{iicUpdateuser,jdbcType=VARCHAR},
+            </if>
+            <if test="iccCarCode != null">
+                icc_car_code = #{iccCarCode,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where iic_id = #{iicId,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.fangda.skylot.mathine.model.customer.IftbItemCustomer">
+    update iftb_item_customer
+    set mc_id = #{mcId,jdbcType=INTEGER},
+      omi_id = #{omiId,jdbcType=INTEGER},
+      iiic_status = #{iiicStatus,jdbcType=VARCHAR},
+      iic_startdate = #{iicStartdate,jdbcType=VARCHAR},
+      iic_enddate = #{iicEnddate,jdbcType=VARCHAR},
+      iic_cost = #{iicCost,jdbcType=VARCHAR},
+      iic_formula = #{iicFormula,jdbcType=VARCHAR},
+      iic_createdate = #{iicCreatedate,jdbcType=VARCHAR},
+      iic_createuser = #{iicCreateuser,jdbcType=VARCHAR},
+      iic_updatedate = #{iicUpdatedate,jdbcType=VARCHAR},
+        iic_updateuser = #{iicUpdateuser,jdbcType=VARCHAR},
+        icc_car_code = #{iccCarCode,jdbcType=VARCHAR}
+    where iic_id = #{iicId,jdbcType=INTEGER}
+  </update>
+</mapper>

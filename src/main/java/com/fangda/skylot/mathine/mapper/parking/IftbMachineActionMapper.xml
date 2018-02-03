@@ -1,0 +1,367 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fangda.skylot.mathine.dao.parking.IftbMachineActionMapper">
+    <resultMap id="BaseResultMap" type="com.fangda.skylot.mathine.model.parking.IftbMachineAction">
+        <id column="ima_id" property="imaId" jdbcType="VARCHAR"/>
+        <result column="mm_id" property="mmId" jdbcType="INTEGER"/>
+        <result column="ma_id" property="maId" jdbcType="INTEGER"/>
+        <result column="ima_code" property="imaCode" jdbcType="VARCHAR"/>
+        <result column="ima_name" property="imaName" jdbcType="VARCHAR"/>
+        <result column="ima_address" property="imaAddress" jdbcType="VARCHAR"/>
+        <result column="ima_port" property="imaPort" jdbcType="VARCHAR"/>
+        <result column="ima_status" property="imaStatus" jdbcType="VARCHAR"/>
+        <result column="ima_createtime" property="imaCreatetime" jdbcType="VARCHAR"/>
+        <result column="ima_createuser" property="imaCreateuser" jdbcType="VARCHAR"/>
+        <result column="ima_updatetime" property="imaUpdatetime" jdbcType="VARCHAR"/>
+        <result column="ima_updateuser" property="imaUpdateuser" jdbcType="VARCHAR"/>
+        <result column="ima_error_json" property="imaErrorJson" jdbcType="VARCHAR"/>
+        <result column="ima_physical_status" property="imaPhysicalStatus" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Example_Where_Clause">
+        <where>
+            <foreach collection="oredCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" suffix=")" prefixOverrides="and">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach collection="criterion.value" item="listItem" open="(" close=")"
+                                             separator=",">
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+    <sql id="Update_By_Example_Where_Clause">
+        <where>
+            <foreach collection="example.oredCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" suffix=")" prefixOverrides="and">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach collection="criterion.value" item="listItem" open="(" close=")"
+                                             separator=",">
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+    <sql id="Base_Column_List">
+        ima_id, mm_id, ma_id, ima_code, ima_name, ima_address, ima_port, ima_status, ima_createtime,
+        ima_createuser, ima_updatetime, ima_updateuser, ima_error_json, ima_physical_status
+    </sql>
+    <select id="selectByExample" resultMap="BaseResultMap"
+            parameterType="com.fangda.skylot.mathine.model.parking.IftbMachineActionCriteria">
+        select
+        <if test="distinct">
+            distinct
+        </if>
+        <include refid="Base_Column_List"/>
+        from iftb_machine_action
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+        <if test="page != null">
+            limit #{page.begin} , #{page.length}
+        </if>
+    </select>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from iftb_machine_action
+        where ima_id = #{imaId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        DELETE FROM iftb_machine_action
+        WHERE ima_id = #{imaId,jdbcType=INTEGER}
+    </delete>
+    <delete id="deleteByExample" parameterType="com.fangda.skylot.mathine.model.parking.IftbMachineActionCriteria">
+        delete from iftb_machine_action
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+
+    </delete>
+
+    <insert id="insert" parameterType="com.fangda.skylot.mathine.model.parking.IftbMachineAction">
+        INSERT INTO iftb_machine_action (ima_id, mm_id, ma_id,
+                                         ima_code, ima_name, ima_address,
+                                         ima_port, ima_status, ima_createtime,
+                                         ima_createuser, ima_updatetime, ima_updateuser, ima_error_json, ima_physical_status
+        )
+        VALUES (#{imaId,jdbcType=VARCHAR}, #{mmId,jdbcType=INTEGER}, #{maId,jdbcType=INTEGER},
+                                           #{imaCode,jdbcType=VARCHAR}, #{imaName,jdbcType=VARCHAR},
+                                           #{imaAddress,jdbcType=VARCHAR},
+                                           #{imaPort,jdbcType=VARCHAR}, #{imaStatus,jdbcType=VARCHAR},
+                                           #{imaCreatetime,jdbcType=VARCHAR},
+                                           #{imaCreateuser,jdbcType=VARCHAR}, #{imaUpdatetime,jdbcType=VARCHAR},
+                #{imaUpdateuser,jdbcType=VARCHAR}, #{imaErrorJson,jdbcType=VARCHAR},
+                #{imaPhysicalStatus,jdbcType=VARCHAR}
+        )
+    </insert>
+    <insert id="insertSelective" parameterType="com.fangda.skylot.mathine.model.parking.IftbMachineAction">
+        insert into iftb_machine_action
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="imaId != null">
+                ima_id,
+            </if>
+            <if test="mmId != null">
+                mm_id,
+            </if>
+            <if test="maId != null">
+                ma_id,
+            </if>
+            <if test="imaCode != null">
+                ima_code,
+            </if>
+            <if test="imaName != null">
+                ima_name,
+            </if>
+            <if test="imaAddress != null">
+                ima_address,
+            </if>
+            <if test="imaPort != null">
+                ima_port,
+            </if>
+            <if test="imaStatus != null">
+                ima_status,
+            </if>
+            <if test="imaCreatetime != null">
+                ima_createtime,
+            </if>
+            <if test="imaCreateuser != null">
+                ima_createuser,
+            </if>
+            <if test="imaUpdatetime != null">
+                ima_updatetime,
+            </if>
+            <if test="imaUpdateuser != null">
+                ima_updateuser,
+            </if>
+            <if test="imaErrorJson != null">
+                ima_error_json,
+            </if>
+            <if test="imaPhysicalStatus != null">
+                ima_physical_status,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="imaId != null">
+                #{imaId,jdbcType=VARCHAR},
+            </if>
+            <if test="mmId != null">
+                #{mmId,jdbcType=INTEGER},
+            </if>
+            <if test="maId != null">
+                #{maId,jdbcType=INTEGER},
+            </if>
+            <if test="imaCode != null">
+                #{imaCode,jdbcType=VARCHAR},
+            </if>
+            <if test="imaName != null">
+                #{imaName,jdbcType=VARCHAR},
+            </if>
+            <if test="imaAddress != null">
+                #{imaAddress,jdbcType=VARCHAR},
+            </if>
+            <if test="imaPort != null">
+                #{imaPort,jdbcType=VARCHAR},
+            </if>
+            <if test="imaStatus != null">
+                #{imaStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="imaCreatetime != null">
+                #{imaCreatetime,jdbcType=VARCHAR},
+            </if>
+            <if test="imaCreateuser != null">
+                #{imaCreateuser,jdbcType=VARCHAR},
+            </if>
+            <if test="imaUpdatetime != null">
+                #{imaUpdatetime,jdbcType=VARCHAR},
+            </if>
+            <if test="imaUpdateuser != null">
+                #{imaUpdateuser,jdbcType=VARCHAR},
+            </if>
+            <if test="imaErrorJson != null">
+                #{imaErrorJson,jdbcType=VARCHAR},
+            </if>
+            <if test="imaPhysicalStatus != null">
+                #{imaPhysicalStatus,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <select id="countByExample" parameterType="com.fangda.skylot.mathine.model.parking.IftbMachineActionCriteria"
+            resultType="java.lang.Integer">
+        select count(*) from iftb_machine_action
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+    </select>
+    <update id="updateByExampleSelective" parameterType="map">
+        update iftb_machine_action
+        <set>
+            <if test="record.imaId != null">
+                ima_id = #{record.imaId,jdbcType=VARCHAR},
+            </if>
+            <if test="record.mmId != null">
+                mm_id = #{record.mmId,jdbcType=INTEGER},
+            </if>
+            <if test="record.maId != null">
+                ma_id = #{record.maId,jdbcType=INTEGER},
+            </if>
+            <if test="record.imaCode != null">
+                ima_code = #{record.imaCode,jdbcType=VARCHAR},
+            </if>
+            <if test="record.imaName != null">
+                ima_name = #{record.imaName,jdbcType=VARCHAR},
+            </if>
+            <if test="record.imaAddress != null">
+                ima_address = #{record.imaAddress,jdbcType=VARCHAR},
+            </if>
+            <if test="record.imaPort != null">
+                ima_port = #{record.imaPort,jdbcType=VARCHAR},
+            </if>
+            <if test="record.imaStatus != null">
+                ima_status = #{record.imaStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="record.imaCreatetime != null">
+                ima_createtime = #{record.imaCreatetime,jdbcType=VARCHAR},
+            </if>
+            <if test="record.imaCreateuser != null">
+                ima_createuser = #{record.imaCreateuser,jdbcType=VARCHAR},
+            </if>
+            <if test="record.imaUpdatetime != null">
+                ima_updatetime = #{record.imaUpdatetime,jdbcType=VARCHAR},
+            </if>
+            <if test="record.imaUpdateuser != null">
+                ima_updateuser = #{record.imaUpdateuser,jdbcType=VARCHAR},
+            </if>
+            <if test="record.imaErrorJson != null">
+                ima_error_json = #{record.imaErrorJson,jdbcType=VARCHAR},
+            </if>
+            <if test="record.imaPhysicalStatus != null">
+                ima_physical_status = #{record.imaPhysicalStatus,jdbcType=VARCHAR},
+            </if>
+        </set>
+        <if test="_parameter != null">
+            <include refid="Update_By_Example_Where_Clause"/>
+        </if>
+    </update>
+    <update id="updateByExample" parameterType="map">
+        update iftb_machine_action
+        set ima_id = #{record.imaId,jdbcType=VARCHAR},
+        mm_id = #{record.mmId,jdbcType=INTEGER},
+        ma_id = #{record.maId,jdbcType=INTEGER},
+        ima_code = #{record.imaCode,jdbcType=VARCHAR},
+        ima_name = #{record.imaName,jdbcType=VARCHAR},
+        ima_address = #{record.imaAddress,jdbcType=VARCHAR},
+        ima_port = #{record.imaPort,jdbcType=VARCHAR},
+        ima_status = #{record.imaStatus,jdbcType=VARCHAR},
+        ima_createtime = #{record.imaCreatetime,jdbcType=VARCHAR},
+        ima_createuser = #{record.imaCreateuser,jdbcType=VARCHAR},
+        ima_updatetime = #{record.imaUpdatetime,jdbcType=VARCHAR},
+        ima_updateuser = #{record.imaUpdateuser,jdbcType=VARCHAR},
+        ima_error_json = #{record.imaErrorJson,jdbcType=VARCHAR},
+        ima_physical_status = #{record.imaPhysicalStatus,jdbcType=VARCHAR}
+        <if test="_parameter != null">
+            <include refid="Update_By_Example_Where_Clause"/>
+        </if>
+    </update>
+    <update id="updateByPrimaryKeySelective" parameterType="com.fangda.skylot.mathine.model.parking.IftbMachineAction">
+        update iftb_machine_action
+        <set>
+            <if test="mmId != null">
+                mm_id = #{mmId,jdbcType=INTEGER},
+            </if>
+            <if test="maId != null">
+                ma_id = #{maId,jdbcType=INTEGER},
+            </if>
+            <if test="imaCode != null">
+                ima_code = #{imaCode,jdbcType=VARCHAR},
+            </if>
+            <if test="imaName != null">
+                ima_name = #{imaName,jdbcType=VARCHAR},
+            </if>
+            <if test="imaAddress != null">
+                ima_address = #{imaAddress,jdbcType=VARCHAR},
+            </if>
+            <if test="imaPort != null">
+                ima_port = #{imaPort,jdbcType=VARCHAR},
+            </if>
+            <if test="imaStatus != null">
+                ima_status = #{imaStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="imaCreatetime != null">
+                ima_createtime = #{imaCreatetime,jdbcType=VARCHAR},
+            </if>
+            <if test="imaCreateuser != null">
+                ima_createuser = #{imaCreateuser,jdbcType=VARCHAR},
+            </if>
+            <if test="imaUpdatetime != null">
+                ima_updatetime = #{imaUpdatetime,jdbcType=VARCHAR},
+            </if>
+            <if test="imaUpdateuser != null">
+                ima_updateuser = #{imaUpdateuser,jdbcType=VARCHAR},
+            </if>
+            <if test="imaErrorJson != null">
+                ima_error_json = #{imaErrorJson,jdbcType=VARCHAR},
+            </if>
+            <if test="imaPhysicalStatus != null">
+                ima_physical_status = #{imaPhysicalStatus,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where ima_id = #{imaId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.fangda.skylot.mathine.model.parking.IftbMachineAction">
+        UPDATE iftb_machine_action
+        SET mm_id               = #{mmId,jdbcType=INTEGER},
+            ma_id               = #{maId,jdbcType=INTEGER},
+            ima_code            = #{imaCode,jdbcType=VARCHAR},
+            ima_name            = #{imaName,jdbcType=VARCHAR},
+            ima_address         = #{imaAddress,jdbcType=VARCHAR},
+            ima_port            = #{imaPort,jdbcType=VARCHAR},
+            ima_status          = #{imaStatus,jdbcType=VARCHAR},
+            ima_createtime      = #{imaCreatetime,jdbcType=VARCHAR},
+            ima_createuser      = #{imaCreateuser,jdbcType=VARCHAR},
+            ima_updatetime      = #{imaUpdatetime,jdbcType=VARCHAR},
+            ima_updateuser      = #{imaUpdateuser,jdbcType=VARCHAR},
+            ima_error_json      = #{imaErrorJson,jdbcType=VARCHAR},
+            ima_physical_status = #{imaPhysicalStatus,jdbcType=VARCHAR}
+        WHERE ima_id = #{imaId,jdbcType=VARCHAR}
+    </update>
+</mapper>

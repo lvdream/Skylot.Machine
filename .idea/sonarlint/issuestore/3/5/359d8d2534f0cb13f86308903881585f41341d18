@@ -1,0 +1,48 @@
+
+gsquid:S1192"RDefine a constant instead of duplicating this literal "skylot.machine.id" 5 times.(ë’â­
+Bsquid:S1481"(Remove this unused "ids" local variable.(´·ÁÏøÿÿÿÿ
+lsquid:S3776"RRefactor this method to reduce its Cognitive Complexity from 24 to the 15 allowed.(ßİØ“şÿÿÿÿ
+hsquid:S1192"SDefine a constant instead of duplicating this literal "oftbCustomerCarDao" 4 times.(Ïõ¹
+‚squid:S1192"hDefine a constant instead of duplicating this literal "],å½“å‰æ“ä½œ[å­˜è½¦],å½“å‰è½¦è¾†æ˜¯[" 6 times.(Á¢ÓÂşÿÿÿÿ
+=squid:S1148"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+Bsquid:S1481"(Remove this unused "ids" local variable.(¢òÁÿÿÿÿÿ
+Isquid:S1066"/Merge this if statement with the enclosing one.(¶êŒ¿ıÿÿÿÿ
+Lsquid:S1135"2Complete the task associated to this TODO comment.(Ù…Ú”øÿÿÿÿ
+Isquid:S1066"/Merge this if statement with the enclosing one.(¹ø‘âüÿÿÿÿ
+@squid:S1075"&Remove this hard-coded path-delimiter.(üµó«ıÿÿÿÿ
+Osquid:S1141"5Extract this nested try block into a separate method.(¡»¢üùÿÿÿÿ
+hsquid:S1192"SDefine a constant instead of duplicating this literal "oftbMathineItemDao" 3 times.(ÆÛàŠ
+lsquid:S1192"RDefine a constant instead of duplicating this literal "system.properties" 8 times.(¬Óç™ıÿÿÿÿ
+lsquid:S3776"RRefactor this method to reduce its Cognitive Complexity from 24 to the 15 allowed.(ù²²âüÿÿÿÿ
+lsquid:S3776"RRefactor this method to reduce its Cognitive Complexity from 35 to the 15 allowed.(Şôõøÿÿÿÿÿ
+gsquid:S3776"RRefactor this method to reduce its Cognitive Complexity from 31 to the 15 allowed.(—á‚Ó
+Bsquid:S1481"(Remove this unused "ids" local variable.(´·ÁÏøÿÿÿÿ
+Psquid:S1854";Remove this useless assignment to local variable "factory".(Ìª³›
+Qsquid:S1854"7Remove this useless assignment to local variable "ids".(´·ÁÏøÿÿÿÿ
+=squid:S1148"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+=squid:S1148"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+Bsquid:S1481"(Remove this unused "ids" local variable.(´·ÁÏøÿÿÿÿ
+=squid:S1148"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+lsquid:S3776"RRefactor this method to reduce its Cognitive Complexity from 24 to the 15 allowed.( ìÖúÿÿÿÿ
+jsquid:S1192"PDefine a constant instead of duplicating this literal "å½“å‰æ—¶é—´:[" 11 times.(Á¢ÓÂşÿÿÿÿ
+Bsquid:S1481"(Remove this unused "ids" local variable.(´·ÁÏøÿÿÿÿ
+Qsquid:S1854"7Remove this useless assignment to local variable "ids".(´·ÁÏøÿÿÿÿ
+Isquid:S1066"/Merge this if statement with the enclosing one.(¹ø‘âüÿÿÿÿ
+Lsquid:S1135"2Complete the task associated to this TODO comment.(©¯‚åúÿÿÿÿ
+dsquid:S00100"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Ä‘©
+Osquid:S1141"5Extract this nested try block into a separate method.(¡»¢üùÿÿÿÿ
+\squid:S1192"GDefine a constant instead of duplicating this literal "update" 5 times.(°Êğğ
+=squid:S1148"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+Qsquid:S1854"7Remove this useless assignment to local variable "ids".(´·ÁÏøÿÿÿÿ
+Isquid:S1066"/Merge this if statement with the enclosing one.(¹ø‘âüÿÿÿÿ
+`squid:CommentedOutCodeLine"<This block of commented-out lines of code should be removed.(‹ç¬Ö
+esquid:S1192"PDefine a constant instead of duplicating this literal "mstbCustomerDao" 3 times.(‘á¾Ú
+lsquid:S3776"RRefactor this method to reduce its Cognitive Complexity from 24 to the 15 allowed.(…ã€¯ıÿÿÿÿ
+lsquid:S3776"RRefactor this method to reduce its Cognitive Complexity from 24 to the 15 allowed.(ì»¤øÿÿÿÿ
+Isquid:S1066"/Merge this if statement with the enclosing one.(¹ø‘âüÿÿÿÿ
+_squid:HiddenFieldCheck":Rename "client" which hides the field declared at line 64.(Ø»çüÿÿÿÿ
+Isquid:S1066"/Merge this if statement with the enclosing one.(¹ø‘âüÿÿÿÿ
+Isquid:S1066"/Merge this if statement with the enclosing one.(¹ø‘âüÿÿÿÿ
+Qsquid:S1854"7Remove this useless assignment to local variable "ids".(¢òÁÿÿÿÿÿ
+Qsquid:S1854"7Remove this useless assignment to local variable "ids".(´·ÁÏøÿÿÿÿ
+‚squid:S1192"hDefine a constant instead of duplicating this literal "],å½“å‰æ“ä½œ[å–è½¦],å½“å‰è½¦è¾†æ˜¯[" 5 times.(ƒ¶ëïıÿÿÿÿ

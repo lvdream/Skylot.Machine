@@ -1,0 +1,559 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="issues">
+    <option name="index">
+      <map>
+        <entry key="/Dummy.txt">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Fangda.PMS/Version Control/1.5.1/src/main/java/com/fangda/pms/mapper/projectstageaddtional/MstbProjectStageAddtionalMapper.xml">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Fangda.PMS/Version Control/1.5.1/src/main/java/com/fangda/pms/service/impl/workflow/WfDesignCoreProgressSizeModificationImpl.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Fangda.PMS/Version Control/1.5.1/src/main/webapp/WEB-INF/plugins/js/business/workflow/material_add/detail.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Fangda.PMS/Version Control/pms.1.4.0/src/main/filters-dev.properties">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Fangda.PMS/Version Control/pms.1.4.0/src/main/java/com/fangda/pms/mapper/purchaseplan/MstbPurchasePlanMapper.xml">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Fangda.PMS/Version Control/pms.1.4.0/src/main/java/com/fangda/pms/model/workflow/MstbWorkflowProcessMain.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Fangda.PMS/Version Control/pms.1.4.0/src/main/java/com/fangda/pms/service/impl/optimize/OptimizationServiceImpl.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Fangda.PMS/Version Control/pms.1.4.0/src/main/java/com/fangda/pms/service/impl/purchaseplan/PurchasePlanServiceImpl.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Fangda.PMS/Version Control/pms.1.4.0/src/main/java/com/fangda/pms/service/impl/workflow/WfDeleteMaterialProcessImpl.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Fangda.PMS/Version Control/pms.1.4.0/src/main/java/com/fangda/pms/service/impl/workflow/deletematerial/DeleteMaterialUnit.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Fangda.PMS/Version Control/pms.1.4.0/src/main/java/com/fangda/pms/util/WorkFlowHelper.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Fangda.PMS/Version Control/pms.1.4.0/src/main/java/com/fangda/pms/util/constant/ConstantWorkflow.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Fangda.PMS/Version Control/pms.1.4.0/src/main/java/com/fangda/pms/web/workflow/WorkFlowManagerController.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Fangda.PMS/Version Control/pms.1.4.0/src/main/resources/message/workflow_zh_CN.properties">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Fangda.PMS/Version Control/pms.1.4.0/src/main/webapp/WEB-INF/layouts/workflow_template.jsp">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Fangda.PMS/Version Control/pms.1.4.0/src/main/webapp/WEB-INF/plugins/js/business/workflow/manager/workflow_approved.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Fangda.PMS/Version Control/pms.1.4.0/src/main/webapp/WEB-INF/plugins/js/business/workflow/manager/workflow_start.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Fangda.PMS/Version Control/pms.1.4.0/src/main/webapp/WEB-INF/plugins/js/ligerUI/js/ligerui.all.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Fangda.PMS/Version Control/pms.1.4.0/src/main/webapp/WEB-INF/tiles-workflow.xml">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Fangda.PMS/Version Control/pms.1.4.0/src/main/webapp/WEB-INF/views/jsp/workFlow/manager/workflow_approved.jsp">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Fangda.PMS/Version Control/pms.1.4.0/src/main/webapp/WEB-INF/views/jsp/workFlow/manager/workflow_copy.jsp">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Fangda.PMS/Version Control/pms.1.4.0/src/main/webapp/WEB-INF/views/jsp/workFlow/manager/workflow_manager.jsp">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Fangda.PMS/Version Control/pms.1.4.0/src/main/webapp/WEB-INF/views/jsp/workFlow/manager/workflow_start.jsp">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Fangda.PMS/Version Control/pms.1.4.0/src/main/webapp/WEB-INF/views/jsp/workFlow/manager/workflow_todo.jsp">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Fangda.PMS/Version Control/pms.1.4.0/src/test/java/WebServiceTest.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Fangda.WorkFlow/trunk/fangda.workflow/pom.xml">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Fangda.WorkFlow/trunk/fangda.workflow/src/main/java/com/fangda/workflow/Service/impl/WorkflowBaseActionImpl.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Fangda.WorkFlow/trunk/fangda.workflow/src/main/java/com/fangda/workflow/Service/impl/processmain/ProcessMainServiceImpl.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Fangda.WorkFlow/trunk/fangda.workflow/src/main/java/com/fangda/workflow/dao/impl/processmain/ProcessMainDAOImpl.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Fangda.WorkFlow/trunk/fangda.workflow/src/main/java/com/fangda/workflow/mapper/processmain/MstbWorkflowProcessMainMapper.xml">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Fangda.WorkFlow/trunk/fangda.workflow/src/main/java/com/fangda/workflow/model/processmain/MstbWorkflowProcessMain.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Fangda.WorkFlow/trunk/fangda.workflow/src/main/java/com/fangda/workflow/model/processmain/MstbWorkflowProcessMainCriteria.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Fangda.WorkFlow/trunk/fangda.workflow/src/main/java/com/fangda/workflow/util/SearchOption.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Fangda.WorkFlow/trunk/fangda.workflow/src/main/resources/log4j.properties">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Fangda.WorkFlow/trunk/fangda.workflow/src/main/resources/spring-config.xml">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Fangda.WorkFlow/trunk/fangda.workflow/src/test/java/WebServiceTest.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Skylot/pom.xml">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Skylot/src/main/filters-dev.properties">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Skylot/src/main/java/com/fangda/skylot/service/impl/utils/AttachmentServiceImpl.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Skylot/src/main/java/com/fangda/skylot/web/machine/MachineController.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Skylot/src/main/resources/spring-config.xml">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Skylot/src/main/webapp/WEB-INF/layouts/classic_iframe.jsp">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Skylot/src/main/webapp/WEB-INF/plugins/js/business/app.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Skylot/src/main/webapp/WEB-INF/plugins/js/business/mathine/add.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Skylot/src/main/webapp/WEB-INF/plugins/js/business/mathine/list.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Skylot/src/main/webapp/WEB-INF/plugins/js/metronic/bootstrap/bootstrap-closable-tab.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Skylot/src/main/webapp/WEB-INF/tiles-mathine.xml">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Skylot/src/main/webapp/WEB-INF/tiles.xml">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Skylot/src/main/webapp/WEB-INF/views/app.jsp">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Skylot/src/main/webapp/WEB-INF/views/jsp/business/mathine/add.jsp">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Skylot/src/main/webapp/WEB-INF/views/jsp/business/mathine/list.jsp">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Skylot/src/main/webapp/WEB-INF/web.xml">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Skylot/src/main/webapp/index.jsp">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/pom.xml">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/filters-test81.properties">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/filters-test82.properties">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/java/com/fangda/skylot/mathine/mapper/customer/IftbItemCustomerMapper.xml">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/java/com/fangda/skylot/mathine/model/customer/IftbItemCustomer.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/java/com/fangda/skylot/mathine/model/customer/IftbItemCustomerCriteria.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/java/com/fangda/skylot/mathine/scheduler/springtask/CompressTask.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/java/com/fangda/skylot/mathine/service/WsSkylotMachine.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/java/com/fangda/skylot/mathine/service/impl/ShowPicRestService.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/java/com/fangda/skylot/mathine/service/impl/WsSkylotMachineImpl.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/java/com/fangda/skylot/mathine/service/impl/customer/CustomerWSImpl.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/java/com/fangda/skylot/mathine/utils/constant/Constant.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/java/com/fangda/skylot/mathine/utils/page/PagePreparer.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/java/com/fangda/skylot/mathine/web/IndexController.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/resources/spring-config.xml">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/resources/spring-servlet.xml">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/resources/spring-timertask.xml">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/webapp/WEB-INF/basefragments/_footer_metronic.jsp">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/webapp/WEB-INF/basefragments/_header_metronic.jsp">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/webapp/WEB-INF/basefragments/_menu_metronic.jsp">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/webapp/WEB-INF/basefragments/_nav_metronic.jsp">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/webapp/WEB-INF/layouts/classic_iframe.jsp">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/webapp/WEB-INF/layouts/classic_metronic.jsp">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/webapp/WEB-INF/plugins/css/ligerUI/skins/Aqua/css/ligerui-grid.css">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/webapp/WEB-INF/plugins/css/ligerUI/skins/Aqua/css/ligerui-layout.css">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/webapp/WEB-INF/plugins/css/metronic/google.css">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/webapp/WEB-INF/plugins/js/business/app.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/webapp/WEB-INF/plugins/js/business/cus.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/webapp/WEB-INF/plugins/js/business/menu.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/webapp/WEB-INF/plugins/js/business/test/test.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/webapp/WEB-INF/plugins/js/common_metronic.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/webapp/WEB-INF/plugins/js/ligerUI/js/plugins/ligerGrid.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/webapp/WEB-INF/plugins/js/metronic/bootstrap/bootstrap-closable-tab.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/webapp/WEB-INF/plugins/js/metronic/menu.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/webapp/WEB-INF/tiles.xml">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/app.jsp">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/jsp/test.jsp">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/webapp/WEB-INF/web.xml">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/webapp/index.jsp">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/test/java/Test.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../../../02.Personal/01.Autotest/pom.xml">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../../../02.Personal/01.Autotest/src/main/java/org/mybatis/generator/plugins/LombokPlugin.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../../../02.Personal/01.Autotest/src/main/java/org/mybatis/generator/plugins/MySQLPaginationPlugin.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../../../02.Personal/01.Autotest/src/main/java/plugins/LombokPlugin.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../../../02.Personal/01.Autotest/src/main/java/plugins/MySQLPaginationPlugin.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../../../02.Personal/01.Autotest/src/main/java/saul/app/autotest/mapper/CmtbDictionaryMapper.xml">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../../../02.Personal/01.Autotest/src/main/java/saul/app/autotest/model/CmtbDictionary.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../../../02.Personal/01.Autotest/src/main/java/saul/app/autotest/model/CmtbDictionaryCriteria.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../../../02.Personal/01.Autotest/src/main/java/saul/app/autotest/utils/PagePreparer.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../../../02.Personal/01.Autotest/src/main/resources/generatorConfig.xml">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../../../02.Personal/01.Autotest/src/main/webapp/WEB-INF/web.xml">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$APPLICATION_CONFIG_DIR$/consoles/db/e6c96309-8f7d-4aad-adf7-8c39d5be8d55/console_1.sql">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="/a.dummy">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="/a.sql">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="/dummy.sql">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="/fragment.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>

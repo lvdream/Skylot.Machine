@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fangda.skylot.mathine.dao.customer.OftbCustomerCarMapper" >
+  <resultMap id="BaseResultMap" type="com.fangda.skylot.mathine.model.customer.OftbCustomerCar" >
+    <id column="occ_id" property="occId" jdbcType="INTEGER" />
+    <result column="mc_id" property="mcId" jdbcType="INTEGER" />
+    <result column="occ_name" property="occName" jdbcType="VARCHAR" />
+    <result column="occ_code" property="occCode" jdbcType="VARCHAR" />
+    <result column="occ_type" property="occType" jdbcType="VARCHAR" />
+    <result column="occ_status" property="occStatus" jdbcType="VARCHAR" />
+    <result column="occ_createuser" property="occCreateuser" jdbcType="VARCHAR" />
+    <result column="occ_createdate" property="occCreatedate" jdbcType="VARCHAR" />
+    <result column="occ_updateuser" property="occUpdateuser" jdbcType="VARCHAR" />
+    <result column="occ_updatedate" property="occUpdatedate" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    occ_id, mc_id, occ_name, occ_code, occ_type, occ_status, occ_createuser, occ_createdate, 
+    occ_updateuser, occ_updatedate
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.fangda.skylot.mathine.model.customer.OftbCustomerCarCriteria" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from oftb_customer_car
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="page != null" >
+      limit #{page.begin} , #{page.length}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from oftb_customer_car
+    where occ_id = #{occId,jdbcType=INTEGER}
+  </select>
+  <select id="selectByCarExample" resultType="java.lang.Integer" parameterType="java.lang.String" >
+    SELECT count(*)
+    from oftb_customer_car AS occ
+    LEFT JOIN mstb_customer AS mc on occ.mc_id=mc.mc_id
+    LEFT JOIN iftb_item_customer as iic on iic.mc_id=occ.mc_id
+    WHERE
+    <if test="occCode != null" >
+      occ.occ_code=#{occCode}
+    </if>
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from oftb_customer_car
+    where occ_id = #{occId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.fangda.skylot.mathine.model.customer.OftbCustomerCarCriteria" >
+    delete from oftb_customer_car
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.fangda.skylot.mathine.model.customer.OftbCustomerCar" >
+    insert into oftb_customer_car (occ_id, mc_id, occ_name, 
+      occ_code, occ_type, occ_status, 
+      occ_createuser, occ_createdate, occ_updateuser, 
+      occ_updatedate)
+    values (#{occId,jdbcType=INTEGER}, #{mcId,jdbcType=INTEGER}, #{occName,jdbcType=VARCHAR}, 
+      #{occCode,jdbcType=VARCHAR}, #{occType,jdbcType=VARCHAR}, #{occStatus,jdbcType=VARCHAR}, 
+      #{occCreateuser,jdbcType=VARCHAR}, #{occCreatedate,jdbcType=VARCHAR}, #{occUpdateuser,jdbcType=VARCHAR}, 
+      #{occUpdatedate,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.fangda.skylot.mathine.model.customer.OftbCustomerCar" >
+    insert into oftb_customer_car
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="occId != null" >
+        occ_id,
+      </if>
+      <if test="mcId != null" >
+        mc_id,
+      </if>
+      <if test="occName != null" >
+        occ_name,
+      </if>
+      <if test="occCode != null" >
+        occ_code,
+      </if>
+      <if test="occType != null" >
+        occ_type,
+      </if>
+      <if test="occStatus != null" >
+        occ_status,
+      </if>
+      <if test="occCreateuser != null" >
+        occ_createuser,
+      </if>
+      <if test="occCreatedate != null" >
+        occ_createdate,
+      </if>
+      <if test="occUpdateuser != null" >
+        occ_updateuser,
+      </if>
+      <if test="occUpdatedate != null" >
+        occ_updatedate,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="occId != null" >
+        #{occId,jdbcType=INTEGER},
+      </if>
+      <if test="mcId != null" >
+        #{mcId,jdbcType=INTEGER},
+      </if>
+      <if test="occName != null" >
+        #{occName,jdbcType=VARCHAR},
+      </if>
+      <if test="occCode != null" >
+        #{occCode,jdbcType=VARCHAR},
+      </if>
+      <if test="occType != null" >
+        #{occType,jdbcType=VARCHAR},
+      </if>
+      <if test="occStatus != null" >
+        #{occStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="occCreateuser != null" >
+        #{occCreateuser,jdbcType=VARCHAR},
+      </if>
+      <if test="occCreatedate != null" >
+        #{occCreatedate,jdbcType=VARCHAR},
+      </if>
+      <if test="occUpdateuser != null" >
+        #{occUpdateuser,jdbcType=VARCHAR},
+      </if>
+      <if test="occUpdatedate != null" >
+        #{occUpdatedate,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.fangda.skylot.mathine.model.customer.OftbCustomerCarCriteria" resultType="java.lang.Integer" >
+    select count(*) from oftb_customer_car
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update oftb_customer_car
+    <set >
+      <if test="record.occId != null" >
+        occ_id = #{record.occId,jdbcType=INTEGER},
+      </if>
+      <if test="record.mcId != null" >
+        mc_id = #{record.mcId,jdbcType=INTEGER},
+      </if>
+      <if test="record.occName != null" >
+        occ_name = #{record.occName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.occCode != null" >
+        occ_code = #{record.occCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.occType != null" >
+        occ_type = #{record.occType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.occStatus != null" >
+        occ_status = #{record.occStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="record.occCreateuser != null" >
+        occ_createuser = #{record.occCreateuser,jdbcType=VARCHAR},
+      </if>
+      <if test="record.occCreatedate != null" >
+        occ_createdate = #{record.occCreatedate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.occUpdateuser != null" >
+        occ_updateuser = #{record.occUpdateuser,jdbcType=VARCHAR},
+      </if>
+      <if test="record.occUpdatedate != null" >
+        occ_updatedate = #{record.occUpdatedate,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update oftb_customer_car
+    set occ_id = #{record.occId,jdbcType=INTEGER},
+      mc_id = #{record.mcId,jdbcType=INTEGER},
+      occ_name = #{record.occName,jdbcType=VARCHAR},
+      occ_code = #{record.occCode,jdbcType=VARCHAR},
+      occ_type = #{record.occType,jdbcType=VARCHAR},
+      occ_status = #{record.occStatus,jdbcType=VARCHAR},
+      occ_createuser = #{record.occCreateuser,jdbcType=VARCHAR},
+      occ_createdate = #{record.occCreatedate,jdbcType=VARCHAR},
+      occ_updateuser = #{record.occUpdateuser,jdbcType=VARCHAR},
+      occ_updatedate = #{record.occUpdatedate,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.fangda.skylot.mathine.model.customer.OftbCustomerCar" >
+    update oftb_customer_car
+    <set >
+      <if test="mcId != null" >
+        mc_id = #{mcId,jdbcType=INTEGER},
+      </if>
+      <if test="occName != null" >
+        occ_name = #{occName,jdbcType=VARCHAR},
+      </if>
+      <if test="occCode != null" >
+        occ_code = #{occCode,jdbcType=VARCHAR},
+      </if>
+      <if test="occType != null" >
+        occ_type = #{occType,jdbcType=VARCHAR},
+      </if>
+      <if test="occStatus != null" >
+        occ_status = #{occStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="occCreateuser != null" >
+        occ_createuser = #{occCreateuser,jdbcType=VARCHAR},
+      </if>
+      <if test="occCreatedate != null" >
+        occ_createdate = #{occCreatedate,jdbcType=VARCHAR},
+      </if>
+      <if test="occUpdateuser != null" >
+        occ_updateuser = #{occUpdateuser,jdbcType=VARCHAR},
+      </if>
+      <if test="occUpdatedate != null" >
+        occ_updatedate = #{occUpdatedate,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where occ_id = #{occId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.fangda.skylot.mathine.model.customer.OftbCustomerCar" >
+    update oftb_customer_car
+    set mc_id = #{mcId,jdbcType=INTEGER},
+      occ_name = #{occName,jdbcType=VARCHAR},
+      occ_code = #{occCode,jdbcType=VARCHAR},
+      occ_type = #{occType,jdbcType=VARCHAR},
+      occ_status = #{occStatus,jdbcType=VARCHAR},
+      occ_createuser = #{occCreateuser,jdbcType=VARCHAR},
+      occ_createdate = #{occCreatedate,jdbcType=VARCHAR},
+      occ_updateuser = #{occUpdateuser,jdbcType=VARCHAR},
+      occ_updatedate = #{occUpdatedate,jdbcType=VARCHAR}
+    where occ_id = #{occId,jdbcType=INTEGER}
+  </update>
+</mapper>

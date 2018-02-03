@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fangda.skylot.mathine.dao.parking.IftbScheduleActionMapper">
+  <resultMap id="BaseResultMap" type="com.fangda.skylot.mathine.model.utils.IftbScheduleAction" >
+    <id column="isa_id" property="isaId" jdbcType="INTEGER" />
+    <result column="isa_business_obj" property="isaBusinessObj" jdbcType="VARCHAR" />
+    <result column="isa_module_id" property="isaModuleId" jdbcType="VARCHAR" />
+    <result column="isa_item_id" property="isaItemId" jdbcType="VARCHAR" />
+    <result column="isa_schedule_date" property="isaScheduleDate" jdbcType="VARCHAR" />
+    <result column="isa_schedule_type" property="isaScheduleType" jdbcType="VARCHAR" />
+    <result column="isa_schedule_message" property="isaScheduleMessage" jdbcType="VARCHAR" />
+    <result column="isa_status" property="isaStatus" jdbcType="VARCHAR" />
+    <result column="isa_createdate" property="isaCreatedate" jdbcType="VARCHAR" />
+    <result column="isa_createuser" property="isaCreateuser" jdbcType="VARCHAR" />
+    <result column="isa_updatedate" property="isaUpdatedate" jdbcType="VARCHAR" />
+    <result column="isa_updateuser" property="isaUpdateuser" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    isa_id, isa_business_obj, isa_module_id, isa_item_id, isa_schedule_date, isa_schedule_type, 
+    isa_schedule_message, isa_status, isa_createdate, isa_createuser, isa_updatedate,
+    isa_updateuser
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap"
+          parameterType="com.fangda.skylot.mathine.model.utils.IftbScheduleActionCriteria">
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from iftb_schedule_action
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="page != null" >
+      limit #{page.begin} , #{page.length}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from iftb_schedule_action
+    where isa_id = #{isaId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from iftb_schedule_action
+    where isa_id = #{isaId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.fangda.skylot.mathine.model.utils.IftbScheduleActionCriteria">
+    delete from iftb_schedule_action
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.fangda.skylot.mathine.model.utils.IftbScheduleAction">
+    insert into iftb_schedule_action (isa_id, isa_business_obj, isa_module_id, 
+      isa_item_id, isa_schedule_date, isa_schedule_type, 
+      isa_schedule_message, isa_status, isa_createdate,
+    isa_createuser, isa_updatedate, isa_updateuser
+    )
+    values (#{isaId,jdbcType=INTEGER}, #{isaBusinessObj,jdbcType=VARCHAR}, #{isaModuleId,jdbcType=VARCHAR}, 
+      #{isaItemId,jdbcType=VARCHAR}, #{isaScheduleDate,jdbcType=VARCHAR}, #{isaScheduleType,jdbcType=VARCHAR}, 
+      #{isaScheduleMessage,jdbcType=VARCHAR}, #{isaStatus,jdbcType=VARCHAR}, #{isaCreatedate,jdbcType=VARCHAR},
+    #{isaCreateuser,jdbcType=VARCHAR}, #{isaUpdatedate,jdbcType=VARCHAR}, #{isaUpdateuser,jdbcType=VARCHAR}
+    )
+  </insert>
+  <insert id="insertSelective" parameterType="com.fangda.skylot.mathine.model.utils.IftbScheduleAction">
+    insert into iftb_schedule_action
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="isaId != null" >
+        isa_id,
+      </if>
+      <if test="isaBusinessObj != null" >
+        isa_business_obj,
+      </if>
+      <if test="isaModuleId != null" >
+        isa_module_id,
+      </if>
+      <if test="isaItemId != null" >
+        isa_item_id,
+      </if>
+      <if test="isaScheduleDate != null" >
+        isa_schedule_date,
+      </if>
+      <if test="isaScheduleType != null" >
+        isa_schedule_type,
+      </if>
+      <if test="isaScheduleMessage != null" >
+        isa_schedule_message,
+      </if>
+      <if test="isaStatus != null" >
+        isa_status,
+      </if>
+      <if test="isaCreatedate != null" >
+        isa_createdate,
+      </if>
+      <if test="isaCreateuser != null" >
+        isa_createuser,
+      </if>
+      <if test="isaUpdatedate != null" >
+        isa_updatedate,
+      </if>
+      <if test="isaUpdateuser != null" >
+        isa_updateuser,
+      </if>
+
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="isaId != null" >
+        #{isaId,jdbcType=INTEGER},
+      </if>
+      <if test="isaBusinessObj != null" >
+        #{isaBusinessObj,jdbcType=VARCHAR},
+      </if>
+      <if test="isaModuleId != null" >
+        #{isaModuleId,jdbcType=VARCHAR},
+      </if>
+      <if test="isaItemId != null" >
+        #{isaItemId,jdbcType=VARCHAR},
+      </if>
+      <if test="isaScheduleDate != null" >
+        #{isaScheduleDate,jdbcType=VARCHAR},
+      </if>
+      <if test="isaScheduleType != null" >
+        #{isaScheduleType,jdbcType=VARCHAR},
+      </if>
+      <if test="isaScheduleMessage != null" >
+        #{isaScheduleMessage,jdbcType=VARCHAR},
+      </if>
+      <if test="isaStatus != null" >
+        #{isaStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="isaCreatedate != null" >
+        #{isaCreatedate,jdbcType=VARCHAR},
+      </if>
+      <if test="isaCreateuser != null" >
+        #{isaCreateuser,jdbcType=VARCHAR},
+      </if>
+      <if test="isaUpdatedate != null" >
+        #{isaUpdatedate,jdbcType=VARCHAR},
+      </if>
+      <if test="isaUpdateuser != null" >
+        #{isaUpdateuser,jdbcType=VARCHAR},
+      </if>
+
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.fangda.skylot.mathine.model.utils.IftbScheduleActionCriteria"
+          resultType="java.lang.Integer">
+    select count(*) from iftb_schedule_action
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update iftb_schedule_action
+    <set >
+      <if test="record.isaBusinessObj != null" >
+        isa_business_obj = #{record.isaBusinessObj,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isaModuleId != null" >
+        isa_module_id = #{record.isaModuleId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isaItemId != null" >
+        isa_item_id = #{record.isaItemId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isaScheduleDate != null" >
+        isa_schedule_date = #{record.isaScheduleDate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isaScheduleType != null" >
+        isa_schedule_type = #{record.isaScheduleType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isaScheduleMessage != null" >
+        isa_schedule_message = #{record.isaScheduleMessage,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isaStatus != null" >
+        isa_status = #{record.isaStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isaCreatedate != null" >
+        isa_createdate = #{record.isaCreatedate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isaCreateuser != null" >
+        isa_createuser = #{record.isaCreateuser,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isaUpdatedate != null" >
+        isa_updatedate = #{record.isaUpdatedate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isaUpdateuser != null" >
+        isa_updateuser = #{record.isaUpdateuser,jdbcType=VARCHAR},
+      </if>
+
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update iftb_schedule_action
+    set isa_id = #{record.isaId,jdbcType=INTEGER},
+      isa_business_obj = #{record.isaBusinessObj,jdbcType=VARCHAR},
+      isa_module_id = #{record.isaModuleId,jdbcType=VARCHAR},
+      isa_item_id = #{record.isaItemId,jdbcType=VARCHAR},
+      isa_schedule_date = #{record.isaScheduleDate,jdbcType=VARCHAR},
+      isa_schedule_type = #{record.isaScheduleType,jdbcType=VARCHAR},
+      isa_schedule_message = #{record.isaScheduleMessage,jdbcType=VARCHAR},
+      isa_status = #{record.isaStatus,jdbcType=VARCHAR},
+      isa_createdate = #{record.isaCreatedate,jdbcType=VARCHAR},
+      isa_createuser = #{record.isaCreateuser,jdbcType=VARCHAR},
+      isa_updatedate = #{record.isaUpdatedate,jdbcType=VARCHAR},
+    isa_updateuser = #{record.isaUpdateuser,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.fangda.skylot.mathine.model.utils.IftbScheduleAction">
+    update iftb_schedule_action
+    <set >
+      <if test="isaBusinessObj != null" >
+        isa_business_obj = #{isaBusinessObj,jdbcType=VARCHAR},
+      </if>
+      <if test="isaModuleId != null" >
+        isa_module_id = #{isaModuleId,jdbcType=VARCHAR},
+      </if>
+      <if test="isaItemId != null" >
+        isa_item_id = #{isaItemId,jdbcType=VARCHAR},
+      </if>
+      <if test="isaScheduleDate != null" >
+        isa_schedule_date = #{isaScheduleDate,jdbcType=VARCHAR},
+      </if>
+      <if test="isaScheduleType != null" >
+        isa_schedule_type = #{isaScheduleType,jdbcType=VARCHAR},
+      </if>
+      <if test="isaScheduleMessage != null" >
+        isa_schedule_message = #{isaScheduleMessage,jdbcType=VARCHAR},
+      </if>
+      <if test="isaStatus != null" >
+        isa_status = #{isaStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="isaCreatedate != null" >
+        isa_createdate = #{isaCreatedate,jdbcType=VARCHAR},
+      </if>
+      <if test="isaCreateuser != null" >
+        isa_createuser = #{isaCreateuser,jdbcType=VARCHAR},
+      </if>
+      <if test="isaUpdatedate != null" >
+        isa_updatedate = #{isaUpdatedate,jdbcType=VARCHAR},
+      </if>
+      <if test="isaUpdateuser != null" >
+        isa_updateuser = #{isaUpdateuser,jdbcType=VARCHAR},
+      </if>
+
+    </set>
+    where isa_id = #{isaId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.fangda.skylot.mathine.model.utils.IftbScheduleAction">
+    update iftb_schedule_action
+    set isa_business_obj = #{isaBusinessObj,jdbcType=VARCHAR},
+      isa_module_id = #{isaModuleId,jdbcType=VARCHAR},
+      isa_item_id = #{isaItemId,jdbcType=VARCHAR},
+      isa_schedule_date = #{isaScheduleDate,jdbcType=VARCHAR},
+      isa_schedule_type = #{isaScheduleType,jdbcType=VARCHAR},
+      isa_schedule_message = #{isaScheduleMessage,jdbcType=VARCHAR},
+      isa_status = #{isaStatus,jdbcType=VARCHAR},
+      isa_createdate = #{isaCreatedate,jdbcType=VARCHAR},
+      isa_createuser = #{isaCreateuser,jdbcType=VARCHAR},
+      isa_updatedate = #{isaUpdatedate,jdbcType=VARCHAR},
+    isa_updateuser = #{isaUpdateuser,jdbcType=VARCHAR}
+    where isa_id = #{isaId,jdbcType=INTEGER}
+  </update>
+</mapper>

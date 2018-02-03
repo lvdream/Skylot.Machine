@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fangda.skylot.mathine.dao.parking.TstbMathineParkingLogMapper">
+    <resultMap id="BaseResultMap" type="com.fangda.skylot.mathine.model.parking.TstbMathineParkingLog">
+        <id column="tmpl_id" property="tmplId" jdbcType="INTEGER"/>
+        <result column="ima_id" property="imaId" jdbcType="VARCHAR"/>
+        <result column="tmpl_car" property="tmplCar" jdbcType="VARCHAR"/>
+        <result column="tmpl_physical_code" property="tmplPhysicalCode" jdbcType="VARCHAR"/>
+        <result column="tmpl_customer" property="tmplCustomer" jdbcType="VARCHAR"/>
+        <result column="tmpl_type" property="tmplType" jdbcType="VARCHAR"/>
+        <result column="tmpl_status" property="tmplStatus" jdbcType="VARCHAR"/>
+        <result column="tmpl_createdate" property="tmplCreatedate" jdbcType="VARCHAR"/>
+        <result column="tmpl_createuser" property="tmplCreateuser" jdbcType="VARCHAR"/>
+        <result column="tmpl_updatedate" property="tmplUpdatedate" jdbcType="VARCHAR"/>
+        <result column="tmpl_updateuser" property="tmplUpdateuser" jdbcType="VARCHAR"/>
+        <result column="endTime" property="endTime" jdbcType="VARCHAR"/>
+        <result column="ima_name" property="imaName" jdbcType="VARCHAR"/>
+        <result column="tmpl_diection_code" property="tmplDiectionCode" jdbcType="VARCHAR"/>
+        <result column="tmpl_operation_duriation_total" property="tmplOperationDuriationTotal" jdbcType="VARCHAR"/>
+        <result column="tmpl_operation_duriation_routing" property="tmplOperationDuriationRouting" jdbcType="VARCHAR"/>
+        <result column="tmpl_operation_duriation_manually" property="tmplOperationDuriationManually"
+                jdbcType="VARCHAR"/>
+        <result column="tmpl_operation_duriation_weighting" property="tmplOperationDuriationWeighting"
+                jdbcType="VARCHAR"/>
+        <result column="tmpl_operation_down_code" property="tmplOperationDownCode" jdbcType="VARCHAR"/>
+        <result column="tmpl_operation_weighting_code" property="tmplOperationWeightingCode" jdbcType="VARCHAR"/>
+        <result column="tmpl_operation_energy_cost" property="tmplOperationEnergyCost" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Example_Where_Clause">
+        <where>
+            <foreach collection="oredCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" suffix=")" prefixOverrides="and">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach collection="criterion.value" item="listItem" open="(" close=")"
+                                             separator=",">
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+    <sql id="Update_By_Example_Where_Clause">
+        <where>
+            <foreach collection="example.oredCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" suffix=")" prefixOverrides="and">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach collection="criterion.value" item="listItem" open="(" close=")"
+                                             separator=",">
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+    <sql id="Base_Column_List">
+        tmpl_id, ima_id, tmpl_car, tmpl_physical_code, tmpl_customer, tmpl_type, tmpl_status,
+        tmpl_createdate, tmpl_createuser, tmpl_updatedate, tmpl_updateuser
+    </sql>
+    <select id="selectByExample" resultMap="BaseResultMap"
+            parameterType="com.fangda.skylot.mathine.model.parking.TstbMathineParkingLogCriteria">
+        select
+        <if test="distinct">
+            distinct
+        </if>
+        <include refid="Base_Column_List"/>
+        from tstb_mathine_parking_log
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+        <if test="page != null">
+            limit #{page.begin} , #{page.length}
+        </if>
+    </select>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from tstb_mathine_parking_log
+        where tmpl_id = #{tmplId,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        delete from tstb_mathine_parking_log
+        where tmpl_id = #{tmplId,jdbcType=INTEGER}
+    </delete>
+    <delete id="deleteByExample" parameterType="com.fangda.skylot.mathine.model.parking.TstbMathineParkingLogCriteria">
+        delete from tstb_mathine_parking_log
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+    </delete>
+    <insert id="insert" parameterType="com.fangda.skylot.mathine.model.parking.TstbMathineParkingLog">
+        insert into tstb_mathine_parking_log (tmpl_id, ima_id, tmpl_car,
+      tmpl_customer, tmpl_type, tmpl_status,
+      tmpl_createdate, tmpl_createuser, tmpl_updatedate,
+      tmpl_updateuser, tmpl_physical_code, tmpl_diection_code, tmpl_operation_duriation_total,
+      tmpl_operation_duriation_routing, tmpl_operation_duriation_manually, tmpl_operation_duriation_weighting,
+      tmpl_operation_down_code, tmpl_operation_weighting_code, tmpl_operation_energy_cost)
+    values (#{tmplId,jdbcType=INTEGER}, #{imaId,jdbcType=VARCHAR}, #{tmplCar,jdbcType=VARCHAR},
+      #{tmplCustomer,jdbcType=VARCHAR}, #{tmplType,jdbcType=VARCHAR}, #{tmplStatus,jdbcType=VARCHAR},
+      #{tmplCreatedate,jdbcType=VARCHAR}, #{tmplCreateuser,jdbcType=VARCHAR}, #{tmplUpdatedate,jdbcType=VARCHAR},
+      #{tmplUpdateuser,jdbcType=VARCHAR}, #{tmplPhysicalCode,jdbcType=VARCHAR}, #{tmplDiectionCode,jdbcType=VARCHAR},
+      #{tmplOperationDuriationTotal,jdbcType=VARCHAR}, #{tmplOperationDuriationRouting,jdbcType=VARCHAR},
+      #{tmplOperationDuriationManually,jdbcType=VARCHAR},#{tmplOperationDuriationWeighting,jdbcType=VARCHAR},
+      #{tmplOperationDownCode,jdbcType=VARCHAR}, #{tmplOperationWeightingCode,jdbcType=VARCHAR},
+      #{tmplOperationEnergyCost,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.fangda.skylot.mathine.model.parking.TstbMathineParkingLog">
+        insert into tstb_mathine_parking_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="tmplId != null">
+                tmpl_id,
+            </if>
+            <if test="imaId != null">
+                ima_id,
+            </if>
+            <if test="tmplCar != null">
+                tmpl_car,
+            </if>
+            <if test="tmplPhysicalCode != null">
+                tmpl_physical_code,
+            </if>
+            <if test="tmplCustomer != null">
+                tmpl_customer,
+            </if>
+            <if test="tmplType != null">
+                tmpl_type,
+            </if>
+            <if test="tmplStatus != null">
+                tmpl_status,
+            </if>
+            <if test="tmplCreatedate != null">
+                tmpl_createdate,
+            </if>
+            <if test="tmplCreateuser != null">
+                tmpl_createuser,
+            </if>
+            <if test="tmplUpdatedate != null">
+                tmpl_updatedate,
+            </if>
+            <if test="tmplUpdateuser != null">
+                tmpl_updateuser,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="tmplId != null">
+                #{tmplId,jdbcType=INTEGER},
+            </if>
+            <if test="imaId != null">
+                #{imaId,jdbcType=VARCHAR},
+            </if>
+            <if test="tmplCar != null">
+                #{tmplCar,jdbcType=VARCHAR},
+            </if>
+            <if test="tmplPhysicalCode != null">
+                #{tmplPhysicalCode,jdbcType=VARCHAR},
+            </if>
+            <if test="tmplCustomer != null">
+                #{tmplCustomer,jdbcType=VARCHAR},
+            </if>
+            <if test="tmplType != null">
+                #{tmplType,jdbcType=VARCHAR},
+            </if>
+            <if test="tmplStatus != null">
+                #{tmplStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="tmplCreatedate != null">
+                #{tmplCreatedate,jdbcType=VARCHAR},
+            </if>
+            <if test="tmplCreateuser != null">
+                #{tmplCreateuser,jdbcType=VARCHAR},
+            </if>
+            <if test="tmplUpdatedate != null">
+                #{tmplUpdatedate,jdbcType=VARCHAR},
+            </if>
+            <if test="tmplUpdateuser != null">
+                #{tmplUpdateuser,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <select id="countByExample" parameterType="com.fangda.skylot.mathine.model.parking.TstbMathineParkingLogCriteria"
+            resultType="java.lang.Integer">
+        select count(*) from tstb_mathine_parking_log
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+    </select>
+    <update id="updateByExampleSelective" parameterType="map">
+        update tstb_mathine_parking_log
+        <set>
+            <if test="record.tmplId != null">
+                tmpl_id = #{record.tmplId,jdbcType=INTEGER},
+            </if>
+            <if test="record.imaId != null">
+                ima_id = #{record.imaId,jdbcType=VARCHAR},
+            </if>
+            <if test="record.tmplCar != null">
+                tmpl_car = #{record.tmplCar,jdbcType=VARCHAR},
+            </if>
+            <if test="record.tmplPhysicalCode != null">
+                tmpl_physical_code = #{record.tmplPhysicalCode,jdbcType=VARCHAR},
+            </if>
+            <if test="record.tmplCustomer != null">
+                tmpl_customer = #{record.tmplCustomer,jdbcType=VARCHAR},
+            </if>
+            <if test="record.tmplType != null">
+                tmpl_type = #{record.tmplType,jdbcType=VARCHAR},
+            </if>
+            <if test="record.tmplStatus != null">
+                tmpl_status = #{record.tmplStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="record.tmplCreatedate != null">
+                tmpl_createdate = #{record.tmplCreatedate,jdbcType=VARCHAR},
+            </if>
+            <if test="record.tmplCreateuser != null">
+                tmpl_createuser = #{record.tmplCreateuser,jdbcType=VARCHAR},
+            </if>
+            <if test="record.tmplUpdatedate != null">
+                tmpl_updatedate = #{record.tmplUpdatedate,jdbcType=VARCHAR},
+            </if>
+            <if test="record.tmplUpdateuser != null">
+                tmpl_updateuser = #{record.tmplUpdateuser,jdbcType=VARCHAR},
+            </if>
+        </set>
+        <if test="_parameter != null">
+            <include refid="Update_By_Example_Where_Clause"/>
+        </if>
+    </update>
+    <update id="updateByExample" parameterType="map">
+        update tstb_mathine_parking_log
+        set tmpl_id = #{record.tmplId,jdbcType=INTEGER},
+        ima_id = #{record.imaId,jdbcType=VARCHAR},
+        tmpl_car = #{record.tmplCar,jdbcType=VARCHAR},
+        tmpl_physical_code = #{record.tmplPhysicalCode,jdbcType=VARCHAR},
+        tmpl_customer = #{record.tmplCustomer,jdbcType=VARCHAR},
+        tmpl_type = #{record.tmplType,jdbcType=VARCHAR},
+        tmpl_status = #{record.tmplStatus,jdbcType=VARCHAR},
+        tmpl_createdate = #{record.tmplCreatedate,jdbcType=VARCHAR},
+        tmpl_createuser = #{record.tmplCreateuser,jdbcType=VARCHAR},
+        tmpl_updatedate = #{record.tmplUpdatedate,jdbcType=VARCHAR},
+        tmpl_updateuser = #{record.tmplUpdateuser,jdbcType=VARCHAR}
+        <if test="_parameter != null">
+            <include refid="Update_By_Example_Where_Clause"/>
+        </if>
+    </update>
+    <update id="updateByPrimaryKeySelective"
+            parameterType="com.fangda.skylot.mathine.model.parking.TstbMathineParkingLog">
+        update tstb_mathine_parking_log
+        <set>
+            <if test="imaId != null">
+                ima_id = #{imaId,jdbcType=VARCHAR},
+            </if>
+            <if test="tmplCar != null">
+                tmpl_car = #{tmplCar,jdbcType=VARCHAR},
+            </if>
+            <if test="tmplPhysicalCode != null">
+                tmpl_physical_code = #{tmplPhysicalCode,jdbcType=VARCHAR},
+            </if>
+            <if test="tmplCustomer != null">
+                tmpl_customer = #{tmplCustomer,jdbcType=VARCHAR},
+            </if>
+            <if test="tmplType != null">
+                tmpl_type = #{tmplType,jdbcType=VARCHAR},
+            </if>
+            <if test="tmplStatus != null">
+                tmpl_status = #{tmplStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="tmplCreatedate != null">
+                tmpl_createdate = #{tmplCreatedate,jdbcType=VARCHAR},
+            </if>
+            <if test="tmplCreateuser != null">
+                tmpl_createuser = #{tmplCreateuser,jdbcType=VARCHAR},
+            </if>
+            <if test="tmplUpdatedate != null">
+                tmpl_updatedate = #{tmplUpdatedate,jdbcType=VARCHAR},
+            </if>
+            <if test="tmplUpdateuser != null">
+                tmpl_updateuser = #{tmplUpdateuser,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where tmpl_id = #{tmplId,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.fangda.skylot.mathine.model.parking.TstbMathineParkingLog">
+    update tstb_mathine_parking_log
+        set ima_id = #{imaId,jdbcType=VARCHAR},
+      tmpl_car = #{tmplCar,jdbcType=VARCHAR},
+        tmpl_physical_code = #{tmplPhysicalCode,jdbcType=VARCHAR},
+      tmpl_customer = #{tmplCustomer,jdbcType=VARCHAR},
+      tmpl_type = #{tmplType,jdbcType=VARCHAR},
+      tmpl_status = #{tmplStatus,jdbcType=VARCHAR},
+      tmpl_createdate = #{tmplCreatedate,jdbcType=VARCHAR},
+      tmpl_createuser = #{tmplCreateuser,jdbcType=VARCHAR},
+      tmpl_updatedate = #{tmplUpdatedate,jdbcType=VARCHAR},
+        tmpl_updateuser = #{tmplUpdateuser,jdbcType=VARCHAR}
+    where tmpl_id = #{tmplId,jdbcType=INTEGER}
+    </update>
+</mapper>

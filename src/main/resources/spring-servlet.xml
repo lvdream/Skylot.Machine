@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+        xmlns:context="http://www.springframework.org/schema/context"
+        xmlns:mvc="http://www.springframework.org/schema/mvc"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.springframework.org/schema/beans"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/context   
+            http://www.springframework.org/schema/context/spring-context.xsd
+            http://www.springframework.org/schema/mvc   
+            http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+    <!-- 激活注解 -->
+    <context:annotation-config/>
+
+    <!-- 让前端控制器dispatcher只去搜索注解为controller的类 -->
+    <context:component-scan base-package="com.fangda.skylot.mathine.web">
+        <context:include-filter type="annotation"
+                                expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+
+    <!-- 扩展驱动，让请求可以进入到某个controller的方法中 -->
+    <mvc:annotation-driven/>
+    <!-- 静态资源处理， css， js， imgs -->
+    <!-- <mvc:resources mapping="/resources/**" location="/resources/" /> -->    <!-- ... -->
+    <mvc:resources mapping="/plugins-js/**" location="/WEB-INF/plugins/js/"/>
+    <mvc:resources mapping="/plugins-css/**" location="/WEB-INF/plugins/css/"/>
+    <mvc:default-servlet-handler/>
+    <!-- 配置试图解析器 -->
+    <bean
+            class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="viewClass"
+                  value="org.springframework.web.servlet.view.JstlView"/>
+        <property name="prefix" value="/WEB-INF/jsps/"/>
+        <property name="suffix" value=".jsp"/>
+    </bean>
+    <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+        <property name="messageConverters">
+            <list>
+                <ref bean="jsonHttpMessageConverter"/>
+            </list>
+        </property>
+    </bean>
+    <bean id="jsonHttpMessageConverter"
+          class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+        <property name="supportedMediaTypes">
+            <list>
+                <value>text/html;charset=UTF-8</value>
+                <!-- 注意 这是传输json格式，无论是ajax还是外部接口传输-->
+                <value>application/json;charset=UTF-8</value>
+            </list>
+        </property>
+    </bean>
+</beans>

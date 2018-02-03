@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context.xsd
+           http://www.springframework.org/schema/util
+           http://www.springframework.org/schema/util/spring-util.xsd">
+    <import resource="classpath:META-INF/cxf/cxf.xml"/>
+    <import resource="classpath:META-INF/cxf/cxf-servlet.xml"/>
+    <!-- 配置注解扫描 -->
+    <context:annotation-config/>
+
+    <!-- 自动扫描的包名 -->
+    <context:component-scan
+            base-package="com.fangda.skylot.mathine.dao,com.fangda.skylot.mathine.service,com.fangda.skylot.mathine.scheduler.springtask,com.fangda.skylot.mathine.utils">
+        <context:exclude-filter type="annotation"
+                                expression="org.springframework.stereotype.Controller"/>
+        <context:exclude-filter type="annotation"
+                                expression="org.springframework.web.bind.annotation.ControllerAdvice"/>
+    </context:component-scan>
+
+    <bean id="messageSource"
+          class="org.springframework.context.support.ResourceBundleMessageSource">
+        <property name="basenames">
+            <list>
+                <value>message/messages</value>
+            </list>
+        </property>
+    </bean>
+
+
+    <bean id="configProperties"
+          class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>
+                    classpath:db.properties
+                </value>
+                <value>
+                    classpath:system.properties
+                </value>
+                <value>
+                    classpath:client/shiro-client-default.properties
+                </value>
+            </list>
+
+        </property>
+    </bean>
+    <util:properties id="settings" location="classpath:system.properties"></util:properties>
+    <!-- BoneCP actived -->
+    <bean id="mysqldataSource" class="com.jolbox.bonecp.BoneCPDataSource"
+          destroy-method="close">
+        <property name="driverClass" value="${jdbc.driver}"/>
+        <property name="jdbcUrl" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+        <property name="maxConnectionsPerPartition" value="${jdbc.maxConnectionsPerPartition}"/>
+        <property name="minConnectionsPerPartition" value="${jdbc.minConnectionsPerPartition}"/>
+        <property name="partitionCount" value="${jdbc.partitionCount}"/>
+        <property name="acquireIncrement" value="${jdbc.acquireIncrement}"/>
+        <property name="statementsCacheSize" value="${jdbc.statementsCacheSize}"/>
+    </bean>
+
+    <!-- mybatis文件配置，扫描所有mapper文件 -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean"
+          p:dataSource-ref="mysqldataSource" p:configLocation="classpath:mybatis-cfg.xml"
+          p:mapperLocations="classpath:com/fangda/skylot/mathine/mapper/**/*Mapper.xml"/>
+    <!-- configLocation为mybatis属性 mapperLocations为所有mapper -->
+
+    <!-- spring与mybatis整合配置，扫描所有dao -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer"
+          p:basePackage="com.fangda.skylot.mathine.dao" p:sqlSessionFactoryBeanName="sqlSessionFactory"/>
+
+    <!-- 对数据源进行事务管理 -->
+    <bean id="transactionManager"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager"
+          p:dataSource-ref="mysqldataSource"/>
+
+    <bean id="multipartResolver"
+          class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="defaultEncoding" value="utf-8"/>
+        <property name="maxUploadSize" value="5000000"/>
+        <property name="maxInMemorySize" value="4096"/>
+    </bean>
+    <bean id="exceptionResolver"
+          class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+        <property name="exceptionMappings">
+            <props>
+                <prop
+                        key="org.springframework.web.multipart.MaxUploadSizeExceededException">error_fileupload
+                </prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean class="com.fangda.skylot.mathine.utils.page.PagePreparer" id="preparer"/>
+
+
+    <!-- 导入client.xml文件 -->
+    <!-- WebService的实现Bean定义 -->
+    <!-- web services -->
+    <!-- jax-ws endpoint定义 -->
+    <!--<context:component-scan base-package="com.fangda.skylot.mathine.service.impl"/>-->
+    <!--<jaxws:endpoint address="/soap/WFServiceSkylotMachine"-->
+    <!--implementorClass="com.fangda.skylot.mathine.service.impl.WsSkylotMachineImpl">-->
+    <!--<jaxws:implementor>-->
+    <!--<bean id="CustomerDao" class="com.fangda.skylot.mathine.dao.impl.MstbCustomerDAOImpl">-->
+    <!--<property name="mstbCustomerDAO" ref="mstbCustomerDAO" />-->
+    <!--</bean>-->
+    <!--</jaxws:implementor>-->
+    <!--</jaxws:endpoint>-->
+    <!--<jaxws:endpoint id="wsSkylotMachine" implementor="#WFServiceSkylotMachine" address="/soap/WFServiceSkylotMachine"/>-->
+
+    <import resource="spring-timertask.xml"/>
+    <import resource="errorcode/index.xml"/>
+
+
+</beans>

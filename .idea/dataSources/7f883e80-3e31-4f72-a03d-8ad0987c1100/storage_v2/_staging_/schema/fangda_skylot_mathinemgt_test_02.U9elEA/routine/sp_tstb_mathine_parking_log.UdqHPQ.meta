@@ -1,0 +1,2 @@
+#n:sp_tstb_mathine_parking_log
+#i:(int(11),varchar(20),varchar(1),varchar(2),varchar(100))

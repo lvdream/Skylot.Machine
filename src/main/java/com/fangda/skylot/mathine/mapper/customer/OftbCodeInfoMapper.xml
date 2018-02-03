@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fangda.skylot.mathine.dao.customer.OftbCodeInfoMapper">
+    <resultMap id="BaseResultMap" type="com.fangda.skylot.mathine.model.customer.OftbCodeInfo">
+        <id column="oci_id" property="ociId" jdbcType="INTEGER"/>
+        <result column="ima_id" property="imaId" jdbcType="VARCHAR"/>
+        <result column="oci_physical_code" property="ociPhysicalCode" jdbcType="VARCHAR"/>
+        <result column="oci_code_url" property="ociCodeUrl" jdbcType="VARCHAR"/>
+        <result column="oci_password" property="ociPassword" jdbcType="VARCHAR"/>
+        <result column="oci_status" property="ociStatus" jdbcType="VARCHAR"/>
+        <result column="oci_createdate" property="ociCreatedate" jdbcType="VARCHAR"/>
+        <result column="oci_createuser" property="ociCreateuser" jdbcType="VARCHAR"/>
+        <result column="oci_updatedate" property="ociUpdatedate" jdbcType="VARCHAR"/>
+        <result column="oci_updateuser" property="ociUpdateuser" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Example_Where_Clause">
+        <where>
+            <foreach collection="oredCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" suffix=")" prefixOverrides="and">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach collection="criterion.value" item="listItem" open="(" close=")"
+                                             separator=",">
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+    <sql id="Update_By_Example_Where_Clause">
+        <where>
+            <foreach collection="example.oredCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" suffix=")" prefixOverrides="and">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach collection="criterion.value" item="listItem" open="(" close=")"
+                                             separator=",">
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+    <sql id="Base_Column_List">
+        oci_id, ima_id, oci_physical_code, oci_code_url, oci_password, oci_status, oci_createdate,
+        oci_createuser, oci_updatedate, oci_updateuser
+    </sql>
+    <select id="selectByExample" resultMap="BaseResultMap"
+            parameterType="com.fangda.skylot.mathine.model.customer.OftbCodeInfoCriteria">
+        select
+        <if test="distinct">
+            distinct
+        </if>
+        <include refid="Base_Column_List"/>
+        from oftb_code_info
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+        <if test="page != null">
+            limit #{page.begin} , #{page.length}
+        </if>
+    </select>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from oftb_code_info
+        where oci_id = #{ociId,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        DELETE FROM oftb_code_info
+        WHERE oci_id = #{ociId,jdbcType=INTEGER}
+    </delete>
+    <delete id="deleteByExample" parameterType="com.fangda.skylot.mathine.model.customer.OftbCodeInfoCriteria">
+        delete from oftb_code_info
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+    </delete>
+    <insert id="insert" parameterType="com.fangda.skylot.mathine.model.customer.OftbCodeInfo" useGeneratedKeys="true"
+            keyProperty="ociId">
+        insert into oftb_code_info (oci_id, ima_id, oci_physical_code,
+        oci_code_url, oci_password, oci_status,
+        oci_createdate, oci_createuser, oci_updatedate,
+        oci_updateuser)
+        values (#{ociId,jdbcType=INTEGER}, #{imaId,jdbcType=VARCHAR}, #{ociPhysicalCode,jdbcType=VARCHAR},
+        #{ociCodeUrl,jdbcType=VARCHAR}, #{ociPassword,jdbcType=VARCHAR}, #{ociStatus,jdbcType=VARCHAR},
+        #{ociCreatedate,jdbcType=VARCHAR}, #{ociCreateuser,jdbcType=VARCHAR}, #{ociUpdatedate,jdbcType=VARCHAR},
+        #{ociUpdateuser,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.fangda.skylot.mathine.model.customer.OftbCodeInfo"
+            useGeneratedKeys="true" keyProperty="ociId">
+        insert into oftb_code_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="ociId != null">
+                oci_id,
+            </if>
+            <if test="imaId != null">
+                ima_id,
+            </if>
+            <if test="ociPhysicalCode != null">
+                oci_physical_code,
+            </if>
+            <if test="ociCodeUrl != null">
+                oci_code_url,
+            </if>
+            <if test="ociPassword != null">
+                oci_password,
+            </if>
+            <if test="ociStatus != null">
+                oci_status,
+            </if>
+            <if test="ociCreatedate != null">
+                oci_createdate,
+            </if>
+            <if test="ociCreateuser != null">
+                oci_createuser,
+            </if>
+            <if test="ociUpdatedate != null">
+                oci_updatedate,
+            </if>
+            <if test="ociUpdateuser != null">
+                oci_updateuser,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="ociId != null">
+                #{ociId,jdbcType=INTEGER},
+            </if>
+            <if test="imaId != null">
+                #{imaId,jdbcType=VARCHAR},
+            </if>
+            <if test="ociPhysicalCode != null">
+                #{ociPhysicalCode,jdbcType=VARCHAR},
+            </if>
+            <if test="ociCodeUrl != null">
+                #{ociCodeUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="ociPassword != null">
+                #{ociPassword,jdbcType=VARCHAR},
+            </if>
+            <if test="ociStatus != null">
+                #{ociStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="ociCreatedate != null">
+                #{ociCreatedate,jdbcType=VARCHAR},
+            </if>
+            <if test="ociCreateuser != null">
+                #{ociCreateuser,jdbcType=VARCHAR},
+            </if>
+            <if test="ociUpdatedate != null">
+                #{ociUpdatedate,jdbcType=VARCHAR},
+            </if>
+            <if test="ociUpdateuser != null">
+                #{ociUpdateuser,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <select id="countByExample" parameterType="com.fangda.skylot.mathine.model.customer.OftbCodeInfoCriteria"
+            resultType="java.lang.Integer">
+        select count(*) from oftb_code_info
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+    </select>
+    <update id="updateByExampleSelective" parameterType="map">
+        update oftb_code_info
+        <set>
+            <if test="record.ociId != null">
+                oci_id = #{record.ociId,jdbcType=INTEGER},
+            </if>
+            <if test="record.imaId != null">
+                ima_id = #{record.imaId,jdbcType=VARCHAR},
+            </if>
+            <if test="record.ociPhysicalCode != null">
+                oci_physical_code = #{record.ociPhysicalCode,jdbcType=VARCHAR},
+            </if>
+            <if test="record.ociCodeUrl != null">
+                oci_code_url = #{record.ociCodeUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="record.ociPassword != null">
+                oci_password = #{record.ociPassword,jdbcType=VARCHAR},
+            </if>
+            <if test="record.ociStatus != null">
+                oci_status = #{record.ociStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="record.ociCreatedate != null">
+                oci_createdate = #{record.ociCreatedate,jdbcType=VARCHAR},
+            </if>
+            <if test="record.ociCreateuser != null">
+                oci_createuser = #{record.ociCreateuser,jdbcType=VARCHAR},
+            </if>
+            <if test="record.ociUpdatedate != null">
+                oci_updatedate = #{record.ociUpdatedate,jdbcType=VARCHAR},
+            </if>
+            <if test="record.ociUpdateuser != null">
+                oci_updateuser = #{record.ociUpdateuser,jdbcType=VARCHAR},
+            </if>
+        </set>
+        <if test="_parameter != null">
+            <include refid="Update_By_Example_Where_Clause"/>
+        </if>
+    </update>
+    <update id="updateByExample" parameterType="map">
+        update oftb_code_info
+        set oci_id = #{record.ociId,jdbcType=INTEGER},
+        ima_id = #{record.imaId,jdbcType=VARCHAR},
+        oci_physical_code = #{record.ociPhysicalCode,jdbcType=VARCHAR},
+        oci_code_url = #{record.ociCodeUrl,jdbcType=VARCHAR},
+        oci_password = #{record.ociPassword,jdbcType=VARCHAR},
+        oci_status = #{record.ociStatus,jdbcType=VARCHAR},
+        oci_createdate = #{record.ociCreatedate,jdbcType=VARCHAR},
+        oci_createuser = #{record.ociCreateuser,jdbcType=VARCHAR},
+        oci_updatedate = #{record.ociUpdatedate,jdbcType=VARCHAR},
+        oci_updateuser = #{record.ociUpdateuser,jdbcType=VARCHAR}
+        <if test="_parameter != null">
+            <include refid="Update_By_Example_Where_Clause"/>
+        </if>
+    </update>
+    <update id="updateByPrimaryKeySelective" parameterType="com.fangda.skylot.mathine.model.customer.OftbCodeInfo">
+        update oftb_code_info
+        <set>
+            <if test="imaId != null">
+                ima_id = #{imaId,jdbcType=VARCHAR},
+            </if>
+            <if test="ociPhysicalCode != null">
+                oci_physical_code = #{ociPhysicalCode,jdbcType=VARCHAR},
+            </if>
+            <if test="ociCodeUrl != null">
+                oci_code_url = #{ociCodeUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="ociPassword != null">
+                oci_password = #{ociPassword,jdbcType=VARCHAR},
+            </if>
+            <if test="ociStatus != null">
+                oci_status = #{ociStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="ociCreatedate != null">
+                oci_createdate = #{ociCreatedate,jdbcType=VARCHAR},
+            </if>
+            <if test="ociCreateuser != null">
+                oci_createuser = #{ociCreateuser,jdbcType=VARCHAR},
+            </if>
+            <if test="ociUpdatedate != null">
+                oci_updatedate = #{ociUpdatedate,jdbcType=VARCHAR},
+            </if>
+            <if test="ociUpdateuser != null">
+                oci_updateuser = #{ociUpdateuser,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where oci_id = #{ociId,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.fangda.skylot.mathine.model.customer.OftbCodeInfo">
+        UPDATE oftb_code_info
+        SET ima_id            = #{imaId,jdbcType=VARCHAR},
+            oci_physical_code = #{ociPhysicalCode,jdbcType=VARCHAR},
+            oci_code_url      = #{ociCodeUrl,jdbcType=VARCHAR},
+            oci_password      = #{ociPassword,jdbcType=VARCHAR},
+            oci_status        = #{ociStatus,jdbcType=VARCHAR},
+            oci_createdate    = #{ociCreatedate,jdbcType=VARCHAR},
+            oci_createuser    = #{ociCreateuser,jdbcType=VARCHAR},
+            oci_updatedate    = #{ociUpdatedate,jdbcType=VARCHAR},
+            oci_updateuser    = #{ociUpdateuser,jdbcType=VARCHAR}
+        WHERE oci_id = #{ociId,jdbcType=INTEGER}
+    </update>
+</mapper>

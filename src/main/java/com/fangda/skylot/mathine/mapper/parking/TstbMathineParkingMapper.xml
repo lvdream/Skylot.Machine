@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fangda.skylot.mathine.dao.parking.TstbMathineParkingMapper" >
+  <resultMap id="BaseResultMap" type="com.fangda.skylot.mathine.model.parking.TstbMathineParking" >
+    <id column="tmp_id" property="tmpId" jdbcType="INTEGER" />
+      <result column="ima_id" property="imaId" jdbcType="VARCHAR"/>
+    <result column="tmp_code" property="tmpCode" jdbcType="VARCHAR" />
+    <result column="tmp_physical_code" property="tmpPhysicalCode" jdbcType="VARCHAR" />
+    <result column="tmp_car_code" property="tmpCarCode" jdbcType="VARCHAR" />
+    <result column="tmp_status" property="tmpStatus" jdbcType="VARCHAR" />
+    <result column="tmp_createdate" property="tmpCreatedate" jdbcType="VARCHAR" />
+    <result column="tmp_createuser" property="tmpCreateuser" jdbcType="VARCHAR" />
+    <result column="tmp_updateuser" property="tmpUpdateuser" jdbcType="VARCHAR" />
+    <result column="tmp_updatedate" property="tmpUpdatedate" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    tmp_id, ima_id, tmp_code, tmp_physical_code, tmp_car_code, tmp_status, tmp_createdate, 
+    tmp_createuser, tmp_updateuser, tmp_updatedate
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.fangda.skylot.mathine.model.parking.TstbMathineParkingCriteria" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from tstb_mathine_parking
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="page != null" >
+      limit #{page.begin} , #{page.length}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from tstb_mathine_parking
+    where tmp_id = #{tmpId,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectByImaId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from tstb_mathine_parking
+    where ima_id = #{imaId,jdbcType=INTEGER}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from tstb_mathine_parking
+    where tmp_id = #{tmpId,jdbcType=INTEGER}
+  </delete>
+  
+  <delete id="deleteByExample" parameterType="com.fangda.skylot.mathine.model.parking.TstbMathineParkingCriteria" >
+    delete from tstb_mathine_parking
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.fangda.skylot.mathine.model.parking.TstbMathineParking" >
+    insert into tstb_mathine_parking (tmp_id, ima_id, tmp_code, 
+      tmp_physical_code, tmp_car_code, tmp_status, 
+      tmp_createdate, tmp_createuser, tmp_updateuser, 
+      tmp_updatedate)
+      values (#{tmpId,jdbcType=INTEGER}, #{imaId,jdbcType=VARCHAR}, #{tmpCode,jdbcType=VARCHAR},
+      #{tmpPhysicalCode,jdbcType=VARCHAR}, #{tmpCarCode,jdbcType=VARCHAR}, #{tmpStatus,jdbcType=VARCHAR}, 
+      #{tmpCreatedate,jdbcType=VARCHAR}, #{tmpCreateuser,jdbcType=VARCHAR}, #{tmpUpdateuser,jdbcType=VARCHAR}, 
+      #{tmpUpdatedate,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.fangda.skylot.mathine.model.parking.TstbMathineParking" >
+    insert into tstb_mathine_parking
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tmpId != null" >
+        tmp_id,
+      </if>
+      <if test="imaId != null" >
+        ima_id,
+      </if>
+      <if test="tmpCode != null" >
+        tmp_code,
+      </if>
+      <if test="tmpPhysicalCode != null" >
+        tmp_physical_code,
+      </if>
+      <if test="tmpCarCode != null" >
+        tmp_car_code,
+      </if>
+      <if test="tmpStatus != null" >
+        tmp_status,
+      </if>
+      <if test="tmpCreatedate != null" >
+        tmp_createdate,
+      </if>
+      <if test="tmpCreateuser != null" >
+        tmp_createuser,
+      </if>
+      <if test="tmpUpdateuser != null" >
+        tmp_updateuser,
+      </if>
+      <if test="tmpUpdatedate != null" >
+        tmp_updatedate,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tmpId != null" >
+        #{tmpId,jdbcType=INTEGER},
+      </if>
+      <if test="imaId != null" >
+          #{imaId,jdbcType=VARCHAR},
+      </if>
+      <if test="tmpCode != null" >
+        #{tmpCode,jdbcType=VARCHAR},
+      </if>
+      <if test="tmpPhysicalCode != null" >
+        #{tmpPhysicalCode,jdbcType=VARCHAR},
+      </if>
+      <if test="tmpCarCode != null" >
+        #{tmpCarCode,jdbcType=VARCHAR},
+      </if>
+      <if test="tmpStatus != null" >
+        #{tmpStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="tmpCreatedate != null" >
+        #{tmpCreatedate,jdbcType=VARCHAR},
+      </if>
+      <if test="tmpCreateuser != null" >
+        #{tmpCreateuser,jdbcType=VARCHAR},
+      </if>
+      <if test="tmpUpdateuser != null" >
+        #{tmpUpdateuser,jdbcType=VARCHAR},
+      </if>
+      <if test="tmpUpdatedate != null" >
+        #{tmpUpdatedate,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.fangda.skylot.mathine.model.parking.TstbMathineParkingCriteria" resultType="java.lang.Integer" >
+    select count(*) from tstb_mathine_parking
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update tstb_mathine_parking
+    <set >
+      <if test="record.tmpId != null" >
+        tmp_id = #{record.tmpId,jdbcType=INTEGER},
+      </if>
+      <if test="record.imaId != null" >
+          ima_id = #{record.imaId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tmpCode != null" >
+        tmp_code = #{record.tmpCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tmpPhysicalCode != null" >
+        tmp_physical_code = #{record.tmpPhysicalCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tmpCarCode != null" >
+        tmp_car_code = #{record.tmpCarCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tmpStatus != null" >
+        tmp_status = #{record.tmpStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tmpCreatedate != null" >
+        tmp_createdate = #{record.tmpCreatedate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tmpCreateuser != null" >
+        tmp_createuser = #{record.tmpCreateuser,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tmpUpdateuser != null" >
+        tmp_updateuser = #{record.tmpUpdateuser,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tmpUpdatedate != null" >
+        tmp_updatedate = #{record.tmpUpdatedate,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update tstb_mathine_parking
+    set tmp_id = #{record.tmpId,jdbcType=INTEGER},
+      ima_id = #{record.imaId,jdbcType=VARCHAR},
+      tmp_code = #{record.tmpCode,jdbcType=VARCHAR},
+      tmp_physical_code = #{record.tmpPhysicalCode,jdbcType=VARCHAR},
+      tmp_car_code = #{record.tmpCarCode,jdbcType=VARCHAR},
+      tmp_status = #{record.tmpStatus,jdbcType=VARCHAR},
+      tmp_createdate = #{record.tmpCreatedate,jdbcType=VARCHAR},
+      tmp_createuser = #{record.tmpCreateuser,jdbcType=VARCHAR},
+      tmp_updateuser = #{record.tmpUpdateuser,jdbcType=VARCHAR},
+      tmp_updatedate = #{record.tmpUpdatedate,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.fangda.skylot.mathine.model.parking.TstbMathineParking" >
+    update tstb_mathine_parking
+    <set >
+      <if test="imaId != null" >
+          ima_id = #{imaId,jdbcType=VARCHAR},
+      </if>
+      <if test="tmpCode != null" >
+        tmp_code = #{tmpCode,jdbcType=VARCHAR},
+      </if>
+      <if test="tmpPhysicalCode != null" >
+        tmp_physical_code = #{tmpPhysicalCode,jdbcType=VARCHAR},
+      </if>
+      <if test="tmpCarCode != null" >
+        tmp_car_code = #{tmpCarCode,jdbcType=VARCHAR},
+      </if>
+      <if test="tmpStatus != null" >
+        tmp_status = #{tmpStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="tmpCreatedate != null" >
+        tmp_createdate = #{tmpCreatedate,jdbcType=VARCHAR},
+      </if>
+      <if test="tmpCreateuser != null" >
+        tmp_createuser = #{tmpCreateuser,jdbcType=VARCHAR},
+      </if>
+      <if test="tmpUpdateuser != null" >
+        tmp_updateuser = #{tmpUpdateuser,jdbcType=VARCHAR},
+      </if>
+      <if test="tmpUpdatedate != null" >
+        tmp_updatedate = #{tmpUpdatedate,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where tmp_id = #{tmpId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.fangda.skylot.mathine.model.parking.TstbMathineParking" >
+    update tstb_mathine_parking
+      set ima_id = #{imaId,jdbcType=VARCHAR},
+      tmp_code = #{tmpCode,jdbcType=VARCHAR},
+      tmp_physical_code = #{tmpPhysicalCode,jdbcType=VARCHAR},
+      tmp_car_code = #{tmpCarCode,jdbcType=VARCHAR},
+      tmp_status = #{tmpStatus,jdbcType=VARCHAR},
+      tmp_createdate = #{tmpCreatedate,jdbcType=VARCHAR},
+      tmp_createuser = #{tmpCreateuser,jdbcType=VARCHAR},
+      tmp_updateuser = #{tmpUpdateuser,jdbcType=VARCHAR},
+      tmp_updatedate = #{tmpUpdatedate,jdbcType=VARCHAR}
+    where tmp_id = #{tmpId,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
+<generatorConfiguration>
+    <!-- <properties resource="generator-init.properties"/> -->
+    <!--数据库驱动 -->
+
+    <classPathEntry
+            location="E:\Software Backup\MySQL\mysql-connector-java-5.1.18.jar" ></classPathEntry>
+
+    <!-- <classPathEntry location="${generator.classPathEntry.location}" /> -->
+    <context id="MySql" targetRuntime="MyBatis3">
+        <plugin type="org.mybatis.generator.plugins.RenameExampleClassPlugin">
+            <property name="searchString" value="Example$" />
+            <property name="replaceString" value="Criteria" />
+        </plugin>
+        <plugin type="org.mybatis.generator.plugins.EqualsHashCodePlugin" />
+        <plugin type="org.mybatis.generator.plugins.CaseInsensitiveLikePlugin"></plugin>
+        <plugin type="org.mybatis.generator.plugins.SerializablePlugin"></plugin>
+        <!-- Pagination -->
+        <!--<plugin type="org.mybatis.generator.plugins.MySQLPaginationPlugin"></plugin>-->
+        <commentGenerator>
+            <property name="suppressDate" value="true" />
+            <!-- 是否去除自动生成的注释 true：是 ： false:否 -->
+            <property name="suppressAllComments" value="true" />
+        </commentGenerator>
+        <!--数据库链接URL，用户名、密码 -->
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+                        connectionURL="jdbc:mysql://10.3.13.82:3306/fangda_skylot_mathinemgt?useUnicode=true&amp;characterEncoding=UTF-8?useUnicode=true&amp;characterEncoding=UTF-8"
+                        userId="fangda" password="123456" />
+        <!-- <jdbcConnection driverClass="${jdbc.driver}" connectionURL="${jdbc.url}"
+            userId="${jdbc.username}" password="${jdbc.password}" /> -->
+        <!-- 生成模型的包名和位置 -->
+        <javaModelGenerator targetPackage="com.fangda.skylot.mathine.model.parking"
+                            targetProject="SkylotMachine">
+            <property name="enableSubPackages" value="true" />
+            <property name="trimStrings" value="true" />
+        </javaModelGenerator>
+        <!-- <javaModelGenerator targetPackage="${generator.javaModelGenerator.targetPackage}"
+            targetProject="${generator.targetProject}"> enableSubPackages:是否让schema作为包的后缀
+            <property name="enableSubPackages" value="true" /> 从数据库返回的值被清理前后的空格 <property
+            name="trimStrings" value="true" /> </javaModelGenerator> -->
+        <!-- 生成映射文件的包名和位置 -->
+        <sqlMapGenerator targetPackage="com.fangda.skylot.mathine.mapper.parking"
+                         targetProject="SkylotMachine" />
+        <!-- <sqlMapGenerator targetPackage="${generator.sqlMapGenerator.targetPackage}"
+            targetProject="${generator.targetProject}" /> -->
+        <!-- 生成DAO的包名和位置 -->
+        <javaClientGenerator targetPackage="com.fangda.skylot.mathine.dao.parking"
+                             targetProject="SkylotMachine" type="XMLMAPPER" />
+        <!-- <javaClientGenerator targetPackage="${generator.javaClientGenerator.targetPackage}"
+            targetProject="${generator.targetProject}" type="XMLMAPPER" /> -->
+        <!-- 1、要生成哪些表,schema是其它数据库需要用到的，MySQL虽然不需要这个，可以不用定义 2、tableName:用于自动生成代码的数据库表；domainObjectName:对应于数据库表的javaBean类名 -->
+        <!-- <table schema="srm" tableName="mstb_vendor" domainObjectName="MstbVendor"></table>
+            <table schema="srm" tableName="mstb_attachment" domainObjectName="MstbAttAchment"></table>
+            <table schema="srm" tableName="mstb_bidding" domainObjectName="MstbBidding"></table>
+            <table schema="srm" tableName="mstb_dictionary" domainObjectName="MstbDictory"></table>
+            <table schema="srm" tableName="mstb_email" domainObjectName="MstbEmail"></table>
+            <table schema="srm" tableName="mstb_grade" domainObjectName="MstbGrade"></table>
+            <table schema="srm" tableName="mstb_message" domainObjectName="MstbMessage"></table>
+            <table schema="srm" tableName="mstb_message_vendor" domainObjectName="MstbMessageVendor">
+            </table> <table schema="srm" tableName="mstb_project" domainObjectName="MstbProject"></table>
+            <table schema="srm" tableName="mstb_project_purchase" domainObjectName="MstbProjectPurchase"></table>
+            <table schema="srm" tableName="mstb_project_viewer" domainObjectName="MstbProjectViewer"></table>
+            <table schema="srm" tableName="mstb_userlog" domainObjectName="MstbUserLog"></table>
+            <table schema="srm" tableName="mstb_vendor_additional" domainObjectName="MstbVendorAdditional"></table>
+            <table schema="srm" tableName="mstb_vendor_bidding" domainObjectName="MstbVendorBidding"></table>
+            <table schema="srm" tableName="mstb_vendor_grade" domainObjectName="MstbVendorGrade"></table>
+            <table schema="srm" tableName="mstb_permission" domainObjectName="MstbPermission"></table>
+            <table schema="srm" tableName="mstb_project_viewer" domainObjectName="MstbProjectViewer">
+            <generatedKey column="PV_ID" sqlStatement="MySql" identity="true"/> </table>
+            <table schema="vendor" tableName="mstb_company" domainObjectName="MstbCompany"></table>
+            <table schema="vendor" tableName="mstb_provide_additional" domainObjectName="mstbProvideAdditional"></table>
+            <table schema="vendor" tableName="mstb_vendor_additional" domainObjectName="mstbVendorAdditional"></table> -->
+        <table schema="SkylotMachine" tableName="tstb_ftp_car_information"
+               domainObjectName="TstbFtpCarInformation"></table>
+        <!-- <table schema="${generator.table.schema}" tableName="${generator.table.tableName}"
+        <table schema="pms" tableName="mstb_project_stage_addtional_material"
+            domainObjectName="mstbVendorAdditionalSub"></table>
+        <table schema="pms" tableName="mstb_project_stage_addtional_relationship"
+            domainObjectName="mstbVendorAdditionalSub"></table>
+            domainObjectName="${generator.table.domainObjectName}" enableCountByExample="${generator.table.enableCountByExample}"
+            enableDeleteByExample="${generator.table.enableDeleteByExample}" enableDeleteByPrimaryKey="${generator.table.enableDeleteByPrimaryKey}"
+            enableInsert="${generator.table.enableInsert}" enableSelectByExample="${generator.table.enableSelectByExample}"
+            enableSelectByPrimaryKey="${generator.table.enableSelectByPrimaryKey}" enableUpdateByExample="${generator.table.enableUpdateByExample}"
+            enableUpdateByPrimaryKey="${generator.table.enableUpdateByPrimaryKey}" escapeWildcards="${generator.table.escapeWildcards}"
+            /> -->
+    </context>
+</generatorConfiguration>

@@ -1,0 +1,11 @@
+
+`squid:CommentedOutCodeLine"<This block of commented-out lines of code should be removed.(†Ã›Ì
+esquid:CommentedOutCodeLine"<This block of commented-out lines of code should be removed.(Ìïšÿùÿÿÿÿ
+esquid:CommentedOutCodeLine"<This block of commented-out lines of code should be removed.(ÄåÐþÿÿÿÿ
+`squid:CommentedOutCodeLine"<This block of commented-out lines of code should be removed.(ûÐÁ¹
+R
+squid:S106"9Replace this use of System.out or System.err by a logger.(Ø…€îüÿÿÿÿ
+L
+squid:S106"9Replace this use of System.out or System.err by a logger.(µÉZ
+Osquid:S1141"5Extract this nested try block into a separate method.(¡»¢üùÿÿÿÿ
+ssquid:S1149"_Replace the synchronized class "StringBuffer" by an unsynchronized one such as "StringBuilder".(¿ìÀQ

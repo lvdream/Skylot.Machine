@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fangda.skylot.mathine.dao.customer.MstbCustomerMapper" >
+  <resultMap id="BaseResultMap" type="com.fangda.skylot.mathine.model.customer.MstbCustomer" >
+    <id column="mc_id" property="mcId" jdbcType="INTEGER" />
+    <result column="mc_code" property="mcCode" jdbcType="VARCHAR" />
+    <result column="mc_pass" property="mcPass" jdbcType="VARCHAR" />
+    <result column="mc_name_cn" property="mcNameCn" jdbcType="VARCHAR" />
+    <result column="mc_mobile" property="mcMobile" jdbcType="VARCHAR" />
+    <result column="mc_type" property="mcType" jdbcType="VARCHAR" />
+    <result column="mc_status" property="mcStatus" jdbcType="VARCHAR" />
+    <result column="mc_verify_code" property="mcVerifyCode" jdbcType="VARCHAR" />
+    <result column="mc_createdate" property="mcCreatedate" jdbcType="VARCHAR" />
+    <result column="mc_createuser" property="mcCreateuser" jdbcType="VARCHAR" />
+    <result column="mc_updatedate" property="mcUpdatedate" jdbcType="VARCHAR" />
+    <result column="mc_updateuser" property="mcUpdateuser" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    mc_id, mc_code, mc_pass, mc_name_cn, mc_mobile, mc_type, mc_status, mc_verify_code, 
+    mc_createdate, mc_createuser, mc_updatedate, mc_updateuser
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.fangda.skylot.mathine.model.customer.MstbCustomerCriteria" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from mstb_customer
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="page != null" >
+      limit #{page.begin} , #{page.length}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from mstb_customer
+    where mc_id = #{mcId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from mstb_customer
+    where mc_id = #{mcId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.fangda.skylot.mathine.model.customer.MstbCustomerCriteria" >
+    delete from mstb_customer
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.fangda.skylot.mathine.model.customer.MstbCustomer" >
+    insert into mstb_customer (mc_id, mc_code, mc_pass, 
+      mc_name_cn, mc_mobile, mc_type, 
+      mc_status, mc_verify_code, mc_createdate, 
+      mc_createuser, mc_updatedate, mc_updateuser
+      )
+    values (#{mcId,jdbcType=INTEGER}, #{mcCode,jdbcType=VARCHAR}, #{mcPass,jdbcType=VARCHAR}, 
+      #{mcNameCn,jdbcType=VARCHAR}, #{mcMobile,jdbcType=VARCHAR}, #{mcType,jdbcType=VARCHAR}, 
+      #{mcStatus,jdbcType=VARCHAR}, #{mcVerifyCode,jdbcType=VARCHAR}, #{mcCreatedate,jdbcType=VARCHAR}, 
+      #{mcCreateuser,jdbcType=VARCHAR}, #{mcUpdatedate,jdbcType=VARCHAR}, #{mcUpdateuser,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.fangda.skylot.mathine.model.customer.MstbCustomer" >
+    insert into mstb_customer
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="mcId != null" >
+        mc_id,
+      </if>
+      <if test="mcCode != null" >
+        mc_code,
+      </if>
+      <if test="mcPass != null" >
+        mc_pass,
+      </if>
+      <if test="mcNameCn != null" >
+        mc_name_cn,
+      </if>
+      <if test="mcMobile != null" >
+        mc_mobile,
+      </if>
+      <if test="mcType != null" >
+        mc_type,
+      </if>
+      <if test="mcStatus != null" >
+        mc_status,
+      </if>
+      <if test="mcVerifyCode != null" >
+        mc_verify_code,
+      </if>
+      <if test="mcCreatedate != null" >
+        mc_createdate,
+      </if>
+      <if test="mcCreateuser != null" >
+        mc_createuser,
+      </if>
+      <if test="mcUpdatedate != null" >
+        mc_updatedate,
+      </if>
+      <if test="mcUpdateuser != null" >
+        mc_updateuser,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="mcId != null" >
+        #{mcId,jdbcType=INTEGER},
+      </if>
+      <if test="mcCode != null" >
+        #{mcCode,jdbcType=VARCHAR},
+      </if>
+      <if test="mcPass != null" >
+        #{mcPass,jdbcType=VARCHAR},
+      </if>
+      <if test="mcNameCn != null" >
+        #{mcNameCn,jdbcType=VARCHAR},
+      </if>
+      <if test="mcMobile != null" >
+        #{mcMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="mcType != null" >
+        #{mcType,jdbcType=VARCHAR},
+      </if>
+      <if test="mcStatus != null" >
+        #{mcStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="mcVerifyCode != null" >
+        #{mcVerifyCode,jdbcType=VARCHAR},
+      </if>
+      <if test="mcCreatedate != null" >
+        #{mcCreatedate,jdbcType=VARCHAR},
+      </if>
+      <if test="mcCreateuser != null" >
+        #{mcCreateuser,jdbcType=VARCHAR},
+      </if>
+      <if test="mcUpdatedate != null" >
+        #{mcUpdatedate,jdbcType=VARCHAR},
+      </if>
+      <if test="mcUpdateuser != null" >
+        #{mcUpdateuser,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.fangda.skylot.mathine.model.customer.MstbCustomerCriteria" resultType="java.lang.Integer" >
+    select count(*) from mstb_customer
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update mstb_customer
+    <set >
+      <if test="record.mcId != null" >
+        mc_id = #{record.mcId,jdbcType=INTEGER},
+      </if>
+      <if test="record.mcCode != null" >
+        mc_code = #{record.mcCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mcPass != null" >
+        mc_pass = #{record.mcPass,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mcNameCn != null" >
+        mc_name_cn = #{record.mcNameCn,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mcMobile != null" >
+        mc_mobile = #{record.mcMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mcType != null" >
+        mc_type = #{record.mcType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mcStatus != null" >
+        mc_status = #{record.mcStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mcVerifyCode != null" >
+        mc_verify_code = #{record.mcVerifyCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mcCreatedate != null" >
+        mc_createdate = #{record.mcCreatedate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mcCreateuser != null" >
+        mc_createuser = #{record.mcCreateuser,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mcUpdatedate != null" >
+        mc_updatedate = #{record.mcUpdatedate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mcUpdateuser != null" >
+        mc_updateuser = #{record.mcUpdateuser,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update mstb_customer
+    set mc_id = #{record.mcId,jdbcType=INTEGER},
+      mc_code = #{record.mcCode,jdbcType=VARCHAR},
+      mc_pass = #{record.mcPass,jdbcType=VARCHAR},
+      mc_name_cn = #{record.mcNameCn,jdbcType=VARCHAR},
+      mc_mobile = #{record.mcMobile,jdbcType=VARCHAR},
+      mc_type = #{record.mcType,jdbcType=VARCHAR},
+      mc_status = #{record.mcStatus,jdbcType=VARCHAR},
+      mc_verify_code = #{record.mcVerifyCode,jdbcType=VARCHAR},
+      mc_createdate = #{record.mcCreatedate,jdbcType=VARCHAR},
+      mc_createuser = #{record.mcCreateuser,jdbcType=VARCHAR},
+      mc_updatedate = #{record.mcUpdatedate,jdbcType=VARCHAR},
+      mc_updateuser = #{record.mcUpdateuser,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.fangda.skylot.mathine.model.customer.MstbCustomer" >
+    update mstb_customer
+    <set >
+      <if test="mcCode != null" >
+        mc_code = #{mcCode,jdbcType=VARCHAR},
+      </if>
+      <if test="mcPass != null" >
+        mc_pass = #{mcPass,jdbcType=VARCHAR},
+      </if>
+      <if test="mcNameCn != null" >
+        mc_name_cn = #{mcNameCn,jdbcType=VARCHAR},
+      </if>
+      <if test="mcMobile != null" >
+        mc_mobile = #{mcMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="mcType != null" >
+        mc_type = #{mcType,jdbcType=VARCHAR},
+      </if>
+      <if test="mcStatus != null" >
+        mc_status = #{mcStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="mcVerifyCode != null" >
+        mc_verify_code = #{mcVerifyCode,jdbcType=VARCHAR},
+      </if>
+      <if test="mcCreatedate != null" >
+        mc_createdate = #{mcCreatedate,jdbcType=VARCHAR},
+      </if>
+      <if test="mcCreateuser != null" >
+        mc_createuser = #{mcCreateuser,jdbcType=VARCHAR},
+      </if>
+      <if test="mcUpdatedate != null" >
+        mc_updatedate = #{mcUpdatedate,jdbcType=VARCHAR},
+      </if>
+      <if test="mcUpdateuser != null" >
+        mc_updateuser = #{mcUpdateuser,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where mc_id = #{mcId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.fangda.skylot.mathine.model.customer.MstbCustomer" >
+    update mstb_customer
+    set mc_code = #{mcCode,jdbcType=VARCHAR},
+      mc_pass = #{mcPass,jdbcType=VARCHAR},
+      mc_name_cn = #{mcNameCn,jdbcType=VARCHAR},
+      mc_mobile = #{mcMobile,jdbcType=VARCHAR},
+      mc_type = #{mcType,jdbcType=VARCHAR},
+      mc_status = #{mcStatus,jdbcType=VARCHAR},
+      mc_verify_code = #{mcVerifyCode,jdbcType=VARCHAR},
+      mc_createdate = #{mcCreatedate,jdbcType=VARCHAR},
+      mc_createuser = #{mcCreateuser,jdbcType=VARCHAR},
+      mc_updatedate = #{mcUpdatedate,jdbcType=VARCHAR},
+      mc_updateuser = #{mcUpdateuser,jdbcType=VARCHAR}
+    where mc_id = #{mcId,jdbcType=INTEGER}
+  </update>
+</mapper>

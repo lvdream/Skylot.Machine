@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="Skylot.Machine:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <root id="archive" name="skymachine.war">
+      <element id="artifact" artifact-name="Skylot.Machine:war exploded" />
+    </root>
+  </artifact>
+</component>

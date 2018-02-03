@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <bean class="com.fangda.skylot.mathine.model.utils.ErrorCode">
+        <property name="codeMap">
+            <map>
+                <!-- console related error code -->
+                <entry key="request.system.init.timeout" value="请求超时"/>
+                <entry key="request.system.init.fail" value="请求失败"/>
+                <entry key="request.scancode.getcar.timeout" value="请求超时"/>
+                <entry key="request.scancode.getcar.fail" value="请求失败"/>
+                <entry key="system.scancode.getcar.notexit" value="车辆已取出/车牌号不存在"/>
+                <entry key="system.scancode.getcar.fail" value="二维码识别有误"/>
+                <entry key="request.password.getcar.timeout" value="请求超时"/>
+                <entry key="request.password.getcar.fail" value="请求失败"/>
+                <entry key="system.password.getcar.notexit" value="车辆已取出/车牌号不存在"/>
+                <entry key="request.confirm.getcar.timeout" value="请求超时"/>
+                <entry key="request.confirm.getcar.fail" value="请求失败"/>
+                <entry key="request.scancode.cancel.timeout" value="请求超时"/>
+                <entry key="request.scancode.usercancel.fail" value="请求失败"/>
+                <entry key="system.scancode.usercancel.fail" value="二维码识别有误"/>
+                <entry key="request.password.usercancel.not.auth" value="验证失败"/>
+                <entry key="request.password.usercancel.fail" value="请求失败"/>
+                <entry key="request.admin.login.timeout" value="请求超时"/>
+                <entry key="request.admin.login.fail" value="请求失败"/>
+                <entry key="request.admin.getcar.timeout" value="请求超时"/>
+                <entry key="request.admin.getcar.fail" value="请求失败"/>
+                <entry key="system.admin.getcar.notexit" value="车辆已取出/车牌号不存在"/>
+                <entry key="request.admin.cancel.getcar.timeout" value="请求超时"/>
+                <entry key="request.admin.cancel.getcar.fail" value="请求失败"/>
+                <entry key="request.user.parking.timeout" value="请求超时"/>
+                <entry key="request.user.parking.1005" value="1005故障"/>
+                <entry key="request.user.parking.platform" value="停车位置不正确"/>
+                <entry key="request.user.parking.scanner" value="停车区域或者行人通道有异物!"/>
+                <entry key="request.user.parking.peopledoor" value="人行门未关闭!"/>
+                <entry key="request.user.parking.cardoor" value="车库门检测到异物,无法关闭!"/>
+                <entry key="request.user.parking.emtryCar" value="车台上没有车"/>
+                <entry key="request.user.parking.peopledoorwithoutOC" value="人行门没有开关一次"/>
+                <entry key="request.user.parking.inside.car.notauth" value="当前车辆非月租车辆,无法完成停车"/>
+                <entry key="request.user.parking.other" value="其他错误"/>
+                <entry key="request.user.extract.1007" value="1007故障"/>
+                <entry key="request.user.extract.platform" value="车台传感器故障,车台上依然有车!"/>
+                <entry key="request.user.extract.scanner" value="停车区域或者行人通道有异物!"/>
+                <entry key="request.user.extract.peopledoor" value="人行门未关闭!"/>
+                <entry key="request.user.extract.cardoor" value="车库门检测到异物,无法关闭!"/>
+                <entry key="request.user.extract.carexist" value="车台上还有车"/>
+                <entry key="request.user.extract.other" value="其他错误"/>
+                <entry key="system.machine.break" value="系统故障"/>
+                <entry key="management.login.parameter.error" value="管理员登录,参数错误"/>
+                <entry key="management.getcar.parameter.error" value="管理员取车,参数错误"/>
+                <!-- ws related error code -->
+                <entry key="webservice.required.parameter.error" value="webservice,参数错误"/>
+                <entry key="webservice.single.process.alive" value="webservice,当前已有线程运行!"/>
+                <entry key="webservice.parameter.error.imaid" value="webservice,设备序号错误!"/>
+                <entry key="webservice.execute.error" value="webservice,执行失败!"/>
+                <entry key="webservice.execute.timeout" value="webservice,执行超时!"/>
+            </map>
+        </property>
+        <property name="codePLC">
+            <map>
+                <!-- console related error code p=存车,e=取车 -->
+                <entry key="p1" value="request.user.parking.platform"/>
+                <entry key="p2" value="request.user.parking.scanner"/>
+                <entry key="p3" value="request.user.parking.peopledoor"/>
+                <entry key="p4" value="request.user.parking.cardoor"/>
+                <entry key="p5" value="request.user.parking.emtryCar"/>
+                <entry key="p6" value="request.user.parking.peopledoorwithoutOC"/>
+                <entry key="p7" value="request.user.parking.other"/>
+                <entry key="p8" value="request.user.parking.other"/>
+                <entry key="p9" value="request.user.parking.other"/>
+                <entry key="p10" value="request.user.parking.other"/>
+                <entry key="p11" value="request.user.parking.other"/>
+                <entry key="p12" value="request.user.parking.other"/>
+                <entry key="p13" value="request.user.parking.other"/>
+                <entry key="p14" value="request.user.parking.other"/>
+                <entry key="p15" value="request.user.parking.other"/>
+                <entry key="p16" value="request.user.parking.other"/>
+                <entry key="pp1" value="request.user.parking.platform"/>
+                <entry key="pp2" value="request.user.parking.scanner"/>
+                <entry key="pp3" value="request.user.parking.peopledoor"/>
+                <entry key="pp4" value="request.user.parking.cardoor"/>
+                <entry key="pp5" value="request.user.parking.other"/>
+                <entry key="pp6" value="request.user.parking.other"/>
+                <entry key="pp7" value="request.user.parking.other"/>
+                <entry key="pp8" value="request.user.parking.other"/>
+                <entry key="pp9" value="request.user.parking.other"/>
+                <entry key="pp10" value="request.user.parking.other"/>
+                <entry key="pp11" value="request.user.parking.other"/>
+                <entry key="pp12" value="request.user.parking.other"/>
+                <entry key="pp13" value="request.user.parking.other"/>
+                <entry key="pp14" value="request.user.parking.other"/>
+                <entry key="pp15" value="request.user.parking.other"/>
+                <entry key="pp16" value="request.user.parking.inside.car.notauth"/>
+
+
+                <entry key="e1" value="request.user.extract.platform"/>
+                <entry key="e2" value="request.user.extract.scanner"/>
+                <entry key="e3" value="request.user.extract.peopledoor"/>
+                <entry key="e4" value="request.user.extract.cardoor"/>
+                <entry key="e5" value="request.user.extract.carexist"/>
+                <entry key="e6" value="request.user.extract.other"/>
+                <entry key="e7" value="request.user.extract.other"/>
+                <entry key="e8" value="request.user.extract.other"/>
+                <entry key="e9" value="request.user.extract.other"/>
+                <entry key="e10" value="request.user.extract.other"/>
+                <entry key="e11" value="request.user.extract.other"/>
+                <entry key="e12" value="request.user.extract.other"/>
+                <entry key="e13" value="request.user.extract.other"/>
+                <entry key="e14" value="request.user.extract.other"/>
+                <entry key="e15" value="request.user.extract.other"/>
+                <entry key="e16" value="request.user.extract.other"/>
+                <entry key="ee1" value="request.user.extract.platform"/>
+                <entry key="ee2" value="request.user.extract.scanner"/>
+                <entry key="ee3" value="request.user.extract.peopledoor"/>
+                <entry key="ee4" value="request.user.extract.cardoor"/>
+                <entry key="ee5" value="request.user.extract.other"/>
+                <entry key="ee6" value="request.user.extract.other"/>
+                <entry key="ee7" value="request.user.extract.other"/>
+                <entry key="ee8" value="request.user.extract.other"/>
+                <entry key="ee9" value="request.user.extract.other"/>
+                <entry key="ee10" value="request.user.extract.other"/>
+                <entry key="ee11" value="request.user.extract.other"/>
+                <entry key="ee12" value="request.user.extract.other"/>
+                <entry key="ee13" value="request.user.extract.other"/>
+                <entry key="ee14" value="request.user.extract.other"/>
+                <entry key="ee15" value="request.user.extract.other"/>
+                <entry key="ee16" value="request.user.extract.other"/>
+            </map>
+        </property>
+
+    </bean>
+</beans>

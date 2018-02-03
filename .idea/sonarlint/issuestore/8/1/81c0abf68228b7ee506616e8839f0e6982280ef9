@@ -1,0 +1,18 @@
+
+Dsquid:S1148"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8¨å™İş+
+wsquid:S1450"\Remove the "stringBuilder" field and declare it as a local variable in the relevant methods.(ŸšÅ88¨å™İş+
+zsquid:S1450"^Remove the "stringBuilderto" field and declare it as a local variable in the relevant methods.(Æ³»ê8¨å™İş+
+Psquid:S1066"/Merge this if statement with the enclosing one.(·”³ªıÿÿÿÿ8¨å™İş+
+Dsquid:S1148"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8¨å™İş+
+Dsquid:S1148"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8¨å™İş+
+ssquid:S00117"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Ú«³‚ùÿÿÿÿ8¨å™İş+
+Dsquid:S1148"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8¨å™İş+
+Nsquid:S1135"2Complete the task associated to this TODO comment.(œÂÕ8¨å™İş+
+§%squid:RedundantThrowsDeclarationCheck"lRemove the declaration of thrown exception 'java.io.IOException', as it cannot be thrown from method's body.(½øöÕÿÿÿÿÿ8¨å™İş+
+nsquid:S1192"RDefine a constant instead of duplicating this literal "system.properties" 3 times.(œÂÕ8¨å™İş+
+ssquid:S00117"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Ú«³‚ùÿÿÿÿ8¨å™İş+
+Ksquid:S1066"/Merge this if statement with the enclosing one.(ˆ–âÌ8¨å™İş+
+Psquid:S1066"/Merge this if statement with the enclosing one.(ÚËô½øÿÿÿÿ8¨å™İş+
+ssquid:S3776"RRefactor this method to reduce its Cognitive Complexity from 28 to the 15 allowed.(Ú«³‚ùÿÿÿÿ8¨å™İş+
+psquid:S00116"SRename this field "out_data" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ø›æÌ8¨å™İş+
+h$squid:AssignmentInSubExpressionCheck".Extract the assignment out of this expression.(‹•„üøÿÿÿÿ8¨å™İş+

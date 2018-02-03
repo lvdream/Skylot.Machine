@@ -1,0 +1,390 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fangda.skylot.mathine.dao.parking.OftbMathineItemMapper">
+	<resultMap id="BaseResultMap"
+		type="com.fangda.skylot.mathine.model.parking.OftbMathineItem">
+		<id column="omi_id" property="omiId" jdbcType="INTEGER" />
+		<result column="ima_id" property="imaId" jdbcType="VARCHAR"/>
+		<result column="omi_code" property="omiCode" jdbcType="VARCHAR" />
+		<result column="omi_physical_code" property="omiPhysicalCode"
+			jdbcType="VARCHAR" />
+		<result column="omi_name" property="omiName" jdbcType="VARCHAR" />
+		<result column="omi_rate" property="omiRate" jdbcType="VARCHAR" />
+		<result column="omi_startdate" property="omiStartdate"
+			jdbcType="VARCHAR" />
+		<result column="omi_enddate" property="omiEnddate" jdbcType="VARCHAR" />
+		<result column="omi_status" property="omiStatus" jdbcType="VARCHAR" />
+		<result column="omi_createuser" property="omiCreateuser"
+			jdbcType="VARCHAR" />
+		<result column="omi_createdate" property="omiCreatedate"
+			jdbcType="VARCHAR" />
+		<result column="omi_updateuser" property="omiUpdateuser"
+			jdbcType="VARCHAR" />
+		<result column="omi_updatedate" property="omiUpdatedate"
+			jdbcType="VARCHAR" />
+		<result column="occ_code" property="occCode"
+				jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Example_Where_Clause">
+		<where>
+			<foreach collection="oredCriteria" item="criteria" separator="or">
+				<if test="criteria.valid">
+					<trim prefix="(" suffix=")" prefixOverrides="and">
+						<foreach collection="criteria.criteria" item="criterion">
+							<choose>
+								<when test="criterion.noValue">
+									and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue">
+									and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue">
+									and ${criterion.condition} #{criterion.value} and
+									#{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue">
+									and ${criterion.condition}
+									<foreach collection="criterion.value" item="listItem"
+										open="(" close=")" separator=",">
+										#{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+	</sql>
+	<sql id="Update_By_Example_Where_Clause">
+		<where>
+			<foreach collection="example.oredCriteria" item="criteria"
+				separator="or">
+				<if test="criteria.valid">
+					<trim prefix="(" suffix=")" prefixOverrides="and">
+						<foreach collection="criteria.criteria" item="criterion">
+							<choose>
+								<when test="criterion.noValue">
+									and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue">
+									and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue">
+									and ${criterion.condition} #{criterion.value} and
+									#{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue">
+									and ${criterion.condition}
+									<foreach collection="criterion.value" item="listItem"
+										open="(" close=")" separator=",">
+										#{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+	</sql>
+	<sql id="Base_Column_List">
+		omi_id, ima_id, omi_code, omi_physical_code, omi_name, omi_rate,
+		omi_startdate, omi_enddate,
+		omi_status, omi_createuser, omi_createdate, omi_updateuser, omi_updatedate
+	</sql>
+	<select id="selectByExample" resultMap="BaseResultMap"
+		parameterType="com.fangda.skylot.mathine.model.parking.OftbMathineItemCriteria">
+		select
+		<if test="distinct">
+			distinct
+		</if>
+		<include refid="Base_Column_List" />
+		from oftb_mathine_item
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+		<if test="orderByClause != null">
+			order by ${orderByClause}
+		</if>
+		<if test="page != null">
+			limit #{page.begin} , #{page.length}
+		</if>
+	</select>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from oftb_mathine_item
+		where omi_id = #{omiId,jdbcType=INTEGER}
+	</select>
+
+	<select id="selectByImaId" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from oftb_mathine_item
+		where ima_id = #{imaId,jdbcType=INTEGER}
+	</select>
+	<select id="selectByImaCode"  resultType="java.lang.String"
+			>
+    SELECT omi_name
+    from oftb_customer_car AS occ
+   LEFT JOIN mstb_customer AS mc on occ.mc_id=mc.mc_id
+  LEFT JOIN iftb_item_customer as iic on iic.mc_id=occ.mc_id
+ LEFT JOIN oftb_mathine_item AS oma ON iic.omi_id=oma.omi_id
+       WHERE
+		<if test="occCode != null">
+			occ.occ_code=#{occCode}
+		</if>
+		<if test="omiStatus != null">
+		AND omi_status=#{omiStatus}
+		</if>
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from oftb_mathine_item
+		where omi_id = #{omiId,jdbcType=INTEGER}
+	</delete>
+	<delete id="deleteByExample"
+		parameterType="com.fangda.skylot.mathine.model.parking.OftbMathineItemCriteria">
+		delete from oftb_mathine_item
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</delete>
+	<insert id="insert"
+		parameterType="com.fangda.skylot.mathine.model.parking.OftbMathineItem">
+		insert into oftb_mathine_item (omi_id, ima_id, omi_code,
+		omi_physical_code, omi_name, omi_rate,
+		omi_startdate, omi_enddate, omi_status,
+		omi_createuser, omi_createdate, omi_updateuser,
+		omi_updatedate)
+		values (#{omiId,jdbcType=INTEGER}, #{imaId,jdbcType=INTEGER},
+		#{omiCode,jdbcType=VARCHAR},
+		#{omiPhysicalCode,jdbcType=VARCHAR}, #{omiName,jdbcType=VARCHAR}, #{omiRate,jdbcType=VARCHAR},
+		#{omiStartdate,jdbcType=VARCHAR}, #{omiEnddate,jdbcType=VARCHAR},
+		#{omiStatus,jdbcType=VARCHAR},
+		#{omiCreateuser,jdbcType=VARCHAR}, #{omiCreatedate,jdbcType=VARCHAR}, #{omiUpdateuser,jdbcType=VARCHAR},
+		#{omiUpdatedate,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.fangda.skylot.mathine.model.parking.OftbMathineItem">
+		insert into oftb_mathine_item
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="omiId != null">
+				omi_id,
+			</if>
+			<if test="imaId != null">
+				ima_id,
+			</if>
+			<if test="omiCode != null">
+				omi_code,
+			</if>
+			<if test="omiPhysicalCode != null">
+				omi_physical_code,
+			</if>
+			<if test="omiName != null">
+				omi_name,
+			</if>
+			<if test="omiRate != null">
+				omi_rate,
+			</if>
+			<if test="omiStartdate != null">
+				omi_startdate,
+			</if>
+			<if test="omiEnddate != null">
+				omi_enddate,
+			</if>
+			<if test="omiStatus != null">
+				omi_status,
+			</if>
+			<if test="omiCreateuser != null">
+				omi_createuser,
+			</if>
+			<if test="omiCreatedate != null">
+				omi_createdate,
+			</if>
+			<if test="omiUpdateuser != null">
+				omi_updateuser,
+			</if>
+			<if test="omiUpdatedate != null">
+				omi_updatedate,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="omiId != null">
+				#{omiId,jdbcType=INTEGER},
+			</if>
+			<if test="imaId != null">
+				#{imaId,jdbcType=VARCHAR},
+			</if>
+			<if test="omiCode != null">
+				#{omiCode,jdbcType=VARCHAR},
+			</if>
+			<if test="omiPhysicalCode != null">
+				#{omiPhysicalCode,jdbcType=VARCHAR},
+			</if>
+			<if test="omiName != null">
+				#{omiName,jdbcType=VARCHAR},
+			</if>
+			<if test="omiRate != null">
+				#{omiRate,jdbcType=VARCHAR},
+			</if>
+			<if test="omiStartdate != null">
+				#{omiStartdate,jdbcType=VARCHAR},
+			</if>
+			<if test="omiEnddate != null">
+				#{omiEnddate,jdbcType=VARCHAR},
+			</if>
+			<if test="omiStatus != null">
+				#{omiStatus,jdbcType=VARCHAR},
+			</if>
+			<if test="omiCreateuser != null">
+				#{omiCreateuser,jdbcType=VARCHAR},
+			</if>
+			<if test="omiCreatedate != null">
+				#{omiCreatedate,jdbcType=VARCHAR},
+			</if>
+			<if test="omiUpdateuser != null">
+				#{omiUpdateuser,jdbcType=VARCHAR},
+			</if>
+			<if test="omiUpdatedate != null">
+				#{omiUpdatedate,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<select id="countByExample"
+		parameterType="com.fangda.skylot.mathine.model.parking.OftbMathineItemCriteria"
+		resultType="java.lang.Integer">
+		select count(*) from oftb_mathine_item
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</select>
+	<update id="updateByExampleSelective" parameterType="map">
+		update oftb_mathine_item
+		<set>
+			<if test="record.omiId != null">
+				omi_id = #{record.omiId,jdbcType=INTEGER},
+			</if>
+			<if test="record.imaId != null">
+				ima_id = #{record.imaId,jdbcType=VARCHAR},
+			</if>
+			<if test="record.omiCode != null">
+				omi_code = #{record.omiCode,jdbcType=VARCHAR},
+			</if>
+			<if test="record.omiPhysicalCode != null">
+				omi_physical_code = #{record.omiPhysicalCode,jdbcType=VARCHAR},
+			</if>
+			<if test="record.omiName != null">
+				omi_name = #{record.omiName,jdbcType=VARCHAR},
+			</if>
+			<if test="record.omiRate != null">
+				omi_rate = #{record.omiRate,jdbcType=VARCHAR},
+			</if>
+			<if test="record.omiStartdate != null">
+				omi_startdate = #{record.omiStartdate,jdbcType=VARCHAR},
+			</if>
+			<if test="record.omiEnddate != null">
+				omi_enddate = #{record.omiEnddate,jdbcType=VARCHAR},
+			</if>
+			<if test="record.omiStatus != null">
+				omi_status = #{record.omiStatus,jdbcType=VARCHAR},
+			</if>
+			<if test="record.omiCreateuser != null">
+				omi_createuser = #{record.omiCreateuser,jdbcType=VARCHAR},
+			</if>
+			<if test="record.omiCreatedate != null">
+				omi_createdate = #{record.omiCreatedate,jdbcType=VARCHAR},
+			</if>
+			<if test="record.omiUpdateuser != null">
+				omi_updateuser = #{record.omiUpdateuser,jdbcType=VARCHAR},
+			</if>
+			<if test="record.omiUpdatedate != null">
+				omi_updatedate = #{record.omiUpdatedate,jdbcType=VARCHAR},
+			</if>
+		</set>
+		<if test="_parameter != null">
+			<include refid="Update_By_Example_Where_Clause" />
+		</if>
+	</update>
+	<update id="updateByExample" parameterType="map">
+		update oftb_mathine_item
+		set omi_id = #{record.omiId,jdbcType=INTEGER},
+		ima_id = #{record.imaId,jdbcType=INTEGER},
+		omi_code = #{record.omiCode,jdbcType=VARCHAR},
+		omi_physical_code = #{record.omiPhysicalCode,jdbcType=VARCHAR},
+		omi_name = #{record.omiName,jdbcType=VARCHAR},
+		omi_rate = #{record.omiRate,jdbcType=VARCHAR},
+		omi_startdate = #{record.omiStartdate,jdbcType=VARCHAR},
+		omi_enddate = #{record.omiEnddate,jdbcType=VARCHAR},
+		omi_status = #{record.omiStatus,jdbcType=VARCHAR},
+		omi_createuser = #{record.omiCreateuser,jdbcType=VARCHAR},
+		omi_createdate = #{record.omiCreatedate,jdbcType=VARCHAR},
+		omi_updateuser = #{record.omiUpdateuser,jdbcType=VARCHAR},
+		omi_updatedate = #{record.omiUpdatedate,jdbcType=VARCHAR}
+		<if test="_parameter != null">
+			<include refid="Update_By_Example_Where_Clause" />
+		</if>
+	</update>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.fangda.skylot.mathine.model.parking.OftbMathineItem">
+		update oftb_mathine_item
+		<set>
+			<if test="imaId != null">
+				ima_id = #{imaId,jdbcType=VARCHAR},
+			</if>
+			<if test="omiCode != null">
+				omi_code = #{omiCode,jdbcType=VARCHAR},
+			</if>
+			<if test="omiPhysicalCode != null">
+				omi_physical_code = #{omiPhysicalCode,jdbcType=VARCHAR},
+			</if>
+			<if test="omiName != null">
+				omi_name = #{omiName,jdbcType=VARCHAR},
+			</if>
+			<if test="omiRate != null">
+				omi_rate = #{omiRate,jdbcType=VARCHAR},
+			</if>
+			<if test="omiStartdate != null">
+				omi_startdate = #{omiStartdate,jdbcType=VARCHAR},
+			</if>
+			<if test="omiEnddate != null">
+				omi_enddate = #{omiEnddate,jdbcType=VARCHAR},
+			</if>
+			<if test="omiStatus != null">
+				omi_status = #{omiStatus,jdbcType=VARCHAR},
+			</if>
+			<if test="omiCreateuser != null">
+				omi_createuser = #{omiCreateuser,jdbcType=VARCHAR},
+			</if>
+			<if test="omiCreatedate != null">
+				omi_createdate = #{omiCreatedate,jdbcType=VARCHAR},
+			</if>
+			<if test="omiUpdateuser != null">
+				omi_updateuser = #{omiUpdateuser,jdbcType=VARCHAR},
+			</if>
+			<if test="omiUpdatedate != null">
+				omi_updatedate = #{omiUpdatedate,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where omi_id = #{omiId,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.fangda.skylot.mathine.model.parking.OftbMathineItem">
+		update oftb_mathine_item
+		set ima_id = #{imaId,jdbcType=VARCHAR},
+		omi_code = #{omiCode,jdbcType=VARCHAR},
+		omi_physical_code = #{omiPhysicalCode,jdbcType=VARCHAR},
+		omi_name = #{omiName,jdbcType=VARCHAR},
+		omi_rate = #{omiRate,jdbcType=VARCHAR},
+		omi_startdate = #{omiStartdate,jdbcType=VARCHAR},
+		omi_enddate = #{omiEnddate,jdbcType=VARCHAR},
+		omi_status = #{omiStatus,jdbcType=VARCHAR},
+		omi_createuser = #{omiCreateuser,jdbcType=VARCHAR},
+		omi_createdate = #{omiCreatedate,jdbcType=VARCHAR},
+		omi_updateuser = #{omiUpdateuser,jdbcType=VARCHAR},
+		omi_updatedate = #{omiUpdatedate,jdbcType=VARCHAR}
+		where omi_id = #{omiId,jdbcType=INTEGER}
+	</update>
+</mapper>

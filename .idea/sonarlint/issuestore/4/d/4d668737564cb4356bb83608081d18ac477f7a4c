@@ -1,0 +1,29 @@
+
+nsquid:S00117"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(¤εΏε8ίηΝ„,
+ssquid:S3776"RRefactor this method to reduce its Cognitive Complexity from 62 to the 15 allowed.(ςωή…ωÿÿÿÿ8ίηΝ„,
+Nsquid:S1135"2Complete the task associated to this TODO comment.(†Τ‰«8ίηΝ„,
+Psquid:S1066"/Merge this if statement with the enclosing one.(ΆψΑώÿÿÿÿ8ίηΝ„,
+psquid:S00100"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(”‹€Λόÿÿÿÿ8άΦ…,
+Nsquid:S1135"2Complete the task associated to this TODO comment.(†Τ‰«8ίηΝ„,
+Ssquid:S1135"2Complete the task associated to this TODO comment.(λ‰Κ„ÿÿÿÿÿ8ίηΝ„,
+Qsquid:S1143"5Remove this return statement from this finally block.(ί Τ8ίηΝ„,
+Psquid:S1066"/Merge this if statement with the enclosing one.(–‚›ϊώÿÿÿÿ8ίηΝ„,
+Nsquid:S1135"2Complete the task associated to this TODO comment.(†Τ‰«8ίηΝ„,
+Ksquid:S1066"/Merge this if statement with the enclosing one.(υ‹Τ8ίηΝ„,
+bsquid:S2142"FEither re-interrupt this method or rethrow the "InterruptedException".(δ Ή€8ίηΝ„,
+ssquid:S3776"RRefactor this method to reduce its Cognitive Complexity from 16 to the 15 allowed.(¨•…³ψÿÿÿÿ8ίηΝ„,
+psquid:S00116"SRename this field "out_data" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ψ›ζΜ8ίηΝ„,
+‰squid:S1192"hDefine a constant instead of duplicating this literal "],ε½“ε‰ζ“δ½[ε­θ½¦],ε½“ε‰θ½¦θΎ†ζ―[" 7 times.(Φγψÿϋÿÿÿÿ8ίηΝ„,
+bsquid:S2142"FEither re-interrupt this method or rethrow the "InterruptedException".(δ Ή€8ίηΝ„,
+Dsquid:S1148"#Use a logger to log this exception.(€ΙΤ…ύÿÿÿÿ8ίηΝ„,
+qsquid:S1192"PDefine a constant instead of duplicating this literal "ε½“ε‰ζ—¶ι—΄:[" 14 times.(Φγψÿϋÿÿÿÿ8ίηΝ„,
+Nsquid:S1135"2Complete the task associated to this TODO comment.(»ξΩΜ8ίηΝ„,
+bsquid:S2142"FEither re-interrupt this method or rethrow the "InterruptedException".(δ Ή€8ίηΝ„,
+Vsquid:S1141"5Extract this nested try block into a separate method.(΅»Άόωÿÿÿÿ8ίηΝ„,
+ssquid:S00117"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(”‹€Λόÿÿÿÿ8ίηΝ„,
+jsquid:S00100"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ύιΣ8ίηΝ„,
+bsquid:S2142"FEither re-interrupt this method or rethrow the "InterruptedException".(δ Ή€8ίηΝ„,
+nsquid:S3776"RRefactor this method to reduce its Cognitive Complexity from 16 to the 15 allowed.(¤εΏε8ίηΝ„,
+ksquid:S00100"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(¤εΏε8άΦ…,
+Dsquid:S1148"#Use a logger to log this exception.(€ΙΤ…ύÿÿÿÿ8ίηΝ„,
+Ksquid:S1066"/Merge this if statement with the enclosing one.(ΎΌΒ8ίηΝ„,

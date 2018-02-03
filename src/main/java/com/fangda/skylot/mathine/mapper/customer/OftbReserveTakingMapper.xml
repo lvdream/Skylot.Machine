@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fangda.skylot.mathine.dao.customer.OftbReserveTakingMapper">
+    <resultMap id="BaseResultMap" type="com.fangda.skylot.mathine.model.customer.OftbReserveTaking">
+        <id column="ort_id" property="ortId" jdbcType="INTEGER"/>
+        <result column="mc_id" property="mcId" jdbcType="INTEGER"/>
+        <result column="ima_id" property="imaId" jdbcType="VARCHAR"/>
+        <result column="ort_physical_code" property="ortPhysicalCode" jdbcType="VARCHAR"/>
+        <result column="ort_reserve_time" property="ortReserveTime" jdbcType="VARCHAR"/>
+        <result column="ort_status" property="ortStatus" jdbcType="VARCHAR"/>
+        <result column="ort_createdate" property="ortCreatedate" jdbcType="VARCHAR"/>
+        <result column="ort_createuser" property="ortCreateuser" jdbcType="VARCHAR"/>
+        <result column="ort_updatedate" property="ortUpdatedate" jdbcType="VARCHAR"/>
+        <result column="ort_updateuser" property="ortUpdateuser" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Example_Where_Clause">
+        <where>
+            <foreach collection="oredCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" suffix=")" prefixOverrides="and">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach collection="criterion.value" item="listItem" open="(" close=")"
+                                             separator=",">
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+    <sql id="Update_By_Example_Where_Clause">
+        <where>
+            <foreach collection="example.oredCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" suffix=")" prefixOverrides="and">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach collection="criterion.value" item="listItem" open="(" close=")"
+                                             separator=",">
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+    <sql id="Base_Column_List">
+        ort_id, mc_id, ima_id, ort_physical_code, ort_reserve_time, ort_status, ort_createdate,
+        ort_createuser, ort_updatedate, ort_updateuser
+    </sql>
+    <select id="selectByExample" resultMap="BaseResultMap"
+            parameterType="com.fangda.skylot.mathine.model.customer.OftbReserveTakingCriteria">
+        select
+        <if test="distinct">
+            distinct
+        </if>
+        <include refid="Base_Column_List"/>
+        from oftb_reserve_taking
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+        <if test="page != null">
+            limit #{page.begin} , #{page.length}
+        </if>
+    </select>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from oftb_reserve_taking
+        where ort_id = #{ortId,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        DELETE FROM oftb_reserve_taking
+        WHERE ort_id = #{ortId,jdbcType=INTEGER}
+    </delete>
+    <delete id="deleteByExample" parameterType="com.fangda.skylot.mathine.model.customer.OftbReserveTakingCriteria">
+        delete from oftb_reserve_taking
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+    </delete>
+    <insert id="insert" parameterType="com.fangda.skylot.mathine.model.customer.OftbReserveTaking"
+            useGeneratedKeys="true" keyProperty="ortId">
+        insert into oftb_reserve_taking (ort_id, mc_id, ima_id,
+        ort_physical_code, ort_reserve_time, ort_status,
+        ort_createdate, ort_createuser, ort_updatedate,
+        ort_updateuser)
+        values (#{ortId,jdbcType=INTEGER}, #{mcId,jdbcType=INTEGER}, #{imaId,jdbcType=VARCHAR},
+        #{ortPhysicalCode,jdbcType=VARCHAR}, #{ortReserveTime,jdbcType=VARCHAR}, #{ortStatus,jdbcType=VARCHAR},
+        #{ortCreatedate,jdbcType=VARCHAR}, #{ortCreateuser,jdbcType=VARCHAR}, #{ortUpdatedate,jdbcType=VARCHAR},
+        #{ortUpdateuser,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.fangda.skylot.mathine.model.customer.OftbReserveTaking"
+            useGeneratedKeys="true" keyProperty="ortId">
+        insert into oftb_reserve_taking
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="ortId != null">
+                ort_id,
+            </if>
+            <if test="mcId != null">
+                mc_id,
+            </if>
+            <if test="imaId != null">
+                ima_id,
+            </if>
+            <if test="ortPhysicalCode != null">
+                ort_physical_code,
+            </if>
+            <if test="ortReserveTime != null">
+                ort_reserve_time,
+            </if>
+            <if test="ortStatus != null">
+                ort_status,
+            </if>
+            <if test="ortCreatedate != null">
+                ort_createdate,
+            </if>
+            <if test="ortCreateuser != null">
+                ort_createuser,
+            </if>
+            <if test="ortUpdatedate != null">
+                ort_updatedate,
+            </if>
+            <if test="ortUpdateuser != null">
+                ort_updateuser,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="ortId != null">
+                #{ortId,jdbcType=INTEGER},
+            </if>
+            <if test="mcId != null">
+                #{mcId,jdbcType=INTEGER},
+            </if>
+            <if test="imaId != null">
+                #{imaId,jdbcType=VARCHAR},
+            </if>
+            <if test="ortPhysicalCode != null">
+                #{ortPhysicalCode,jdbcType=VARCHAR},
+            </if>
+            <if test="ortReserveTime != null">
+                #{ortReserveTime,jdbcType=VARCHAR},
+            </if>
+            <if test="ortStatus != null">
+                #{ortStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="ortCreatedate != null">
+                #{ortCreatedate,jdbcType=VARCHAR},
+            </if>
+            <if test="ortCreateuser != null">
+                #{ortCreateuser,jdbcType=VARCHAR},
+            </if>
+            <if test="ortUpdatedate != null">
+                #{ortUpdatedate,jdbcType=VARCHAR},
+            </if>
+            <if test="ortUpdateuser != null">
+                #{ortUpdateuser,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <select id="countByExample" parameterType="com.fangda.skylot.mathine.model.customer.OftbReserveTakingCriteria"
+            resultType="java.lang.Integer">
+        select count(*) from oftb_reserve_taking
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+    </select>
+    <update id="updateByExampleSelective" parameterType="map">
+        update oftb_reserve_taking
+        <set>
+            <if test="record.ortId != null">
+                ort_id = #{record.ortId,jdbcType=INTEGER},
+            </if>
+            <if test="record.mcId != null">
+                mc_id = #{record.mcId,jdbcType=INTEGER},
+            </if>
+            <if test="record.imaId != null">
+                ima_id = #{record.imaId,jdbcType=VARCHAR},
+            </if>
+            <if test="record.ortPhysicalCode != null">
+                ort_physical_code = #{record.ortPhysicalCode,jdbcType=VARCHAR},
+            </if>
+            <if test="record.ortReserveTime != null">
+                ort_reserve_time = #{record.ortReserveTime,jdbcType=VARCHAR},
+            </if>
+            <if test="record.ortStatus != null">
+                ort_status = #{record.ortStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="record.ortCreatedate != null">
+                ort_createdate = #{record.ortCreatedate,jdbcType=VARCHAR},
+            </if>
+            <if test="record.ortCreateuser != null">
+                ort_createuser = #{record.ortCreateuser,jdbcType=VARCHAR},
+            </if>
+            <if test="record.ortUpdatedate != null">
+                ort_updatedate = #{record.ortUpdatedate,jdbcType=VARCHAR},
+            </if>
+            <if test="record.ortUpdateuser != null">
+                ort_updateuser = #{record.ortUpdateuser,jdbcType=VARCHAR},
+            </if>
+        </set>
+        <if test="_parameter != null">
+            <include refid="Update_By_Example_Where_Clause"/>
+        </if>
+    </update>
+    <update id="updateByExample" parameterType="map">
+        update oftb_reserve_taking
+        set ort_id = #{record.ortId,jdbcType=INTEGER},
+        mc_id = #{record.mcId,jdbcType=INTEGER},
+        ima_id = #{record.imaId,jdbcType=VARCHAR},
+        ort_physical_code = #{record.ortPhysicalCode,jdbcType=VARCHAR},
+        ort_reserve_time = #{record.ortReserveTime,jdbcType=VARCHAR},
+        ort_status = #{record.ortStatus,jdbcType=VARCHAR},
+        ort_createdate = #{record.ortCreatedate,jdbcType=VARCHAR},
+        ort_createuser = #{record.ortCreateuser,jdbcType=VARCHAR},
+        ort_updatedate = #{record.ortUpdatedate,jdbcType=VARCHAR},
+        ort_updateuser = #{record.ortUpdateuser,jdbcType=VARCHAR}
+        <if test="_parameter != null">
+            <include refid="Update_By_Example_Where_Clause"/>
+        </if>
+    </update>
+    <update id="updateByPrimaryKeySelective" parameterType="com.fangda.skylot.mathine.model.customer.OftbReserveTaking">
+        update oftb_reserve_taking
+        <set>
+            <if test="mcId != null">
+                mc_id = #{mcId,jdbcType=INTEGER},
+            </if>
+            <if test="imaId != null">
+                ima_id = #{imaId,jdbcType=VARCHAR},
+            </if>
+            <if test="ortPhysicalCode != null">
+                ort_physical_code = #{ortPhysicalCode,jdbcType=VARCHAR},
+            </if>
+            <if test="ortReserveTime != null">
+                ort_reserve_time = #{ortReserveTime,jdbcType=VARCHAR},
+            </if>
+            <if test="ortStatus != null">
+                ort_status = #{ortStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="ortCreatedate != null">
+                ort_createdate = #{ortCreatedate,jdbcType=VARCHAR},
+            </if>
+            <if test="ortCreateuser != null">
+                ort_createuser = #{ortCreateuser,jdbcType=VARCHAR},
+            </if>
+            <if test="ortUpdatedate != null">
+                ort_updatedate = #{ortUpdatedate,jdbcType=VARCHAR},
+            </if>
+            <if test="ortUpdateuser != null">
+                ort_updateuser = #{ortUpdateuser,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where ort_id = #{ortId,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.fangda.skylot.mathine.model.customer.OftbReserveTaking">
+        UPDATE oftb_reserve_taking
+        SET mc_id             = #{mcId,jdbcType=INTEGER},
+            ima_id            = #{imaId,jdbcType=VARCHAR},
+            ort_physical_code = #{ortPhysicalCode,jdbcType=VARCHAR},
+            ort_reserve_time  = #{ortReserveTime,jdbcType=VARCHAR},
+            ort_status        = #{ortStatus,jdbcType=VARCHAR},
+            ort_createdate    = #{ortCreatedate,jdbcType=VARCHAR},
+            ort_createuser    = #{ortCreateuser,jdbcType=VARCHAR},
+            ort_updatedate    = #{ortUpdatedate,jdbcType=VARCHAR},
+            ort_updateuser    = #{ortUpdateuser,jdbcType=VARCHAR}
+        WHERE ort_id = #{ortId,jdbcType=INTEGER}
+    </update>
+</mapper>

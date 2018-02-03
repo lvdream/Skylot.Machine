@@ -1,0 +1,18 @@
+
+fsquid:S00117"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(¤¥ÿ%
+4squid:S2131"Use "Integer.toString" instead.(åÚúÿ
+gsquid:S3776"RRefactor this method to reduce its Cognitive Complexity from 25 to the 15 allowed.(Ÿ—ûÉ
+Gsquid:S1135"2Complete the task associated to this TODO comment.(ÔÚ†£
+4squid:S2131"Use "Integer.toString" instead.(øØø
+lsquid:S00117"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(¬å°ûÿÿÿÿ
+4squid:S2131"Use "Integer.toString" instead.(ÕæÜğ
+Usquid:UnusedPrivateMethod"2Remove this unused private "getDownCounts" method.(û…†
+r
+squid:S135"YReduce the total number of break and continue statements in this loop to use at most one.(ı­Ïüÿÿÿÿ
+9squid:S2131"Use "Integer.toString" instead.(‘†ŒÉùÿÿÿÿ
+lsquid:S3776"RRefactor this method to reduce its Cognitive Complexity from 41 to the 15 allowed.(èØ©Îÿÿÿÿÿ
+4squid:S2131"Use "Integer.toString" instead.(†è¼™
+S"squid:SwitchLastCaseIsDefaultCheck""Add a default case to this switch.(È¨ê…üÿÿÿÿ
+r
+squid:S135"YReduce the total number of break and continue statements in this loop to use at most one.(ı­Ïüÿÿÿÿ
+lsquid:S00117"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(¼Òø¾ûÿÿÿÿ

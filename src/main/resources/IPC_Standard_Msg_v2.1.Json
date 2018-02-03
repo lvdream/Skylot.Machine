@@ -1,0 +1,38 @@
+{
+  "说明": [
+    {
+      "machineStatus": "1-空置,2-工作中, 9-严重错误",
+      "operationType": "1-无操作, 2-取车操作, 3-存车操作, 4-预约取车, 5-取车完成后，配载操作",
+      "operationStatus": "1-车台旋转中, 2-车台位置就绪, 3-操作完成"
+    }
+  ],
+  "data": {
+    "machineStatus": 1,
+    "operationStatus": 1,
+    "operatingType": 1,
+    "carCode": "粤B12345",
+    "carCodes": [
+      {
+        "carCode": "粤B12345"
+      },
+      {
+        "carCode": "粤B12325"
+      }
+    ]
+  },
+  "error": [
+    {
+      "ErrorCodeObj": {
+        "errorCode": "request.user.parking.1005",
+        "errorMsg": "1005故障"
+      }
+    },
+    {
+      "ErrorCodeObj": {
+        "errorCode": "request.user.parking.1001",
+        "errorMsg": "1001故障"
+      }
+    }
+  ],
+  "resultType": true
+}
