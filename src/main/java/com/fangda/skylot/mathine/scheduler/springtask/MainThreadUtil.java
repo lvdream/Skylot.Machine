@@ -98,9 +98,8 @@ public class MainThreadUtil {
                 }
             } else {
                 this.getTstbFtpCarInformation().setTfcStatus(NumberUtils.toInt(SCHEDULEACTION_MODULEID_ITEMCUSTOMER));//等待用户确认状态
+                serviceMap.get("ftpcarService").update(this.getTstbFtpCarInformation(), carInformationCriteria);
             }
-
-            serviceMap.get("ftpcarService").update(this.getTstbFtpCarInformation(), carInformationCriteria);
             return true;
         } catch (Exception e) {
             throw new SkyLotException(e);
@@ -291,14 +290,48 @@ public class MainThreadUtil {
     }
 
     /**
-     * 检查车库门是否有关
+     * 检查取消指令是否可以执行
      *
+     * @param actionType 操作的类型,0:取消存车,1:取消取车
      * @throws SkyLotException
      */
-    private void hasHighError() throws SkyLotException {
-        if (socketService.confirmStatus(4, true) == NumberUtils.toInt(FN_RETURN_STATUS_SUCCESS)) {
-            carDoor = true;
+    private boolean checkCancelAction(String actionType) throws SkyLotException {
+        if (StringUtils.equals(CMD_STR_CANCEL_PARK, actionType)) {//取消存车
+            Map valuesMap = getSocketService().getIndexError();
+            List errors = analyzingError(valuesMap, "p");
+            boolean checkError = false;
+            if (CollectionUtils.isNotEmpty(errors)) {
+                for (int i = 0; i < errors.size(); i++) {
+                    Map o = (Map) errors.get(i);
+                    ErrorCodeObj errorCodeObj = (ErrorCodeObj) o.get(" ErrorCodeObj");
+                    if (StringUtils.containsAny(errorCodeObj.getErrorCode(), "p2", "p3", "p4", "p5", "p6")) {//查找错误信息
+                        checkError = true;
+                        break;
+                    }
+                }
+            }
+            if (checkError) {
+                return false;
+            }
+        } else {
+            Map valuesMap = getSocketService().pullIndexError();
+            List errors = analyzingError(valuesMap, "e");
+            boolean checkError = false;
+            if (CollectionUtils.isNotEmpty(errors)) {
+                for (int i = 0; i < errors.size(); i++) {
+                    Map o = (Map) errors.get(i);
+                    ErrorCodeObj errorCodeObj = (ErrorCodeObj) o.get(" ErrorCodeObj");
+                    if (StringUtils.containsAny(errorCodeObj.getErrorCode(), "e2", "e3", "e4", "e5")) {//查找错误信息
+                        checkError = true;
+                        break;
+                    }
+                }
+            }
+            if (checkError) {
+                return false;
+            }
         }
+        return true;
     }
 
     /**
@@ -406,7 +439,13 @@ public class MainThreadUtil {
 //            while (waitForCancel()) {//等待用户确认取消
 //
 //            }
-            marqueeUtil.sendText("存车中", this.getTstbFtpCarInformation().getTfcCarCode() + ",接收到取消指令,正在执行取消操作,请稍后", true);
+            marqueeUtil.sendText(actionType.equals("0") ? "存车中" : "取车中", this.getTstbFtpCarInformation().getTfcCarCode() + ",接收到取消指令,正在执行取消操作,请稍后", true);
+            //检查是否可以进行取消操作
+            while (!checkCancelAction(actionType)) {
+                loggerParking.warn("正在检查取消指令是否可以执行!");
+                heartBeatPLC(actionType.equals("0") ? "3" : "2", "2");
+                Thread.sleep(1000);
+            }
             int status = socketService.cancelAction(actionType);
             int count = 0;
             if (status == 0) {

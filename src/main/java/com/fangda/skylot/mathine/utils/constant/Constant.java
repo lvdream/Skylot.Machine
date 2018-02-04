@@ -452,5 +452,12 @@ public final class Constant {
      */
     public static final String STR_EXCEPTION_BUSINESS_CODE = "business_code";
 
-
+    /**
+     * 指令,取消存车指令
+     */
+    public static final String CMD_STR_CANCEL_PARK = "0";
+    /**
+     * 指令,取消取车指令
+     */
+    public static final String CMD_STR_CANCEL_EXTRACT = "1";
 }
