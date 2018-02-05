@@ -23,6 +23,10 @@ public class JsonResult implements Serializable {
      * 返回的状态值
      */
     private boolean resultType;
+    /**
+     * 设备的类型
+     */
+    private String serviceType;
 
     /**
      * 返回的数据类型

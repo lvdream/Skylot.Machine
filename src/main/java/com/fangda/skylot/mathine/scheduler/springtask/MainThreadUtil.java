@@ -414,6 +414,7 @@ public class MainThreadUtil {
             }
             dataResult.setCarCodes(datalist);
         }
+
         jsonResult.setData(SkylotUtils.removeNullValue(SkylotUtils.beanToHashMap(dataResult)));
         jsonResult.setError(errorList);
         jsonResult.setResultType(true);
@@ -421,10 +422,12 @@ public class MainThreadUtil {
             jsonResult.setResultType(CollectionUtils.isNotEmpty(errorList) ? false : true);
         }
 
-        iftbMachineAction.setImaErrorJson(SingletonObjectMapper.getInstance().writeValueAsString(jsonResult));
-        iftbMachineAction.setImaPhysicalStatus(iStatus);
         IftbMachineActionCriteria criteria = new IftbMachineActionCriteria();
         criteria.createCriteria().andImaIdEqualTo(SkylotUtils.imaId);
+        IftbMachineAction machineAction = (IftbMachineAction) serviceMap.get("machineActionService").queryForAll(criteria).get(0);
+        jsonResult.setServiceType(machineAction.getImaCode());
+        iftbMachineAction.setImaErrorJson(SingletonObjectMapper.getInstance().writeValueAsString(jsonResult));
+        iftbMachineAction.setImaPhysicalStatus(iStatus);
         serviceMap.get("machineActionService").update(iftbMachineAction, criteria);
     }
 

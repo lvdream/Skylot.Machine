@@ -851,6 +851,7 @@ public class SocketServiceImpl extends BaseCommandUtils implements SocketService
                     returnMap.put(MAP_ENERGY, getDirectionEnergy());
                     setFinishParkingTime(System.currentTimeMillis() - getTimeCounter() - getDirectionBeforeTime());//实际完成停车耗时,等于当前时间减去旋转车台耗时,再减去开始计时的时间点
                     returnMap.put(MAP_PARKING_DIRECTION, parkingLogic.getFinalPostionNumer());
+                    returnMap.put("parkingLogic", parkingLogic);
                 } else {
                     if (NumberUtils.toInt(FN_RETURN_STATUS_HANDLE) == status) {//系统急停,严重错误
                         returnMap.put(MAP_PARKING_STATUS, NumberUtils.toInt(FN_RETURN_STATUS_HANDLE));
