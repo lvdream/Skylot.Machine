@@ -207,27 +207,42 @@ CREATE PROCEDURE sp_oftb_reserve_taking()
   BEGIN
     -- 验证当前预约表是否有预约车辆
     DECLARE tmp_count INT;
-    DECLARE tmp_car_code VARCHAR(20) CHARACTER SET utf8;
-    DECLARE tmp_ima_id VARCHAR(100) CHARACTER SET utf8;
-    DECLARE tmp_pysical_code VARCHAR(2) CHARACTER SET utf8;
+    DECLARE tmp_car_code_w VARCHAR(200) CHARACTER SET utf8;
+    DECLARE tmp_ima_id_w VARCHAR(100) CHARACTER SET utf8;
+    DECLARE tmp_pysical_code_w VARCHAR(2) CHARACTER SET utf8;
 
     SET tmp_count = (SELECT count(*)
-                     FROM oftb_reserve_taking);
+                     FROM oftb_reserve_taking
+                     WHERE date_add(now(), INTERVAL '60' SECOND) > ort_reserve_time AND now() < ort_reserve_time);
     IF (tmp_count > 0)
     THEN
-      SET tmp_pysical_code = (SELECT ort_physical_code
-                              FROM oftb_reserve_taking
-                              ORDER BY ort_id ASC
-                              LIMIT 1);
-      SET tmp_ima_id = (SELECT ima_id
-                        FROM oftb_reserve_taking
-                        ORDER BY ort_id ASC
-                        LIMIT 1);
-      SET tmp_car_code = (SELECT tmp_car_code
-                          FROM tstb_mathine_parking
-                          WHERE tmp_physical_code = tmp_pysical_code);
+      SET tmp_pysical_code_w = (SELECT ort_physical_code
+                                FROM oftb_reserve_taking
+                                ORDER BY ort_id ASC
+                                LIMIT 1);
+      SET tmp_ima_id_w = (SELECT ima_id
+                          FROM oftb_reserve_taking
+                          ORDER BY ort_id ASC
+                          LIMIT 1);
+
+      SET tmp_car_code_w = (SELECT tmp_car_code
+                            FROM tstb_mathine_parking
+                            WHERE tmp_physical_code = (SELECT ort_physical_code
+                                                       FROM oftb_reserve_taking
+                                                       ORDER BY ort_id ASC
+                                                       LIMIT 1));
       INSERT INTO tstb_ftp_car_information (ima_id, tfc_car_code, tfc_status, tfc_createtime, tfc_car_action)
-      VALUES (tmp_ima_id, tmp_car_code, 1, now(), '2');
+      VALUES (tmp_ima_id_w, tmp_car_code_w, 1, now(), '2');
+    END IF;
+    # 删除过期预约项目
+    SET tmp_count = (SELECT count(*)
+                     FROM oftb_reserve_taking
+                     WHERE date_add(now(), INTERVAL '-1' DAY) > ort_reserve_time);
+
+    IF (tmp_count > 0)
+    THEN
+      DELETE FROM oftb_reserve_taking
+      WHERE date_add(now(), INTERVAL '-1' DAY) > ort_reserve_time;
     END IF;
   END;
 DELIMITER ;
@@ -236,7 +251,7 @@ DELIMITER ;
 DELIMITER ;
 DROP EVENT IF EXISTS et_sp_reserve;
 CREATE EVENT et_sp_reserve
-  ON SCHEDULE EVERY 2 SECOND STARTS '2012-09-24 00:00:00'
-  ON COMPLETION PRESERVE ENABLE DO CALL sp_oftb_reserve_taking();
+  ON SCHEDULE EVERY 2 SECOND
+  ON COMPLETION PRESERVE DO CALL sp_oftb_reserve_taking();
 
 DELIMITER ;

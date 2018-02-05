@@ -683,8 +683,9 @@ public class SyncServiceImpl implements SyncService {
 //                            hasSyncError("0", true);
 //                        }
                         iftbMachineAction.setImaPhysicalStatus(FN_RETURN_STATUS_SUCCESS);
-                    } else {//和SaaS同步失败,放置一条失败的信息
                         addSyncError("0");
+                    } else {//和SaaS同步失败,放置一条失败的信息
+                        addSyncError("2");
                         iftbMachineAction.setImaPhysicalStatus(FN_RETURN_STATUS_ERROR);
                     }
                     if (StringUtils.equals(SCHEDULEACTION_BUSINESSOBJ_MACHINE, next.getIsaBusinessObj())) {//如果是IMA对象的同步
@@ -822,15 +823,18 @@ public class SyncServiceImpl implements SyncService {
     public boolean hasSyncError(String errorType, boolean... compareDate) throws Exception {
         OftbSyncLogCriteria oftbSyncLogCriteria = new OftbSyncLogCriteria();
         OftbSyncLogCriteria.Criteria criteria = oftbSyncLogCriteria.createCriteria();
-        criteria.andOslTypeEqualTo(errorType);
         if (compareDate.length > 0) {
             criteria.andOslCreatedateLessThan(DateFormatUtils.format(DateUtils.addMinutes(new Date(), -2), DATE_FORMAT_STANDARD));
             // TODO: 05/02/2018 查找5分钟之前是否有同步失败的信息,如有则反馈SaaS,当前设备故障
         }
-        List errorList = Lists.newArrayList();
-        errorList = this.daoMap.get("oftbSyncLogDao").ReadAll(oftbSyncLogCriteria);
-        if (CollectionUtils.isNotEmpty(errorList)) {
-            return true;
+        List oftbSyncLogDao = this.daoMap.get("oftbSyncLogDao").ReadAll(oftbSyncLogCriteria);
+        if (CollectionUtils.isNotEmpty(oftbSyncLogDao)) {
+            OftbSyncLog errorList = (OftbSyncLog) oftbSyncLogDao.get(0);
+            if (errorList != null) {
+                if (errorList.getOslType().equals(errorType)) {
+                    return true;
+                }
+            }
         }
         return false;
     }

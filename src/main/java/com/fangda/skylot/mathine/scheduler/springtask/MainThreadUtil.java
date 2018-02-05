@@ -1,6 +1,7 @@
 package com.fangda.skylot.mathine.scheduler.springtask;
 
 import com.fangda.skylot.mathine.dao.IBaseDao;
+import com.fangda.skylot.mathine.model.customer.OftbSyncLog;
 import com.fangda.skylot.mathine.model.customer.OftbSyncLogCriteria;
 import com.fangda.skylot.mathine.model.parking.IftbMachineAction;
 import com.fangda.skylot.mathine.model.parking.IftbMachineActionCriteria;
@@ -147,12 +148,17 @@ public class MainThreadUtil {
      */
     protected boolean isSyncedIMA() throws Exception {
         OftbSyncLogCriteria oftbSyncLogCriteria = new OftbSyncLogCriteria();
-        oftbSyncLogCriteria.createCriteria().andOslTypeEqualTo("0");
-        List errorList = this.daoMap.get("oftbSyncLogDao").ReadAll(oftbSyncLogCriteria);
-        if (CollectionUtils.isNotEmpty(errorList)) {
-            return false;
+        oftbSyncLogCriteria.setOrderByClause("  osl_id desc");
+        List oftbSyncLogDao = this.daoMap.get("oftbSyncLogDao").ReadAll(oftbSyncLogCriteria);
+        if (CollectionUtils.isNotEmpty(oftbSyncLogDao)) {
+            OftbSyncLog errorList = (OftbSyncLog) oftbSyncLogDao.get(0);
+            if (errorList != null) {
+                if (errorList.getOslType().equals("0")) {
+                    return true;
+                }
+            }
         }
-        return true;
+        return false;
     }
 
     /**
@@ -493,7 +499,6 @@ public class MainThreadUtil {
 
     /**
      * 取消取车失败操作
-     *
      */
     protected void cancelError() throws Exception {
         TstbFtpCarInformationCriteria carInformationCriteria = new TstbFtpCarInformationCriteria();
