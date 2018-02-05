@@ -82,4 +82,13 @@ public interface SyncService {
      * @return
      */
     int createParkinglog(String carNumber, Map parkingMap, int isParking);
+
+    /**
+     * 是否同步失败的数据
+     *
+     * @param errorType   错误的类型
+     * @param compareDate 是否要比较时间
+     * @return true:是,false:否
+     */
+    boolean hasSyncError(String errorType, boolean... compareDate) throws Exception;
 }

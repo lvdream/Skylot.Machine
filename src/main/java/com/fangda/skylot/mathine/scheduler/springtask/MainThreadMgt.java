@@ -61,7 +61,6 @@ public class MainThreadMgt extends MainThreadUtil {
                     }
 
                 }
-                wsThreadMgt.getCommands();
             }
         } catch (Exception e) {
             if (StringUtils.contains(e.getMessage(), EX_PARKING_MATHINE_EXCEPTION)) {
@@ -70,9 +69,10 @@ public class MainThreadMgt extends MainThreadUtil {
                 getLoggerParking().warn("当前时间:[" + SkylotUtils.getStrDate() + "],设备同步异常,不能完成停车操作!");
                 getMarqueeUtil().sendText("SkyLot", "设备故障无法进行同步", true);
             }
+
             throw new SkyLotException(e);
         } finally {
-
+            wsThreadMgt.getCommands();
         }
     }
 
@@ -117,6 +117,8 @@ public class MainThreadMgt extends MainThreadUtil {
                 if (checkCanceled()) {
                     if (cancelAction(FN_RETURN_STATUS_SUCCESS)) {
                         return false;
+                    } else {
+
                     }
                 }
                 //其次,判断内部摄像头是否已经识别到车辆车牌,30秒延迟判断
@@ -265,6 +267,7 @@ public class MainThreadMgt extends MainThreadUtil {
                 TstbFtpCarInformationCriteria carInformationCriteria = new TstbFtpCarInformationCriteria();
                 carInformationCriteria.createCriteria().andTfcCarCodeEqualTo(this.getTstbFtpCarInformation().getTfcCarCode());
                 serviceMap.get("ftpcarService").delete(carInformationCriteria);
+                getMarqueeUtil().sendText("Skylot", "欢迎停车!", true, "丝杆老特");
                 //更新IMA状态
                 updateStatus("3", "9", "1", this.getTstbFtpCarInformation().getTfcCarCode(), this.getTstbFtpCarInformation().getTfcCarInCode(), "3", null);
                 throw new SkyLotException(EX_PARKING_MATHINE_EXCEPTION);
@@ -308,6 +311,8 @@ public class MainThreadMgt extends MainThreadUtil {
                 if (checkCanceled()) {
                     if (cancelAction(FN_RETURN_STATUS_ERROR)) {
                         return false;
+                    } else {
+                        cancelError();
                     }
                 }
                 confirmCar();
@@ -323,6 +328,8 @@ public class MainThreadMgt extends MainThreadUtil {
                     if (checkCanceled()) {
                         if (cancelAction(FN_RETURN_STATUS_ERROR)) {
                             return false;
+                        } else {
+                            cancelError();
                         }
                     }
                     a++;
@@ -335,6 +342,8 @@ public class MainThreadMgt extends MainThreadUtil {
                     if (checkCanceled()) {
                         if (cancelAction(FN_RETURN_STATUS_ERROR)) {
                             return false;
+                        } else {
+                            cancelError();
                         }
                     }
                     getSocketService().carDoor(FN_RETURN_STATUS_SUCCESS);//车库门开门指令发送成功
@@ -347,6 +356,8 @@ public class MainThreadMgt extends MainThreadUtil {
                     if (checkCanceled()) {
                         if (cancelAction(FN_RETURN_STATUS_ERROR)) {
                             return false;
+                        } else {
+                            cancelError();
                         }
                     }
                     Thread.sleep(1000);
@@ -362,6 +373,8 @@ public class MainThreadMgt extends MainThreadUtil {
                     if (checkCanceled()) {
                         if (cancelAction(FN_RETURN_STATUS_ERROR)) {
                             return false;
+                        } else {
+                            cancelError();
                         }
                     }
                     if (a == 0) {
@@ -395,7 +408,7 @@ public class MainThreadMgt extends MainThreadUtil {
                 carInformationCriteria.createCriteria().andTfcCarCodeEqualTo(this.getTstbFtpCarInformation().getTfcCarCode());
                 serviceMap.get("ftpcarService").delete(carInformationCriteria);
                 heartBeatPLC("1", "3");
-                getMarqueeUtil().sendText("Skylot", "欢迎停车!", true, "丝杆老特");
+                getMarqueeUtil().sendText("Skylot", "欢迎停车!", true, "思该唠特");
                 return true;
             } else {
                 getLoggerParking().warn("当前时间:[" + SkylotUtils.getStrDate() + "],当前操作[取车],当前车辆是[" + this.getTstbFtpCarInformation().getTfcCarCode() + "],PLC设备上没有要取车的车辆!");

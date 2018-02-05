@@ -112,8 +112,10 @@ public class SyncServiceImpl implements SyncService {
                 return 2;
             }
         }
-        if (hasSyncError("1", false)) {//PLC通信失败,先同步数据
+        if (hasSyncError("1")) {//PLC通信失败,先同步数据
             comparePLC2Local();
+        } else {
+            addSyncError("0");//新增正常数据
         }
         int a = 0;
         int r = checkPLC(9, true);
@@ -130,17 +132,21 @@ public class SyncServiceImpl implements SyncService {
             }
             a++;
         }
-        if (r == 0) {
-            hasSyncError("1", true);//删除上一次失败数据
-        }
         plcStatus = 1;
+        if (r == 0) {
+            addSyncError("0");//新增正常数据
+        } else {
+            plcStatus = 9;
+        }
+
         try {
+            mainThreadUtil.updateStatus("1", "" + plcStatus, "3", null, null, r == 0 ? "0" : "1", code.getTargetLot());
             Map scheduleMap = new HashMap();
             scheduleMap.put(SCHEDULEACTION_TYPE_HEARTBEAT, SCHEDULEACTION_TYPE_HEARTBEAT_PLC);
             scheduleMap.put(SCHEDULEACTION_TYPE_ITEM, plcStatus + "");
             scheduleMap.put(SCHEDULEACTION_MESSAGE, SingletonObjectMapper.getInstance().writeValueAsString(socketService.getAllStatus(true)));
             updateSchedule(scheduleMap);
-            mainThreadUtil.updateStatus("1", "1", "3", null, null, "0", code.getTargetLot());
+
             return 0;
         } catch (JsonProcessingException e) {
             throw new SkyLotException(e);
@@ -672,10 +678,10 @@ public class SyncServiceImpl implements SyncService {
                         ((ScheduleService) serviceMap.get("scheduleService")).update(next, iftbScheduleActionCriteria);
                         OftbSyncLogCriteria oftbSyncLogCriteria = new OftbSyncLogCriteria();
                         oftbSyncLogCriteria.createCriteria().andOslTypeEqualTo("0");
-                        if (hasSyncError("0", false)) {
-                            //comparePLC2Local();//上一次有同步失败记录
-                            hasSyncError("0", true);
-                        }
+//                        if (hasSyncError("0", false)) {
+//                            //comparePLC2Local();//上一次有同步失败记录
+//                            hasSyncError("0", true);
+//                        }
                         iftbMachineAction.setImaPhysicalStatus(FN_RETURN_STATUS_SUCCESS);
                     } else {//和SaaS同步失败,放置一条失败的信息
                         addSyncError("0");
@@ -788,17 +794,22 @@ public class SyncServiceImpl implements SyncService {
     }
 
     /**
-     * 新增一条错误待同步信息
+     * 新增一条错误待同步信息,如果没有error,新增一条
      *
-     * @param errorType
+     * @param errorType 0:正常数据,1:错误数据
      * @throws Exception
      */
-    private void addSyncError(String errorType) throws Exception {
+    public void addSyncError(String errorType) throws Exception {
         OftbSyncLog oftbSyncLog = OftbSyncLog.builder().build();
         oftbSyncLog.setOslStatus(FN_RETURN_STATUS_ERROR);
         oftbSyncLog.setOslCreatedate(SkylotUtils.getStrDate());
         oftbSyncLog.setOslType(errorType);
-        this.daoMap.get("oftbSyncLogDao").save(oftbSyncLog);
+        OftbSyncLogCriteria oftbSyncLogCriteria = new OftbSyncLogCriteria();
+        oftbSyncLogCriteria.createCriteria().andOslTypeEqualTo(errorType);
+        List errorList = this.daoMap.get("oftbSyncLogDao").ReadAll(oftbSyncLogCriteria);
+        if (CollectionUtils.isEmpty(errorList) || StringUtils.equals(errorType, FN_RETURN_STATUS_SUCCESS)) {
+            this.daoMap.get("oftbSyncLogDao").save(oftbSyncLog);
+        }
     }
 
     /**
@@ -808,15 +819,17 @@ public class SyncServiceImpl implements SyncService {
      * @return
      * @throws Exception
      */
-    private boolean hasSyncError(String errorType, boolean delete) throws Exception {
+    public boolean hasSyncError(String errorType, boolean... compareDate) throws Exception {
         OftbSyncLogCriteria oftbSyncLogCriteria = new OftbSyncLogCriteria();
-        oftbSyncLogCriteria.createCriteria().andOslTypeEqualTo(errorType);
+        OftbSyncLogCriteria.Criteria criteria = oftbSyncLogCriteria.createCriteria();
+        criteria.andOslTypeEqualTo(errorType);
+        if (compareDate.length > 0) {
+            criteria.andOslCreatedateLessThan(DateFormatUtils.format(DateUtils.addMinutes(new Date(), -2), DATE_FORMAT_STANDARD));
+            // TODO: 05/02/2018 查找5分钟之前是否有同步失败的信息,如有则反馈SaaS,当前设备故障
+        }
         List errorList = Lists.newArrayList();
         errorList = this.daoMap.get("oftbSyncLogDao").ReadAll(oftbSyncLogCriteria);
         if (CollectionUtils.isNotEmpty(errorList)) {
-            if (delete) {
-                this.daoMap.get("oftbSyncLogDao").delete(oftbSyncLogCriteria);//删除同步日志中上一次完成同步的信息
-            }
             return true;
         }
         return false;

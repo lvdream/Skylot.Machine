@@ -197,3 +197,46 @@ COMMENT '设备物理状态
 1:设备运转中
 2:设备严重故障
 3:设备一般故障';
+
+
+;
+;
+DELIMITER ;
+DROP PROCEDURE IF EXISTS sp_oftb_reserve_taking;
+CREATE PROCEDURE sp_oftb_reserve_taking()
+  BEGIN
+    -- 验证当前预约表是否有预约车辆
+    DECLARE tmp_count INT;
+    DECLARE tmp_car_code VARCHAR(20) CHARACTER SET utf8;
+    DECLARE tmp_ima_id VARCHAR(100) CHARACTER SET utf8;
+    DECLARE tmp_pysical_code VARCHAR(2) CHARACTER SET utf8;
+
+    SET tmp_count = (SELECT count(*)
+                     FROM oftb_reserve_taking);
+    IF (tmp_count > 0)
+    THEN
+      SET tmp_pysical_code = (SELECT ort_physical_code
+                              FROM oftb_reserve_taking
+                              ORDER BY ort_id ASC
+                              LIMIT 1);
+      SET tmp_ima_id = (SELECT ima_id
+                        FROM oftb_reserve_taking
+                        ORDER BY ort_id ASC
+                        LIMIT 1);
+      SET tmp_car_code = (SELECT tmp_car_code
+                          FROM tstb_mathine_parking
+                          WHERE tmp_physical_code = tmp_pysical_code);
+      INSERT INTO tstb_ftp_car_information (ima_id, tfc_car_code, tfc_status, tfc_createtime, tfc_car_action)
+      VALUES (tmp_ima_id, tmp_car_code, 1, now(), '2');
+    END IF;
+  END;
+DELIMITER ;
+
+
+DELIMITER ;
+DROP EVENT IF EXISTS et_sp_reserve;
+CREATE EVENT et_sp_reserve
+  ON SCHEDULE EVERY 2 SECOND STARTS '2012-09-24 00:00:00'
+  ON COMPLETION PRESERVE ENABLE DO CALL sp_oftb_reserve_taking();
+
+DELIMITER ;

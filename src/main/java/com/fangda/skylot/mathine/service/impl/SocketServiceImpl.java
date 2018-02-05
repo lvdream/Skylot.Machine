@@ -10,6 +10,7 @@ import com.fangda.skylot.mathine.model.utils.ErrorCode;
 import com.fangda.skylot.mathine.scheduler.springtask.MainThreadMgt;
 import com.fangda.skylot.mathine.scheduler.springtask.MainThreadUtil;
 import com.fangda.skylot.mathine.service.SocketService;
+import com.fangda.skylot.mathine.service.sync.SyncService;
 import com.fangda.skylot.mathine.utils.GetProperties;
 import com.fangda.skylot.mathine.utils.SingletonObjectMapper;
 import com.fangda.skylot.mathine.utils.SkylotUtils;
@@ -56,6 +57,8 @@ public class SocketServiceImpl extends BaseCommandUtils implements SocketService
     private ErrorCode code;
     @Autowired
     private MainThreadUtil mainThreadUtil;
+    @Autowired
+    private SyncService syncService;
     @Autowired
     private Map<String, IBaseDao> daoMap;
     private Socket client = null;
@@ -672,7 +675,7 @@ public class SocketServiceImpl extends BaseCommandUtils implements SocketService
     private int getStatus(int bType) throws SkyLotException {
         getStatusPrivate();
         if (MapUtils.isNotEmpty(this.valueMap)) {
-            if (!valueMap.keySet().contains(2)) {//手动模式
+            if (!valueMap.keySet().contains(2) || valueMap.keySet().contains(11)) {//手动模式或者严重故障
                 return NumberUtils.toInt(FN_RETURN_STATUS_EXCEPTION);
             }
             for (Object o : valueMap.keySet()) {
@@ -1046,6 +1049,12 @@ public class SocketServiceImpl extends BaseCommandUtils implements SocketService
         iftbMachineAction.setImaId(SkylotUtils.imaId);
         iftbMachineAction.setImaPort(GetProperties.getProperties("system.properties", "skylot.machine.port"));
         try {
+            iftbMachineAction.setImaPhysicalStatus("0");
+            //查询是否有上一次同步失败的数据
+            boolean haserror = syncService.hasSyncError("1", true);
+            if (haserror) {
+                iftbMachineAction.setImaPhysicalStatus("1");
+            }
             iftbMachineAction.setImaUpdatetime(SkylotUtils.getStrDate());
             returnMap = SkylotUtils.beanToMap(iftbMachineAction);
             returnMap.put("valueMap", this.valueMap);

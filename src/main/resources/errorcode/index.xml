@@ -35,8 +35,9 @@
                 <entry key="request.user.parking.scanner" value="停车区域或者行人通道有异物!"/>
                 <entry key="request.user.parking.peopledoor" value="人行门未关闭!"/>
                 <entry key="request.user.parking.cardoor" value="车库门检测到异物,无法关闭!"/>
-                <entry key="request.user.parking.emtryCar" value="车台上没有车"/>
+                <entry key="request.user.parking.emptyCar" value="车台上没有车"/>
                 <entry key="request.user.parking.peopledoorwithoutOC" value="人行门没有开关一次"/>
+                <entry key="request.user.parking.cancel.exist.car" value="车台上车未驶离"/>
                 <entry key="request.user.parking.inside.car.notauth" value="当前车辆非月租车辆,无法完成停车"/>
                 <entry key="request.user.parking.other" value="其他错误"/>
                 <entry key="request.user.extract.1007" value="1007故障"/>
@@ -45,6 +46,7 @@
                 <entry key="request.user.extract.peopledoor" value="人行门未关闭!"/>
                 <entry key="request.user.extract.cardoor" value="车库门检测到异物,无法关闭!"/>
                 <entry key="request.user.extract.carexist" value="车台上还有车"/>
+                <entry key="request.user.extract.cancel.emptyCar.car" value="车台上已经没有车!"/>
                 <entry key="request.user.extract.other" value="其他错误"/>
                 <entry key="system.machine.break" value="系统故障"/>
                 <entry key="management.login.parameter.error" value="管理员登录,参数错误"/>
@@ -64,9 +66,9 @@
                 <entry key="p2" value="request.user.parking.scanner"/>
                 <entry key="p3" value="request.user.parking.peopledoor"/>
                 <entry key="p4" value="request.user.parking.cardoor"/>
-                <entry key="p5" value="request.user.parking.emtryCar"/>
+                <entry key="p5" value="request.user.parking.emptyCar"/>
                 <entry key="p6" value="request.user.parking.peopledoorwithoutOC"/>
-                <entry key="p7" value="request.user.parking.other"/>
+                <entry key="p7" value="request.user.parking.cancel.exist.car"/>
                 <entry key="p8" value="request.user.parking.other"/>
                 <entry key="p9" value="request.user.parking.other"/>
                 <entry key="p10" value="request.user.parking.other"/>
@@ -100,7 +102,7 @@
                 <entry key="e4" value="request.user.extract.cardoor"/>
                 <entry key="e5" value="request.user.extract.carexist"/>
                 <entry key="e6" value="request.user.extract.other"/>
-                <entry key="e7" value="request.user.extract.other"/>
+                <entry key="e7" value="request.user.extract.cancel.emptyCar.car"/>
                 <entry key="e8" value="request.user.extract.other"/>
                 <entry key="e9" value="request.user.extract.other"/>
                 <entry key="e10" value="request.user.extract.other"/>
