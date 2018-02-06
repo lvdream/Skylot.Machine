@@ -192,7 +192,7 @@ public class MainThreadUtil {
      * @return 是, 否
      * @throws SkyLotException
      */
-    public boolean userCancel() throws SkyLotException {
+    public boolean userCancel(boolean... abort) throws SkyLotException {
         try {
             TstbFtpCarInformationCriteria carInformationCriteria = new TstbFtpCarInformationCriteria();
             carInformationCriteria.setOrderByClause("tfc_id asc");
@@ -200,6 +200,9 @@ public class MainThreadUtil {
             if (CollectionUtils.isNotEmpty(dataList)) {
                 tstbFtpCarInformation = (TstbFtpCarInformation) dataList.get(0);
                 tstbFtpCarInformation.setTfcIsCanceled("0");
+                if (abort.length > 0) {
+                    tstbFtpCarInformation.setTfcIsCanceled("1");
+                }
                 serviceMap.get("ftpcarService").update(tstbFtpCarInformation);
                 return true;
             }
@@ -503,6 +506,7 @@ public class MainThreadUtil {
             }
 
             if (!checkError) {//待取车辆,已经开走
+                userCancel(true);
                 return false;
             }
             code.setErrorList(Lists.newArrayList());
