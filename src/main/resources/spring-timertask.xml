@@ -22,7 +22,7 @@
     </task:scheduled-tasks>
     <!-- 停取车主线程 -->
     <task:scheduled-tasks scheduler="mainThread">
-        <task:scheduled ref="mainThreadMgt" method="go" cron="0/2 * * * * ?"/>
+        <task:scheduled ref="mainThreadMgt" method="go" cron="0/3 * * * * ?"/>
     </task:scheduled-tasks>
 
 </beans>

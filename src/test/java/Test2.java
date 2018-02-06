@@ -1,9 +1,5 @@
-import com.fangda.skylot.mathine.utils.SingletonObjectMapper;
+import com.fangda.skylot.mathine.service.impl.BaseCommandUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import org.apache.commons.lang3.StringUtils;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by Saul on 03/06/2017.
@@ -16,34 +12,35 @@ public class Test2 {
 
     private static void test() throws JsonProcessingException {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("21EA");
-        Map vauelMap = new HashMap();
-        int b = 0;
-        for (int i = 0; i < stringBuilder.toString().length(); i++) {
-            StringBuilder stringBuilder2 = new StringBuilder();
-            stringBuilder2.append(StringUtils.mid(stringBuilder.toString(), i, 1));
-            int tempInt = Integer.parseInt(stringBuilder2.toString(), 16);
-            b++;
-            if (tempInt == 0) continue;
-            for (int k = 0; k < 4; k++) {
-                int t = 1;
-
-                while (Math.pow(2, k + 1) * t < 17) {
-                    if (tempInt < (Math.pow(2, k + 1) * t) && tempInt >= (Math.pow(2, k) * (2 * t - 1)) && tempInt > 0) {
-                        System.out.println("k" + k + ";t" + t);
-                        System.out.println("tempInt" + tempInt);
-                        System.out.println("b" + b);
-                        vauelMap.put((b - 1) * 4 + k, "1");
-                        t = 17;
-                        break;
-                    }
-                    t++;
-                }
-            }
-
-
-        }
-        System.out.println(SingletonObjectMapper.getInstance().writeValueAsString(vauelMap));
+        stringBuilder.append("粤EC727Z");
+//        Map vauelMap = new HashMap();
+//        int b = 0;
+//        for (int i = 0; i < stringBuilder.toString().length(); i++) {
+//            StringBuilder stringBuilder2 = new StringBuilder();
+//            stringBuilder2.append(StringUtils.mid(stringBuilder.toString(), i, 1));
+//            int tempInt = Integer.parseInt(stringBuilder2.toString(), 16);
+//            b++;
+//            if (tempInt == 0) continue;
+//            for (int k = 0; k < 4; k++) {
+//                int t = 1;
+//
+//                while (Math.pow(2, k + 1) * t < 17) {
+//                    if (tempInt < (Math.pow(2, k + 1) * t) && tempInt >= (Math.pow(2, k) * (2 * t - 1)) && tempInt > 0) {
+//                        System.out.println("k" + k + ";t" + t);
+//                        System.out.println("tempInt" + tempInt);
+//                        System.out.println("b" + b);
+//                        vauelMap.put((b - 1) * 4 + k, "1");
+//                        t = 17;
+//                        break;
+//                    }
+//                    t++;
+//                }
+//            }
+//
+//
+//        }
+//        System.out.println(SingletonObjectMapper.getInstance().writeValueAsString(vauelMap));
+        System.out.println(BaseCommandUtils.encode(stringBuilder.toString()));
     }
 
     //计算最上停车位编号

@@ -55,6 +55,7 @@ public class MainThreadUtil {
     private boolean peopleDoor = false;
     private boolean carDoor = false;
     private boolean highException = false;
+    private boolean highError = false;
     @Autowired
     private SocketService socketService;
     @Autowired
@@ -72,6 +73,7 @@ public class MainThreadUtil {
         try {
             TstbFtpCarInformationCriteria carInformationCriteria = new TstbFtpCarInformationCriteria();
             carInformationCriteria.createCriteria().andTfcIdEqualTo(this.getTstbFtpCarInformation().getTfcId());
+            code.setErrorList(Lists.newArrayList());
             if (carInformation != null && carInformation.length > 0) {
                 //增加判断车牌不一致的情况下,提交的车牌是不是可以授权的车牌
                 if (!StringUtils.equals(this.getTstbFtpCarInformation().getTfcCarCode(), carInformation[0].getTfcCarInCode())) {
@@ -86,15 +88,15 @@ public class MainThreadUtil {
                         Map valueAppendMap = Maps.newHashMap();
                         maps.put(16, "1");
                         valueAppendMap.put("valueAppendMap", maps);
-                        analyzingError(maps, "p");
+                        code.setErrorList(analyzingError(valueAppendMap, "p"));
                         updateStatus("3", "1", "2", carInformation[0].getTfcCarInCode(), this.getTstbFtpCarInformation().getTfcCarCode(), "0", code.getTargetLot());
                         this.getTstbFtpCarInformation().setTfcCarCode(carInformation[0].getTfcCarInCode());
-                        this.getTstbFtpCarInformation().setTfcCarInCode(this.getTstbFtpCarInformation().getTfcCarCode());
+                        this.getTstbFtpCarInformation().setTfcCarInCode(carInformation[0].getTfcCarInCode());
                         serviceMap.get("ftpcarService").update(this.getTstbFtpCarInformation(), carInformationCriteria);
                     }
-                } else {
+                } else {//车牌一样
                     this.getTstbFtpCarInformation().setTfcCarCode(carInformation[0].getTfcCarInCode());
-                    this.getTstbFtpCarInformation().setTfcStatus(NumberUtils.toInt(SCHEDULEACTION_MODULEID_MACHINEITEM));//等待用户确认状态
+                    this.getTstbFtpCarInformation().setTfcStatus(NumberUtils.toInt(SCHEDULEACTION_MODULEID_MACHINEITEM));
                     serviceMap.get("ftpcarService").update(this.getTstbFtpCarInformation(), carInformationCriteria);
                 }
             } else {
@@ -267,6 +269,15 @@ public class MainThreadUtil {
     }
 
     /**
+     * 检查是否有严重故障
+     */
+    protected void highErrorExist() throws SkyLotException {
+        if (socketService.confirmStatus(9, true) == NumberUtils.toInt(FN_RETURN_STATUS_HANDLE)) {
+            highError = true;
+        }
+    }
+
+    /**
      * 检查1005,故障是否依然存在
      *
      * @return true:1005故障已清除,false:1005故障依然存在
@@ -422,16 +433,24 @@ public class MainThreadUtil {
         }
 
         jsonResult.setData(SkylotUtils.removeNullValue(SkylotUtils.beanToHashMap(dataResult)));
-        jsonResult.setError(errorList);
+        if (CollectionUtils.isNotEmpty(code.getErrorList())) {
+            jsonResult.setError(code.getErrorList());
+        } else {
+            jsonResult.setError(errorList);
+        }
+
         jsonResult.setResultType(true);
         if (checkCanceled()) {
-            jsonResult.setResultType(CollectionUtils.isNotEmpty(errorList) ? false : true);
+            jsonResult.setResultType(CollectionUtils.isNotEmpty(jsonResult.getError()) ? false : true);
         }
 
         IftbMachineActionCriteria criteria = new IftbMachineActionCriteria();
         criteria.createCriteria().andImaIdEqualTo(SkylotUtils.imaId);
-        IftbMachineAction machineAction = (IftbMachineAction) serviceMap.get("machineActionService").queryForAll(criteria).get(0);
-        jsonResult.setServiceType(machineAction.getImaCode());
+        List mList = serviceMap.get("machineActionService").queryForAll(criteria);
+        if (CollectionUtils.isNotEmpty(mList)) {
+            IftbMachineAction machineAction = (IftbMachineAction) mList.get(0);
+            jsonResult.setServiceType(machineAction.getImaCode());
+        }
         iftbMachineAction.setImaErrorJson(SingletonObjectMapper.getInstance().writeValueAsString(jsonResult));
         iftbMachineAction.setImaPhysicalStatus(iStatus);
         serviceMap.get("machineActionService").update(iftbMachineAction, criteria);
@@ -445,29 +464,49 @@ public class MainThreadUtil {
      */
     protected boolean cancelAction(String actionType) throws Exception {
         boolean result = false;
+        String errorAction = "e";
+        String errorCode = "request.user.extract.carexist";
+        String opt = "2";
+        String mt = "2";
+        String os = "2";
+        Map valuesMap = getSocketService().pullIndexError();
         try {
 //            while (waitForCancel()) {//等待用户确认取消
 //
 //            }
             //取消取车执行条件判断
-            if (StringUtils.equals(actionType, "1")) {
-                Map valuesMap = getSocketService().pullIndexError();
-                List errors = analyzingError(valuesMap, "e");
-                boolean checkError = false;
-                if (CollectionUtils.isNotEmpty(errors)) {
-                    for (int i = 0; i < errors.size(); i++) {
-                        Map o = (Map) errors.get(i);
-                        ErrorCodeObj errorCodeObj = (ErrorCodeObj) o.get("ErrorCodeObj");
-                        if (StringUtils.containsAny(errorCodeObj.getErrorCode(), "request.user.extract.carexist")) {//查找错误信息
-                            checkError = true;
-                            break;
-                        }
+            if (StringUtils.equals(actionType, "0")) {
+                errorAction = "p";
+                errorCode = "request.user.parking.cancel.exist.car";
+                valuesMap = getSocketService().getIndexError();
+                opt = "3";
+            }
+
+            List errors = analyzingError(valuesMap, errorAction);
+            boolean checkError = false;
+            if (CollectionUtils.isNotEmpty(errors)) {
+                for (int i = 0; i < errors.size(); i++) {
+                    Map o = (Map) errors.get(i);
+                    ErrorCodeObj errorCodeObj = (ErrorCodeObj) o.get("ErrorCodeObj");
+                    if (StringUtils.containsAny(errorCodeObj.getErrorCode(), errorCode)) {//查找错误信息
+                        checkError = true;
+                        break;
                     }
                 }
-                if (!checkError) {//待取车辆,已经开走
-                    return false;
-                }
+            } else {
+                Map maps = Maps.newHashMap();
+                Map valueAppendMap = Maps.newHashMap();
+                maps.put(7, "1");
+                valueAppendMap.put("valueMap", maps);
+                code.setErrorList(analyzingError(valueAppendMap, errorAction));
+                updateStatus(opt, mt, os, this.getTstbFtpCarInformation().getTfcCarCode(), this.getTstbFtpCarInformation().getTfcCarInCode(), "0", code.getTargetLot());
             }
+
+            if (!checkError) {//待取车辆,已经开走
+                return false;
+            }
+            code.setErrorList(Lists.newArrayList());
+            updateStatus(opt, mt, os, this.getTstbFtpCarInformation().getTfcCarCode(), this.getTstbFtpCarInformation().getTfcCarInCode(), "0", code.getTargetLot());
             marqueeUtil.sendText(actionType.equals("0") ? "存车中" : "取车中", this.getTstbFtpCarInformation().getTfcCarCode() + ",接收到取消指令,正在执行取消操作,请稍后", true);
             //检查是否可以进行取消操作
             int status = socketService.cancelAction(actionType);

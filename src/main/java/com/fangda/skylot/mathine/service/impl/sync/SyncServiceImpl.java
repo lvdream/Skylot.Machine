@@ -146,7 +146,6 @@ public class SyncServiceImpl implements SyncService {
             scheduleMap.put(SCHEDULEACTION_TYPE_ITEM, plcStatus + "");
             scheduleMap.put(SCHEDULEACTION_MESSAGE, SingletonObjectMapper.getInstance().writeValueAsString(socketService.getAllStatus(true)));
             updateSchedule(scheduleMap);
-
             return 0;
         } catch (JsonProcessingException e) {
             throw new SkyLotException(e);

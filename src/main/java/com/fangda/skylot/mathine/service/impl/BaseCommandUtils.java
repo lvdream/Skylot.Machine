@@ -2,6 +2,7 @@ package com.fangda.skylot.mathine.service.impl;
 
 import com.fangda.skylot.mathine.utils.exception.SkyLotException;
 import lombok.Data;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.ByteArrayOutputStream;
@@ -43,6 +44,7 @@ public class BaseCommandUtils {
     /**
      * 依据返回16进制对象,转换为可以识别的停车位置信息
      * FFFF--> 15:1;14:0 .......
+     *
      * @param bit16Sstr 标准对象
      */
     protected void calculateStatus(String bit16Sstr) {
@@ -79,6 +81,12 @@ public class BaseCommandUtils {
      */
     protected void convertArraytoCalc(String returnStr) throws SkyLotException {
         StringBuilder stringBuildernew = new StringBuilder();
+        if (MapUtils.isNotEmpty(this.valueMap)) {
+            this.valueMap.clear();
+        }
+        if (MapUtils.isNotEmpty(this.valueMapAppend)) {
+            this.valueMapAppend.clear();
+        }
         if (StringUtils.split(returnStr, " ").length == 32) {
             stringBuildernew = new StringBuilder();
             stringBuildernew.append(StringUtils.leftPad(StringUtils.split(returnStr, " ")[30], 2, "0"));

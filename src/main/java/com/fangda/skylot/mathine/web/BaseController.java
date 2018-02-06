@@ -15,14 +15,11 @@ import com.fangda.skylot.mathine.model.utils.ErrorCode;
 import com.fangda.skylot.mathine.model.utils.JsonDataResult;
 import com.fangda.skylot.mathine.model.utils.JsonResult;
 import com.fangda.skylot.mathine.scheduler.springtask.MainThreadUtil;
-import com.fangda.skylot.mathine.service.SocketService;
 import com.fangda.skylot.mathine.utils.SkylotUtils;
 import com.fangda.skylot.mathine.utils.exception.SkyLotException;
 import com.google.common.collect.Maps;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.List;
 import java.util.Map;
 
 import static com.fangda.skylot.mathine.utils.constant.Constant.FN_RETURN_STATUS_SUCCESS;
@@ -45,17 +42,10 @@ public class BaseController {
         }
     }
 
-    protected void cancelCar(JsonDataResult jsonDataResult, SocketService socketService, MainThreadUtil mainThreadUtil,JsonResult result,StringBuilder exceptionBuilder) throws SkyLotException {
+    protected void cancelCar(JsonDataResult jsonDataResult, MainThreadUtil mainThreadUtil, JsonResult result, StringBuilder exceptionBuilder) throws SkyLotException {
         if (StringUtils.equals(jsonDataResult.getResult(), FN_RETURN_STATUS_SUCCESS)) {//验证成功,可以取消取车
-            Map dataMap = socketService.pullIndexError();
-            List errorList = mainThreadUtil.analyzingError(dataMap, "e");
-            if (CollectionUtils.isNotEmpty(errorList)) {
-                result.setError(errorList);
-                result.setResultType(false);
-            } else {
-                mainThreadUtil.userCancel();
-                result.setResultType(true);
-            }
+            mainThreadUtil.userCancel();
+            result.setResultType(true);
         } else {
             exceptionBuilder.append("request.password.usercancel.not.auth");
             throw new SkyLotException(exceptionBuilder.toString());

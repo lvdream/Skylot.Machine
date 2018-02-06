@@ -8,7 +8,6 @@ import com.fangda.skylot.mathine.service.webservice.PushWebService;
 import com.fangda.skylot.mathine.utils.SingletonObjectMapper;
 import com.fangda.skylot.mathine.utils.SkylotUtils;
 import com.fangda.skylot.mathine.utils.exception.SkyLotException;
-import com.fangda.skylot.mathine.utils.socket.WSThreadMgt;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.MapUtils;
@@ -33,8 +32,6 @@ public class PushServiceController {
     @Autowired
     private ErrorCode code;
 
-    @Autowired
-    private WSThreadMgt wsThreadMgt;
     @Autowired
     private PushWebService pushWS;
 

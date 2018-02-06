@@ -84,16 +84,23 @@ public class QRCodeController extends BaseController {
         JsonDataResult jsonDataResult = new JsonDataResult();
         StringBuilder exceptionBuilder = new StringBuilder();
         exceptionBuilder.append(STR_EXCEPTION_BUSINESS_CODE);
+        Map subMap = Maps.newHashMap();
         try {
             if (StringUtils.isNotEmpty(consoleParamater.getScanCode())) {
                 Map subMapData = ((CodeInfoService) serviceMap.get("codeInfoService")).verifyCode(consoleParamater.getScanCode(), true);
                 jsonDataResult.setResult(MapUtils.getString(subMapData, MAP_PARKING_STATUS));
                 jsonDataResult.setCarCode(MapUtils.getString(SkylotUtils.verifyCode(consoleParamater.getScanCode()), MAP_QRCODE_CARCODE));
-                cancelCar(jsonDataResult, socketService, mainThreadUtil, result, exceptionBuilder);
+                cancelCar(jsonDataResult, mainThreadUtil, result, exceptionBuilder);
+                result.setResultType(true);
+                jsonDataResult.setResult("0");
+                subMap = SkylotUtils.beanToHashMap(jsonDataResult);
+                SkylotUtils.removeNullValue(subMap);
+                result.setData(subMap);
+                resultMap = SkylotUtils.beanToHashMap(result);
             }
         } catch (Exception e) {
         }
-        return null;
+        return resultMap;
     }
 
 }

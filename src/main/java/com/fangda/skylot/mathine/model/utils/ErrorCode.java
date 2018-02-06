@@ -33,6 +33,7 @@ public class ErrorCode {
      */
     private Map codePLC;
     private String targetLot;
+    private List errorList;
 
     /**
      * 处理错误逻辑

@@ -13,7 +13,6 @@ import com.fangda.skylot.mathine.service.IBaseService;
 import com.fangda.skylot.mathine.service.parking.ParkingLogService;
 import com.fangda.skylot.mathine.utils.SingletonObjectMapper;
 import com.fangda.skylot.mathine.utils.exception.SkyLotException;
-import com.fangda.skylot.mathine.utils.socket.WSThreadMgt;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -37,8 +36,6 @@ import java.util.Map;
 public class IndexController extends BaseController {
     @Autowired
     public Map<String, IBaseService> serviceMap;
-    @Autowired
-    private WSThreadMgt wsThreadMgt;
     /**
      * 监控摄像机发来的图片识别信息,HTTP方式
      *

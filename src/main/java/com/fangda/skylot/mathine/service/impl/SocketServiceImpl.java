@@ -163,7 +163,6 @@ public class SocketServiceImpl extends BaseCommandUtils implements SocketService
             stringBuilder.append("000001018203ED000002");
             returnint = CommandExectue(PLC_COMMUNACAITON_HEAD_ALL_INDEX_STATUS, stringBuilder.toString());
             convertArraytoCalc(stringBuilderto.toString());
-
         } catch (Exception e) {
             log.error(e.getMessage());
         }
@@ -674,14 +673,14 @@ public class SocketServiceImpl extends BaseCommandUtils implements SocketService
 
     private int getStatus(int bType) throws SkyLotException {
         getStatusPrivate();
+        if (displayDetail) {
+            log.warn(valueMap.toString());
+        }
         if (MapUtils.isNotEmpty(this.valueMap)) {
             if (!valueMap.keySet().contains(2) || valueMap.keySet().contains(11)) {//手动模式或者严重故障
                 return NumberUtils.toInt(FN_RETURN_STATUS_EXCEPTION);
             }
             for (Object o : valueMap.keySet()) {
-                if (displayDetail) {
-                    log.warn(valueMap.toString());
-                }
                 int pNum = (Integer) o;
                 //增加急停,严重错误判断
                 if (pNum == 11) {

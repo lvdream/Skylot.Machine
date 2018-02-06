@@ -5,9 +5,9 @@ import com.fangda.skylot.mathine.model.parking.IftbMachineActionCriteria;
 import com.fangda.skylot.mathine.model.utils.ConsoleParamater;
 import com.fangda.skylot.mathine.service.IBaseService;
 import com.fangda.skylot.mathine.utils.SkylotUtils;
-import com.fangda.skylot.mathine.utils.exception.SkyLotException;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.MapUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -32,7 +32,13 @@ public class StatusController {
             IftbMachineAction iftbMachineAction = (IftbMachineAction) serviceMap.get("machineActionService").queryForAll(criteria).get(0);
             resultMap = SkylotUtils.jsonToMap(iftbMachineAction.getImaErrorJson());
         } catch (Exception e) {
-            throw new SkyLotException(e);
+            if (MapUtils.isEmpty(resultMap)) {
+                resultMap = Maps.newHashMap();
+            }
+        } finally {
+            if (MapUtils.isEmpty(resultMap)) {
+                resultMap = Maps.newHashMap();
+            }
         }
         return resultMap;
     }

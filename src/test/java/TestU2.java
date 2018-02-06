@@ -1,9 +1,5 @@
 import com.qy.led.Material;
 import com.qy.led.SendBuffer;
-import lombok.extern.slf4j.Slf4j;
-import org.junit.runner.RunWith;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -12,9 +8,6 @@ import java.util.List;
 /**
  * Created by Saul on 11/29/16.
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:spring-config.xml"})
-@Slf4j
 public class TestU2 {
 
     public static void main(String[] args) throws IOException, InterruptedException {
@@ -25,8 +18,8 @@ public class TestU2 {
         int[] nArrUID = new int[]{1, 2};// UID
         int[] nArrTypeNo = new int[]{1, 2};// 种类编号
         String szCardIP = "192.168.10.230";
-        String szVoice = "钟征,你好,欢迎回家";
-        String[] szArrContent = new String[]{"停车中", "钟征,你好,欢迎回家"};
+        String szVoice = "丝盖佬特,欢迎回家";
+        String[] szArrContent = new String[]{"停车中", "停车中双基色批量实时采集发送成功"};
         int nScreenColor = 2;// 0--单机色；1--双基色；2--三基色
         int nShowStyle = 9;// 立即显示
 
@@ -89,10 +82,10 @@ public class TestU2 {
         List<Material> listMaterial = new ArrayList<Material>();
         listMaterial.add(new Material(szArrContent[nArrIndex], nAreaWidth,
                 nAreaHeight, nArrUID[nArrIndex], nArrTypeNo[nArrIndex++],
-                nScreenColor, nShowStyle, 1, 1, 2, 3, 2, 1, false));
+                nScreenColor, nShowStyle, 2, 1, 2, 3, 2, 1, false));
         listMaterial.add(new Material(szArrContent[nArrIndex], nAreaWidth,
                 nAreaHeight, nArrUID[nArrIndex], nArrTypeNo[nArrIndex++],
-                nScreenColor, nShowStyle, 1, 1, 1, 1, 0, 1, false));
+                nScreenColor, nShowStyle, 0, 4, 1, 1, 0, 4, false));
         if (SendBuffer.SendMulInternalText_Net(listMaterial, szCardIP, 1) == 0) {
             System.out.println("内码文字发送成功！");
         } else {
