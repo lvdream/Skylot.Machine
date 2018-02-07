@@ -255,3 +255,8 @@ CREATE EVENT et_sp_reserve
   ON COMPLETION PRESERVE DO CALL sp_oftb_reserve_taking();
 
 DELIMITER ;
+
+# 增加字段,保存如果和SaaS同步失败的情况下,原始数据的内容
+ALTER TABLE oftb_sync_log
+  ADD osl_orignal_message TEXT NULL
+COMMENT '原始的数据信息';

@@ -365,7 +365,8 @@ public class SyncServiceImpl implements SyncService {
             int r = socketService.confirmStatus(9, check);
             return r;
         } else {
-            if (socketService.confirmStatus(2, check) == NumberUtils.toInt(FN_RETURN_STATUS_SUCCESS)) {//设备状态是否正常
+            int r = socketService.confirmStatus(2, check);
+            if (r == NumberUtils.toInt(FN_RETURN_STATUS_SUCCESS)) {//设备状态是否正常
                 if (checkType == 1) {//是否有可用车位可以进行停车
                     if (socketService.enableParking() == NumberUtils.toInt(FN_RETURN_STATUS_SUCCESS)) {
                         return NumberUtils.toInt(FN_RETURN_STATUS_SUCCESS);
@@ -375,8 +376,8 @@ public class SyncServiceImpl implements SyncService {
                 }
                 return NumberUtils.toInt(FN_RETURN_STATUS_SUCCESS);
             }
+            return r;
         }
-        return 1;
     }
 
     /**
@@ -681,9 +682,9 @@ public class SyncServiceImpl implements SyncService {
 //                            hasSyncError("0", true);
 //                        }
                         iftbMachineAction.setImaPhysicalStatus(FN_RETURN_STATUS_SUCCESS);
-                        addSyncError("0");
+                        addSyncError("0", next.getIsaScheduleMessage());
                     } else {//和SaaS同步失败,放置一条失败的信息
-                        addSyncError("2");
+                        addSyncError("2", next.getIsaScheduleMessage());
                         iftbMachineAction.setImaPhysicalStatus(FN_RETURN_STATUS_ERROR);
                     }
                     if (StringUtils.equals(SCHEDULEACTION_BUSINESSOBJ_MACHINE, next.getIsaBusinessObj())) {//如果是IMA对象的同步
@@ -795,14 +796,18 @@ public class SyncServiceImpl implements SyncService {
     /**
      * 新增一条错误待同步信息,如果没有error,新增一条
      *
-     * @param errorType 0:正常数据,1:错误数据
+     * @param errorType   0:正常数据,1:错误数据
+     * @param orignalText 原始数据对象
      * @throws Exception
      */
-    public void addSyncError(String errorType) throws Exception {
+    public void addSyncError(String errorType, String... orignalText) throws Exception {
         OftbSyncLog oftbSyncLog = OftbSyncLog.builder().build();
         oftbSyncLog.setOslStatus(FN_RETURN_STATUS_ERROR);
         oftbSyncLog.setOslCreatedate(SkylotUtils.getStrDate());
         oftbSyncLog.setOslType(errorType);
+        if (orignalText.length > 0) {
+            oftbSyncLog.setOslOrignalMessage(orignalText[0]);
+        }
         OftbSyncLogCriteria oftbSyncLogCriteria = new OftbSyncLogCriteria();
         oftbSyncLogCriteria.createCriteria().andOslTypeEqualTo(errorType);
         List errorList = this.daoMap.get("oftbSyncLogDao").ReadAll(oftbSyncLogCriteria);

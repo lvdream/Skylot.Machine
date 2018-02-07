@@ -29,5 +29,5 @@ public class OftbSyncLog implements Serializable {
 
     private String oslUpdateuser;
 
-
+    private String oslOrignalMessage;
 }

@@ -13,7 +13,6 @@ import com.fangda.skylot.mathine.utils.math.ParkingLogic;
 import com.fangda.skylot.mathine.utils.socket.WSThreadMgt;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import lombok.Data;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -29,7 +28,6 @@ import static com.fangda.skylot.mathine.utils.constant.Constant.*;
  * 主线程控制器
  */
 @Component
-@Data
 public class MainThreadMgt extends MainThreadUtil {
     /**
      * 严重故障标示位
@@ -504,7 +502,15 @@ public class MainThreadMgt extends MainThreadUtil {
                             break;
                         }
                     }
-                    getSyncServiceImpl().checkPLC(2);//重新获取空闲
+                    int a = 1;
+                    while (a != 0) {
+                        a = getSyncServiceImpl().checkPLC(2, true);
+                        getLoggerParking().warn("当前时间:[" + SkylotUtils.getStrDate() + "],当前操作[预约取车],旋转中");
+                        if (a == -1) {
+                            throw new SkyLotException(EX_PARKING_MATHINE_EXCEPTION);
+                        }
+                        Thread.sleep(1000);
+                    }
                     heartBeatPLC("4", "3");
                     TstbFtpCarInformationCriteria carInformationCriteria = new TstbFtpCarInformationCriteria();
                     carInformationCriteria.createCriteria().andTfcCarCodeEqualTo(this.getTstbFtpCarInformation().getTfcCarCode());

@@ -1,262 +1,274 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.fangda.skylot.mathine.dao.customer.OftbSyncLogMapper" >
-  <resultMap id="BaseResultMap" type="com.fangda.skylot.mathine.model.customer.OftbSyncLog" >
-    <id column="osl_id" property="oslId" jdbcType="INTEGER" />
-    <result column="osl_type" property="oslType" jdbcType="VARCHAR" />
-    <result column="osl_count" property="oslCount" jdbcType="INTEGER" />
-    <result column="osl_status" property="oslStatus" jdbcType="VARCHAR" />
-    <result column="osl_createdate" property="oslCreatedate" jdbcType="VARCHAR" />
-    <result column="osl_createuser" property="oslCreateuser" jdbcType="VARCHAR" />
-    <result column="osl_updatedate" property="oslUpdatedate" jdbcType="VARCHAR" />
-    <result column="osl_updateuser" property="oslUpdateuser" jdbcType="VARCHAR" />
-  </resultMap>
-  <sql id="Example_Where_Clause" >
-    <where >
-      <foreach collection="oredCriteria" item="criteria" separator="or" >
-        <if test="criteria.valid" >
-          <trim prefix="(" suffix=")" prefixOverrides="and" >
-            <foreach collection="criteria.criteria" item="criterion" >
-              <choose >
-                <when test="criterion.noValue" >
-                  and ${criterion.condition}
-                </when>
-                <when test="criterion.singleValue" >
-                  and ${criterion.condition} #{criterion.value}
-                </when>
-                <when test="criterion.betweenValue" >
-                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
-                </when>
-                <when test="criterion.listValue" >
-                  and ${criterion.condition}
-                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
-                    #{listItem}
-                  </foreach>
-                </when>
-              </choose>
+<mapper namespace="com.fangda.skylot.mathine.dao.customer.OftbSyncLogMapper">
+    <resultMap id="BaseResultMap" type="com.fangda.skylot.mathine.model.customer.OftbSyncLog">
+        <id column="osl_id" property="oslId" jdbcType="INTEGER"/>
+        <result column="osl_type" property="oslType" jdbcType="VARCHAR"/>
+        <result column="osl_count" property="oslCount" jdbcType="INTEGER"/>
+        <result column="osl_status" property="oslStatus" jdbcType="VARCHAR"/>
+        <result column="osl_createdate" property="oslCreatedate" jdbcType="VARCHAR"/>
+        <result column="osl_createuser" property="oslCreateuser" jdbcType="VARCHAR"/>
+        <result column="osl_updatedate" property="oslUpdatedate" jdbcType="VARCHAR"/>
+        <result column="osl_updateuser" property="oslUpdateuser" jdbcType="VARCHAR"/>
+        <result column="osl_orignal_message" property="oslOrignalMessage" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Example_Where_Clause">
+        <where>
+            <foreach collection="oredCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" suffix=")" prefixOverrides="and">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach collection="criterion.value" item="listItem" open="(" close=")"
+                                             separator=",">
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
             </foreach>
-          </trim>
-        </if>
-      </foreach>
-    </where>
-  </sql>
-  <sql id="Update_By_Example_Where_Clause" >
-    <where >
-      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
-        <if test="criteria.valid" >
-          <trim prefix="(" suffix=")" prefixOverrides="and" >
-            <foreach collection="criteria.criteria" item="criterion" >
-              <choose >
-                <when test="criterion.noValue" >
-                  and ${criterion.condition}
-                </when>
-                <when test="criterion.singleValue" >
-                  and ${criterion.condition} #{criterion.value}
-                </when>
-                <when test="criterion.betweenValue" >
-                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
-                </when>
-                <when test="criterion.listValue" >
-                  and ${criterion.condition}
-                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
-                    #{listItem}
-                  </foreach>
-                </when>
-              </choose>
+        </where>
+    </sql>
+    <sql id="Update_By_Example_Where_Clause">
+        <where>
+            <foreach collection="example.oredCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" suffix=")" prefixOverrides="and">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach collection="criterion.value" item="listItem" open="(" close=")"
+                                             separator=",">
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
             </foreach>
-          </trim>
+        </where>
+    </sql>
+    <sql id="Base_Column_List">
+        osl_id, osl_type, osl_count, osl_status, osl_createdate, osl_createuser, osl_updatedate,
+        osl_updateuser, osl_orignal_message
+    </sql>
+    <select id="selectByExample" resultMap="BaseResultMap"
+            parameterType="com.fangda.skylot.mathine.model.customer.OftbSyncLogCriteria">
+        select
+        <if test="distinct">
+            distinct
         </if>
-      </foreach>
-    </where>
-  </sql>
-  <sql id="Base_Column_List" >
-    osl_id, osl_type, osl_count, osl_status, osl_createdate, osl_createuser, osl_updatedate, 
-    osl_updateuser
-  </sql>
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.fangda.skylot.mathine.model.customer.OftbSyncLogCriteria" >
-    select
-    <if test="distinct" >
-      distinct
-    </if>
-    <include refid="Base_Column_List" />
-    from oftb_sync_log
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
-    <if test="orderByClause != null" >
-      order by ${orderByClause}
-    </if>
-    <if test="page != null" >
-      limit #{page.begin} , #{page.length}
-    </if>
-  </select>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select 
-    <include refid="Base_Column_List" />
-    from oftb_sync_log
-    where osl_id = #{oslId,jdbcType=INTEGER}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from oftb_sync_log
-    where osl_id = #{oslId,jdbcType=INTEGER}
-  </delete>
-  <delete id="deleteByExample" parameterType="com.fangda.skylot.mathine.model.customer.OftbSyncLogCriteria" >
-    delete from oftb_sync_log
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
-  </delete>
-  <insert id="insert" parameterType="com.fangda.skylot.mathine.model.customer.OftbSyncLog" >
-    insert into oftb_sync_log (osl_id, osl_type, osl_count, 
-      osl_status, osl_createdate, osl_createuser, 
-      osl_updatedate, osl_updateuser)
-    values (#{oslId,jdbcType=INTEGER}, #{oslType,jdbcType=VARCHAR}, #{oslCount,jdbcType=INTEGER}, 
-      #{oslStatus,jdbcType=VARCHAR}, #{oslCreatedate,jdbcType=VARCHAR}, #{oslCreateuser,jdbcType=VARCHAR}, 
-      #{oslUpdatedate,jdbcType=VARCHAR}, #{oslUpdateuser,jdbcType=VARCHAR})
-  </insert>
-  <insert id="insertSelective" parameterType="com.fangda.skylot.mathine.model.customer.OftbSyncLog" >
-    insert into oftb_sync_log
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="oslId != null" >
-        osl_id,
-      </if>
-      <if test="oslType != null" >
-        osl_type,
-      </if>
-      <if test="oslCount != null" >
-        osl_count,
-      </if>
-      <if test="oslStatus != null" >
-        osl_status,
-      </if>
-      <if test="oslCreatedate != null" >
-        osl_createdate,
-      </if>
-      <if test="oslCreateuser != null" >
-        osl_createuser,
-      </if>
-      <if test="oslUpdatedate != null" >
-        osl_updatedate,
-      </if>
-      <if test="oslUpdateuser != null" >
-        osl_updateuser,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="oslId != null" >
-        #{oslId,jdbcType=INTEGER},
-      </if>
-      <if test="oslType != null" >
-        #{oslType,jdbcType=VARCHAR},
-      </if>
-      <if test="oslCount != null" >
-        #{oslCount,jdbcType=INTEGER},
-      </if>
-      <if test="oslStatus != null" >
-        #{oslStatus,jdbcType=VARCHAR},
-      </if>
-      <if test="oslCreatedate != null" >
-        #{oslCreatedate,jdbcType=VARCHAR},
-      </if>
-      <if test="oslCreateuser != null" >
-        #{oslCreateuser,jdbcType=VARCHAR},
-      </if>
-      <if test="oslUpdatedate != null" >
-        #{oslUpdatedate,jdbcType=VARCHAR},
-      </if>
-      <if test="oslUpdateuser != null" >
-        #{oslUpdateuser,jdbcType=VARCHAR},
-      </if>
-    </trim>
-  </insert>
-  <select id="countByExample" parameterType="com.fangda.skylot.mathine.model.customer.OftbSyncLogCriteria" resultType="java.lang.Integer" >
-    select count(*) from oftb_sync_log
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
-  </select>
-  <update id="updateByExampleSelective" parameterType="map" >
-    update oftb_sync_log
-    <set >
-      <if test="record.oslId != null" >
-        osl_id = #{record.oslId,jdbcType=INTEGER},
-      </if>
-      <if test="record.oslType != null" >
+        <include refid="Base_Column_List"/>
+        from oftb_sync_log
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+        <if test="page != null">
+            limit #{page.begin} , #{page.length}
+        </if>
+    </select>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from oftb_sync_log
+        where osl_id = #{oslId,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        DELETE FROM oftb_sync_log
+        WHERE osl_id = #{oslId,jdbcType=INTEGER}
+    </delete>
+    <delete id="deleteByExample" parameterType="com.fangda.skylot.mathine.model.customer.OftbSyncLogCriteria">
+        delete from oftb_sync_log
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+    </delete>
+    <insert id="insert" parameterType="com.fangda.skylot.mathine.model.customer.OftbSyncLog">
+        INSERT INTO oftb_sync_log (osl_id, osl_type, osl_count,
+                                   osl_status, osl_createdate, osl_createuser,
+                                   osl_updatedate, osl_updateuser, osl_orignal_message)
+        VALUES (#{oslId,jdbcType=INTEGER}, #{oslType,jdbcType=VARCHAR}, #{oslCount,jdbcType=INTEGER},
+                #{oslStatus,jdbcType=VARCHAR}, #{oslCreatedate,jdbcType=VARCHAR}, #{oslCreateuser,jdbcType=VARCHAR},
+                #{oslUpdatedate,jdbcType=VARCHAR}, #{oslUpdateuser,jdbcType=VARCHAR},
+                #{oslOrignalMessage,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.fangda.skylot.mathine.model.customer.OftbSyncLog">
+        insert into oftb_sync_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="oslId != null">
+                osl_id,
+            </if>
+            <if test="oslType != null">
+                osl_type,
+            </if>
+            <if test="oslCount != null">
+                osl_count,
+            </if>
+            <if test="oslStatus != null">
+                osl_status,
+            </if>
+            <if test="oslCreatedate != null">
+                osl_createdate,
+            </if>
+            <if test="oslCreateuser != null">
+                osl_createuser,
+            </if>
+            <if test="oslUpdatedate != null">
+                osl_updatedate,
+            </if>
+            <if test="oslUpdateuser != null">
+                osl_updateuser,
+            </if>
+            <if test="oslOrignalMessage != null">
+                osl_orignal_message,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="oslId != null">
+                #{oslId,jdbcType=INTEGER},
+            </if>
+            <if test="oslType != null">
+                #{oslType,jdbcType=VARCHAR},
+            </if>
+            <if test="oslCount != null">
+                #{oslCount,jdbcType=INTEGER},
+            </if>
+            <if test="oslStatus != null">
+                #{oslStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="oslCreatedate != null">
+                #{oslCreatedate,jdbcType=VARCHAR},
+            </if>
+            <if test="oslCreateuser != null">
+                #{oslCreateuser,jdbcType=VARCHAR},
+            </if>
+            <if test="oslUpdatedate != null">
+                #{oslUpdatedate,jdbcType=VARCHAR},
+            </if>
+            <if test="oslUpdateuser != null">
+                #{oslUpdateuser,jdbcType=VARCHAR},
+            </if>
+            <if test="oslOrignalMessage != null">
+                #{oslOrignalMessage,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <select id="countByExample" parameterType="com.fangda.skylot.mathine.model.customer.OftbSyncLogCriteria"
+            resultType="java.lang.Integer">
+        select count(*) from oftb_sync_log
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+    </select>
+    <update id="updateByExampleSelective" parameterType="map">
+        update oftb_sync_log
+        <set>
+            <if test="record.oslId != null">
+                osl_id = #{record.oslId,jdbcType=INTEGER},
+            </if>
+            <if test="record.oslType != null">
+                osl_type = #{record.oslType,jdbcType=VARCHAR},
+            </if>
+            <if test="record.oslCount != null">
+                osl_count = #{record.oslCount,jdbcType=INTEGER},
+            </if>
+            <if test="record.oslStatus != null">
+                osl_status = #{record.oslStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="record.oslCreatedate != null">
+                osl_createdate = #{record.oslCreatedate,jdbcType=VARCHAR},
+            </if>
+            <if test="record.oslCreateuser != null">
+                osl_createuser = #{record.oslCreateuser,jdbcType=VARCHAR},
+            </if>
+            <if test="record.oslUpdatedate != null">
+                osl_updatedate = #{record.oslUpdatedate,jdbcType=VARCHAR},
+            </if>
+            <if test="record.oslUpdateuser != null">
+                osl_updateuser = #{record.oslUpdateuser,jdbcType=VARCHAR},
+            </if>
+        </set>
+        <if test="_parameter != null">
+            <include refid="Update_By_Example_Where_Clause"/>
+        </if>
+    </update>
+    <update id="updateByExample" parameterType="map">
+        update oftb_sync_log
+        set osl_id = #{record.oslId,jdbcType=INTEGER},
         osl_type = #{record.oslType,jdbcType=VARCHAR},
-      </if>
-      <if test="record.oslCount != null" >
         osl_count = #{record.oslCount,jdbcType=INTEGER},
-      </if>
-      <if test="record.oslStatus != null" >
         osl_status = #{record.oslStatus,jdbcType=VARCHAR},
-      </if>
-      <if test="record.oslCreatedate != null" >
         osl_createdate = #{record.oslCreatedate,jdbcType=VARCHAR},
-      </if>
-      <if test="record.oslCreateuser != null" >
         osl_createuser = #{record.oslCreateuser,jdbcType=VARCHAR},
-      </if>
-      <if test="record.oslUpdatedate != null" >
         osl_updatedate = #{record.oslUpdatedate,jdbcType=VARCHAR},
-      </if>
-      <if test="record.oslUpdateuser != null" >
-        osl_updateuser = #{record.oslUpdateuser,jdbcType=VARCHAR},
-      </if>
-    </set>
-    <if test="_parameter != null" >
-      <include refid="Update_By_Example_Where_Clause" />
-    </if>
-  </update>
-  <update id="updateByExample" parameterType="map" >
-    update oftb_sync_log
-    set osl_id = #{record.oslId,jdbcType=INTEGER},
-      osl_type = #{record.oslType,jdbcType=VARCHAR},
-      osl_count = #{record.oslCount,jdbcType=INTEGER},
-      osl_status = #{record.oslStatus,jdbcType=VARCHAR},
-      osl_createdate = #{record.oslCreatedate,jdbcType=VARCHAR},
-      osl_createuser = #{record.oslCreateuser,jdbcType=VARCHAR},
-      osl_updatedate = #{record.oslUpdatedate,jdbcType=VARCHAR},
-      osl_updateuser = #{record.oslUpdateuser,jdbcType=VARCHAR}
-    <if test="_parameter != null" >
-      <include refid="Update_By_Example_Where_Clause" />
-    </if>
-  </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.fangda.skylot.mathine.model.customer.OftbSyncLog" >
-    update oftb_sync_log
-    <set >
-      <if test="oslType != null" >
-        osl_type = #{oslType,jdbcType=VARCHAR},
-      </if>
-      <if test="oslCount != null" >
-        osl_count = #{oslCount,jdbcType=INTEGER},
-      </if>
-      <if test="oslStatus != null" >
-        osl_status = #{oslStatus,jdbcType=VARCHAR},
-      </if>
-      <if test="oslCreatedate != null" >
-        osl_createdate = #{oslCreatedate,jdbcType=VARCHAR},
-      </if>
-      <if test="oslCreateuser != null" >
-        osl_createuser = #{oslCreateuser,jdbcType=VARCHAR},
-      </if>
-      <if test="oslUpdatedate != null" >
-        osl_updatedate = #{oslUpdatedate,jdbcType=VARCHAR},
-      </if>
-      <if test="oslUpdateuser != null" >
-        osl_updateuser = #{oslUpdateuser,jdbcType=VARCHAR},
-      </if>
-    </set>
-    where osl_id = #{oslId,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.fangda.skylot.mathine.model.customer.OftbSyncLog" >
-    update oftb_sync_log
-    set osl_type = #{oslType,jdbcType=VARCHAR},
-      osl_count = #{oslCount,jdbcType=INTEGER},
-      osl_status = #{oslStatus,jdbcType=VARCHAR},
-      osl_createdate = #{oslCreatedate,jdbcType=VARCHAR},
-      osl_createuser = #{oslCreateuser,jdbcType=VARCHAR},
-      osl_updatedate = #{oslUpdatedate,jdbcType=VARCHAR},
-      osl_updateuser = #{oslUpdateuser,jdbcType=VARCHAR}
-    where osl_id = #{oslId,jdbcType=INTEGER}
-  </update>
+        osl_updateuser = #{record.oslUpdateuser,jdbcType=VARCHAR}
+        <if test="_parameter != null">
+            <include refid="Update_By_Example_Where_Clause"/>
+        </if>
+    </update>
+    <update id="updateByPrimaryKeySelective" parameterType="com.fangda.skylot.mathine.model.customer.OftbSyncLog">
+        update oftb_sync_log
+        <set>
+            <if test="oslType != null">
+                osl_type = #{oslType,jdbcType=VARCHAR},
+            </if>
+            <if test="oslCount != null">
+                osl_count = #{oslCount,jdbcType=INTEGER},
+            </if>
+            <if test="oslStatus != null">
+                osl_status = #{oslStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="oslCreatedate != null">
+                osl_createdate = #{oslCreatedate,jdbcType=VARCHAR},
+            </if>
+            <if test="oslCreateuser != null">
+                osl_createuser = #{oslCreateuser,jdbcType=VARCHAR},
+            </if>
+            <if test="oslUpdatedate != null">
+                osl_updatedate = #{oslUpdatedate,jdbcType=VARCHAR},
+            </if>
+            <if test="oslUpdateuser != null">
+                osl_updateuser = #{oslUpdateuser,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where osl_id = #{oslId,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.fangda.skylot.mathine.model.customer.OftbSyncLog">
+        UPDATE oftb_sync_log
+        SET osl_type       = #{oslType,jdbcType=VARCHAR},
+            osl_count      = #{oslCount,jdbcType=INTEGER},
+            osl_status     = #{oslStatus,jdbcType=VARCHAR},
+            osl_createdate = #{oslCreatedate,jdbcType=VARCHAR},
+            osl_createuser = #{oslCreateuser,jdbcType=VARCHAR},
+            osl_updatedate = #{oslUpdatedate,jdbcType=VARCHAR},
+            osl_updateuser = #{oslUpdateuser,jdbcType=VARCHAR}
+        WHERE osl_id = #{oslId,jdbcType=INTEGER}
+    </update>
 </mapper>

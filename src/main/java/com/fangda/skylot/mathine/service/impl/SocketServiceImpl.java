@@ -400,12 +400,6 @@ public class SocketServiceImpl extends BaseCommandUtils implements SocketService
             stringBuilder.append(StringUtils.leftPad(Integer.toHexString(number), 4, "0"));
             stringBuilder.append(StringUtils.leftPad(parkingLogic.getActionDirect() + "", 4, "0"));
             returnint = CommandExectue(PLC_COMMUNACAITON_HEAD_DIRECTION, stringBuilder.toString());
-            if (returnint == 0) {//完成标志位
-                if (confirmStatus(0) == 0) {//配重指令
-                    getEnergy();//获取用电量
-                    return returnint;
-                }
-            }
         } catch (Exception e) {
             e.printStackTrace();
         }
