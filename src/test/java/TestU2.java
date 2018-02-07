@@ -18,7 +18,7 @@ public class TestU2 {
         int[] nArrUID = new int[]{1, 2};// UID
         int[] nArrTypeNo = new int[]{1, 2};// 种类编号
         String szCardIP = "192.168.10.230";
-        String szVoice = "丝盖佬特,欢迎回家";
+        String szVoice = "凉凉,丝盖唠特爱你";
         String[] szArrContent = new String[]{"停车中", "停车中双基色批量实时采集发送成功"};
         int nScreenColor = 2;// 0--单机色；1--双基色；2--三基色
         int nShowStyle = 9;// 立即显示

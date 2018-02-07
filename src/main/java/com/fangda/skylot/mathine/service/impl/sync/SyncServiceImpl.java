@@ -126,6 +126,7 @@ public class SyncServiceImpl implements SyncService {
         if (r == 0) {
             addSyncError("0");//新增正常数据
         } else {
+            plcStatus = 2;
             if (r == -1) {
                 plcStatus = 9;
             }

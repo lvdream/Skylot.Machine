@@ -73,7 +73,7 @@ public class MainThreadMgt extends MainThreadUtil {
                 getLoggerParking().warn("当前时间:[" + SkylotUtils.getStrDate() + "],设备同步异常,不能完成停车操作!");
                 getMarqueeUtil().sendText("SkyLot", "设备故障无法进行同步", true);
             }
-            wsThreadMgt.getCommands();
+//            wsThreadMgt.getCommands();
             throw new SkyLotException(e);
         }
     }
@@ -114,6 +114,7 @@ public class MainThreadMgt extends MainThreadUtil {
                     s = MapUtils.getIntValue(parkingMap, MAP_PARKING_STATUS);
                     resultMap = parkingMap;
                     if (s == 0) {
+
                         break;
                     } else if (s == NumberUtils.toInt(FN_RETURN_STATUS_HANDLE)) {//急停处理
                         throw new SkyLotException(EX_PARKING_MATHINE_EXCEPTION);
@@ -144,6 +145,7 @@ public class MainThreadMgt extends MainThreadUtil {
 
                     //获取到1005状态信息,都是正常也是可以跳出循环
                     if (parkingError()) {
+                        heartBeatPLC("3", "2");
                         break;
                     }
                     Thread.sleep(1000);
@@ -157,24 +159,24 @@ public class MainThreadMgt extends MainThreadUtil {
                 }
                 a = 0;
                 //最后判断,人行门开关一次
-                while (!this.isPeopleDoor()) {
-                    if (a == 0) {
-                        getMarqueeUtil().sendText("存车中", "请按照地面指示,离开停车位,打开行人门!", true);
-                    }
-                    getLoggerParking().warn("当前时间:[" + SkylotUtils.getStrDate() + "],当前操作[存车],读取人行门开关数据");
-                    highErrorExist();
-                    if (isHighError()) {
-                        throw new SkyLotException(EX_PARKING_MATHINE_EXCEPTION);
-                    }
-                    peopleDoorhadOpen();
-                    getSocketService().getIndexError();
-                    valueMap = getSocketService().getAllStatus(true);
-                    analyzingError(valueMap, "p");
-                    heartBeatPLC("3", "2");
-
-                    Thread.sleep(1000);
-                    a++;
-                }
+//                while (!this.isPeopleDoor()) {
+//                    if (a == 0) {
+//                        getMarqueeUtil().sendText("存车中", "请按照地面指示,离开停车位,打开行人门!", true);
+//                    }
+//                    getLoggerParking().warn("当前时间:[" + SkylotUtils.getStrDate() + "],当前操作[存车],读取人行门开关数据");
+//                    highErrorExist();
+//                    if (isHighError()) {
+//                        throw new SkyLotException(EX_PARKING_MATHINE_EXCEPTION);
+//                    }
+//                    peopleDoorhadOpen();
+//                    getSocketService().getIndexError();
+//                    valueMap = getSocketService().getAllStatus(true);
+//                    analyzingError(valueMap, "p");
+//                    heartBeatPLC("3", "2");
+//
+//                    Thread.sleep(1000);
+//                    a++;
+//                }
                 if (checkCanceled()) {
                     if (cancelAction(FN_RETURN_STATUS_SUCCESS)) {
                         return false;
@@ -193,10 +195,11 @@ public class MainThreadMgt extends MainThreadUtil {
                     }
                     getLoggerParking().warn("当前时间:[" + SkylotUtils.getStrDate() + "],当前操作[存车],读取1005数据");
                     Thread.sleep(300);
+                    heartBeatPLC("3", "2");
                     if (parkingError()) {
+                        heartBeatPLC("3", "3");
                         s = 0;
                     }
-                    heartBeatPLC("3", "2");
                     Thread.sleep(1000);
                     a++;
                 }

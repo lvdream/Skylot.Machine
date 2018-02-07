@@ -241,7 +241,7 @@ public class MainThreadUtil {
             tstbFtpCarInformation.setTfcCarInCode("");
         }
         updateStatus(pType, mStatus, pStatus, tstbFtpCarInformation.getTfcCarCode(), tstbFtpCarInformation.getTfcCarInCode(), MapUtils.getString(scheduleMap, "operationStatus"), code.getTargetLot());
-        syncServiceImpl.updateSchedule(scheduleMap);
+//        syncServiceImpl.updateSchedule(scheduleMap);
     }
 
     /**
@@ -275,7 +275,7 @@ public class MainThreadUtil {
      * 检查是否有严重故障
      */
     protected void highErrorExist() throws SkyLotException {
-        if (socketService.confirmStatus(9, true) == NumberUtils.toInt(FN_RETURN_STATUS_HANDLE)) {
+        if (socketService.confirmStatus(9, true) == NumberUtils.toInt(FN_RETURN_STATUS_EXCEPTION)) {
             highError = true;
         }
     }

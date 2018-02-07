@@ -488,28 +488,28 @@ public class SocketServiceImpl extends BaseCommandUtils implements SocketService
                     } else {
                         setDirectionBeforeTime(System.currentTimeMillis() - getDirectionBeforeTime());//旋转计时结束
                     }
-                    //打开车库门
-                    if (carDoor(FN_RETURN_STATUS_SUCCESS) == NumberUtils.toInt(FN_RETURN_STATUS_SUCCESS)) {//车库门开门指令发送成功
-                        log.warn("车库门打开指令已发,等待车库门打开");
-                        loggerParking.warn("当前时间:[" + SkylotUtils.getStrDate() + "],当前操作[存车],车库门打开指令已发,等待车库门打开");
-                        //等待车库门已开
-                        status = confirmStatus(3);
-                        if (status == 0) {//车库门已经打开
-                            log.warn("车库门打开完成");
-                            loggerParking.warn("当前时间:[" + SkylotUtils.getStrDate() + "],当前操作[存车],车库门打开完成!");
-                            return returnint;
-                        } else {
-                            if (NumberUtils.toInt(FN_RETURN_STATUS_HANDLE) == status) {//系统急停,严重错误
-                                return NumberUtils.toInt(FN_RETURN_STATUS_HANDLE);
-                            }
-                        }
-                    } else {
-                        return returnint;
-                    }
                 } else {
                     if (NumberUtils.toInt(FN_RETURN_STATUS_HANDLE) == status) {//系统急停,严重错误
                         return NumberUtils.toInt(FN_RETURN_STATUS_HANDLE);
                     }
+                }
+                //打开车库门
+                if (carDoor(FN_RETURN_STATUS_SUCCESS) == NumberUtils.toInt(FN_RETURN_STATUS_SUCCESS)) {//车库门开门指令发送成功
+                    log.warn("车库门打开指令已发,等待车库门打开");
+                    loggerParking.warn("当前时间:[" + SkylotUtils.getStrDate() + "],当前操作[存车],车库门打开指令已发,等待车库门打开");
+                    //等待车库门已开
+                    status = confirmStatus(3);
+                    if (status == 0) {//车库门已经打开
+                        log.warn("车库门打开完成");
+                        loggerParking.warn("当前时间:[" + SkylotUtils.getStrDate() + "],当前操作[存车],车库门打开完成!");
+                        return returnint;
+                    } else {
+                        if (NumberUtils.toInt(FN_RETURN_STATUS_HANDLE) == status) {//系统急停,严重错误
+                            return NumberUtils.toInt(FN_RETURN_STATUS_HANDLE);
+                        }
+                    }
+                } else {
+                    return returnint;
                 }
             } else {
                 return returnint;
@@ -677,7 +677,9 @@ public class SocketServiceImpl extends BaseCommandUtils implements SocketService
                 return NumberUtils.toInt(FN_RETURN_STATUS_EXCEPTION);
             }
             if (valueMap.keySet().contains(12)) {//一般故障
-                return NumberUtils.toInt(FN_RETURN_STATUS_ERROR);
+                if (bType == 2 || bType == 9) {
+                    return NumberUtils.toInt(FN_RETURN_STATUS_ERROR);
+                }
             }
             for (Object o : valueMap.keySet()) {
                 int pNum = (Integer) o;
@@ -975,6 +977,9 @@ public class SocketServiceImpl extends BaseCommandUtils implements SocketService
      * @throws SkyLotException
      */
     public int confirmStatus(int type, boolean... followLoop) throws SkyLotException {
+        if (MapUtils.isNotEmpty(this.valueMap)) {
+            this.valueMap.clear();
+        }
         int a = 1;
         int looptimes = 0;
         setStatusCheck(-1);
@@ -990,8 +995,10 @@ public class SocketServiceImpl extends BaseCommandUtils implements SocketService
                 if (a == NumberUtils.toInt(FN_RETURN_STATUS_EXCEPTION)) {//手动模式
                     return NumberUtils.toInt(FN_RETURN_STATUS_EXCEPTION);
                 }
-                if (a == NumberUtils.toInt(FN_RETURN_STATUS_ERROR)) {//一般故障
-                    return NumberUtils.toInt(FN_RETURN_STATUS_ERROR);
+                if (type == 0) {
+                    if (a == NumberUtils.toInt(FN_RETURN_STATUS_ERROR)) {//一般故障
+                        return NumberUtils.toInt(FN_RETURN_STATUS_ERROR);
+                    }
                 }
                 try {
                     Thread.sleep(1000);
