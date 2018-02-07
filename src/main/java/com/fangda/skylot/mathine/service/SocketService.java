@@ -75,6 +75,13 @@ public interface SocketService {
      */
     int carDoor(String actionType) throws SkyLotException;
 
+    /**
+     * 人行门打开方法
+     *
+     * @param actionType
+     * @return
+     * @throws SkyLotException
+     */
     int peopleDoor(String actionType) throws SkyLotException;
 
     /**
@@ -121,4 +128,12 @@ public interface SocketService {
      * @throws SkyLotException
      */
     Map getParkingStatus(int Type) throws SkyLotException;
+
+    /**
+     * 获取PLC一般故障
+     *
+     * @return Map
+     * @throws SkyLotException
+     */
+    Map getNormalErrorStatus() throws SkyLotException;
 }

@@ -79,18 +79,6 @@ public class SyncServiceImpl implements SyncService {
     @Override
     public int heartbeatSyncServer() throws Exception {
         try {
-            //抽取信息,来着服务器
-            //同步物业设备信息
-//            getUpdateActionItems();
-//            //同步用户信息
-//            getUpdateCustomers();
-//            //同步用户车牌信息
-//            getUpdateCustomersCar();
-//            //同步实体车位数据
-//            getUpdateMathineItem();
-//            //同步用户车牌绑定设备信息
-//            getUpdateCustomersItem();
-            //推送同步信息到服务器
             itemStatus();
         } catch (Exception e) {
             e.printStackTrace();
@@ -102,6 +90,8 @@ public class SyncServiceImpl implements SyncService {
 
     @Override
     public int heartbeatSyncPLC() throws Exception {
+        code.setErrorList(Lists.newArrayList());
+        mainThreadUtil.setErrorList(Lists.newArrayList());
         int plcStatus = 0;
         //check the indenty type
         int iType = NumberUtils.toInt(GetProperties.getProperties("system.properties", "identify.type"));
@@ -126,7 +116,7 @@ public class SyncServiceImpl implements SyncService {
                 addSyncError("1");
                 break;
             }
-            if (r == 1 || r == -1) {
+            if (r == 1 || r == -1 || r == 2) {//一般故障,严重故障
                 addSyncError("1");
                 break;
             }
@@ -136,7 +126,16 @@ public class SyncServiceImpl implements SyncService {
         if (r == 0) {
             addSyncError("0");//新增正常数据
         } else {
-            plcStatus = 9;
+            if (r == -1) {
+                plcStatus = 9;
+            }
+            if (r == 1) {//一般故障
+                Map eMap = socketService.getNormalErrorStatus();
+                List eList = mainThreadUtil.analyzingError(eMap, "n");
+                if (CollectionUtils.isNotEmpty(eList)) {
+                    code.setErrorList(eList);
+                }
+            }
         }
 
         try {

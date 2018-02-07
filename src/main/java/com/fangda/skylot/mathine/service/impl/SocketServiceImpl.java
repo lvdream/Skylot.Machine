@@ -240,7 +240,7 @@ public class SocketServiceImpl extends BaseCommandUtils implements SocketService
     /**
      * 获取故障代码--一般
      */
-    public int getNormalErrorStatus() throws SkyLotException {
+    public Map getNormalErrorStatus() throws SkyLotException {
         int returnint = -1;
         try {
             StringBuilder stringBuilder = new StringBuilder();
@@ -252,7 +252,9 @@ public class SocketServiceImpl extends BaseCommandUtils implements SocketService
 
             log.error(e.getMessage());
         }
-        return returnint;
+        Map map = Maps.newHashMap();
+        map.put("valueMap", this.valueMap);
+        return map;
     }
 
     /**
@@ -680,6 +682,9 @@ public class SocketServiceImpl extends BaseCommandUtils implements SocketService
             if (!valueMap.keySet().contains(2) || valueMap.keySet().contains(11)) {//手动模式或者严重故障
                 return NumberUtils.toInt(FN_RETURN_STATUS_EXCEPTION);
             }
+            if (valueMap.keySet().contains(12)) {//一般故障
+                return NumberUtils.toInt(FN_RETURN_STATUS_ERROR);
+            }
             for (Object o : valueMap.keySet()) {
                 int pNum = (Integer) o;
                 //增加急停,严重错误判断
@@ -990,6 +995,9 @@ public class SocketServiceImpl extends BaseCommandUtils implements SocketService
                 }
                 if (a == NumberUtils.toInt(FN_RETURN_STATUS_EXCEPTION)) {//手动模式
                     return NumberUtils.toInt(FN_RETURN_STATUS_EXCEPTION);
+                }
+                if (a == NumberUtils.toInt(FN_RETURN_STATUS_ERROR)) {//一般故障
+                    return NumberUtils.toInt(FN_RETURN_STATUS_ERROR);
                 }
                 try {
                     Thread.sleep(1000);

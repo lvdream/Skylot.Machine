@@ -57,6 +57,18 @@
                 <entry key="webservice.parameter.error.imaid" value="webservice,设备序号错误!"/>
                 <entry key="webservice.execute.error" value="webservice,执行失败!"/>
                 <entry key="webservice.execute.timeout" value="webservice,执行超时!"/>
+
+
+                <!-- 一般类故障 -->
+                <entry key="system.plc.normal.error.oversize.higher" value="车台超高报警!"/>
+                <entry key="system.plc.normal.error.oversize.left" value="车台左超宽报警!"/>
+                <entry key="system.plc.normal.error.oversize.right" value="车台右超宽报警!"/>
+                <entry key="system.plc.normal.error.oversize.front" value="车台前超长报警!"/>
+                <entry key="system.plc.normal.error.oversize.back" value="车台后超长报警!"/>
+                <entry key="system.plc.normal.error.empty.car" value="车辆停车不到位!"/>
+                <entry key="system.plc.normal.error.scanner.warning" value="车台静止时光幕入侵!"/>
+                <entry key="system.plc.normal.error.peopledoor.open" value="车台静止时人行门开!"/>
+                <entry key="system.plc.normal.error.cardoor.open" value="车台静止时车库门没关严!"/>
             </map>
         </property>
         <property name="codePLC">
@@ -128,6 +140,41 @@
                 <entry key="ee14" value="request.user.extract.other"/>
                 <entry key="ee15" value="request.user.extract.other"/>
                 <entry key="ee16" value="request.user.extract.other"/>
+
+
+                <!-- 一般故障   -->
+                <entry key="n1" value="system.plc.normal.error.oversize.higher"/>
+                <entry key="n2" value="system.plc.normal.error.oversize.left"/>
+                <entry key="n3" value="system.plc.normal.error.oversize.right"/>
+                <entry key="n4" value="system.plc.normal.error.oversize.front"/>
+                <entry key="n5" value="system.plc.normal.error.oversize.back"/>
+                <entry key="n6" value="system.plc.normal.error.empty.car"/>
+                <entry key="n7" value="system.plc.normal.error.peopledoor.open"/>
+                <entry key="n8" value="system.plc.normal.error.scanner.warning"/>
+                <entry key="n9" value="system.plc.normal.error.cardoor.open"/>
+                <entry key="n10" value="request.user.extract.other"/>
+                <entry key="n11" value="request.user.extract.other"/>
+                <entry key="n12" value="request.user.extract.other"/>
+                <entry key="n13" value="request.user.extract.other"/>
+                <entry key="n14" value="request.user.extract.other"/>
+                <entry key="n15" value="request.user.extract.other"/>
+                <entry key="n16" value="request.user.extract.other"/>
+                <entry key="nn1" value="request.user.extract.platform"/>
+                <entry key="nn2" value="request.user.extract.scanner"/>
+                <entry key="nn3" value="request.user.extract.peopledoor"/>
+                <entry key="nn4" value="request.user.extract.cardoor"/>
+                <entry key="nn5" value="request.user.extract.other"/>
+                <entry key="nn6" value="request.user.extract.other"/>
+                <entry key="nn7" value="request.user.extract.other"/>
+                <entry key="nn8" value="request.user.extract.other"/>
+                <entry key="nn9" value="request.user.extract.other"/>
+                <entry key="nn10" value="request.user.extract.other"/>
+                <entry key="nn11" value="request.user.extract.other"/>
+                <entry key="nn12" value="request.user.extract.other"/>
+                <entry key="nn13" value="request.user.extract.other"/>
+                <entry key="nn14" value="request.user.extract.other"/>
+                <entry key="nn15" value="request.user.extract.other"/>
+                <entry key="nn16" value="request.user.extract.other"/>
             </map>
         </property>
 

@@ -94,6 +94,10 @@ public class MainThreadMgt extends MainThreadUtil {
         int result = this.getSyncServiceImpl().checkPLC(2);
         try {
             if (result == NumberUtils.toInt(FN_RETURN_STATUS_SUCCESS)) {
+                Map parkingsMap = getSocketService().getParkingStatus(0);
+                if (MapUtils.isNotEmpty(parkingsMap) && parkingsMap.keySet().size() == 12) {
+                    throw new SkyLotException(EX_PARKING_MATHINE_NOT_AVIABLE);
+                }
                 this.getLoggerParking().warn("当前时间:[" + SkylotUtils.getStrDate() + "],当前操作[存车],当前车辆是[" + this.getTstbFtpCarInformation().getTfcCarCode() + "],PLC设备可用,准备停车!");
                 getMarqueeUtil().sendText("存车中", this.getTstbFtpCarInformation().getTfcCarCode() + "准备停车,等待设备旋转到位并打开车库门", true);
                 //首先,旋转到位,打开车库门
@@ -279,15 +283,21 @@ public class MainThreadMgt extends MainThreadUtil {
                 return false;
             }
         } catch (Exception e) {
+            TstbFtpCarInformationCriteria carInformationCriteria = new TstbFtpCarInformationCriteria();
+            carInformationCriteria.createCriteria().andTfcCarCodeEqualTo(this.getTstbFtpCarInformation().getTfcCarCode());
+            serviceMap.get("ftpcarService").delete(carInformationCriteria);
+            getMarqueeUtil().sendText("Skylot", "欢迎停车!", true, "丝该老特");
+            //更新IMA状态
+            updateStatus("3", "9", "1", this.getTstbFtpCarInformation().getTfcCarCode(), this.getTstbFtpCarInformation().getTfcCarInCode(), "3", null);
             if (StringUtils.contains(e.getMessage(), EX_PARKING_MATHINE_EXCEPTION)) {//急停处理
                 //删除待处理的任务
-                TstbFtpCarInformationCriteria carInformationCriteria = new TstbFtpCarInformationCriteria();
-                carInformationCriteria.createCriteria().andTfcCarCodeEqualTo(this.getTstbFtpCarInformation().getTfcCarCode());
-                serviceMap.get("ftpcarService").delete(carInformationCriteria);
+            }
+            if (StringUtils.contains(e.getMessage(), EX_PARKING_MATHINE_NOT_AVIABLE)) {//停车位置已满
+                getLoggerParking().warn("当前时间:[" + SkylotUtils.getStrDate() + "],当前操作[存车],当前车辆是[" + this.getTstbFtpCarInformation().getTfcCarCode() + "],PLC设备已经没有可用停车位置,本次停车失败!");
+                getMarqueeUtil().sendText("Skylot", "PLC设备已经没有可用停车位置,本次停车失败!", true, "PLC设备已经没有可用停车位置,本次停车失败!");
+                Thread.sleep(2000);
                 getMarqueeUtil().sendText("Skylot", "欢迎停车!", true, "丝该老特");
-                //更新IMA状态
-                updateStatus("3", "9", "1", this.getTstbFtpCarInformation().getTfcCarCode(), this.getTstbFtpCarInformation().getTfcCarInCode(), "3", null);
-                throw new SkyLotException(EX_PARKING_MATHINE_EXCEPTION);
+
             }
             return false;
         }

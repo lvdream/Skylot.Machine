@@ -359,7 +359,7 @@ public class MainThreadUtil {
      * 分析错误Map,配置具体错误信息
      *
      * @param errorMaps   停车错误对象Map
-     * @param errorAction 对应操作的类型,p:停车,e:取车
+     * @param errorAction 对应操作的类型,p:停车,e:取车,n:一般故障
      */
     public List analyzingError(Map errorMaps, String errorAction) {
         List result = Lists.newArrayList();
