@@ -44,10 +44,10 @@ public class MainThreadMgt extends MainThreadUtil {
      * @throws SkyLotException
      */
     public void go() throws Exception {
+        Map map = Maps.newHashMap();
+        map.put("name", "Thread");
         try {
             if (wsThreadMgt.checkCommander() == 0) {
-                Map map = Maps.newHashMap();
-                map.put("name", "Thread");
                 wsThreadMgt.putCommander(map);
                 code.setErrorList(Lists.newArrayList());
                 if (hasTasktodo()) {
@@ -64,16 +64,27 @@ public class MainThreadMgt extends MainThreadUtil {
                         doBookExtractLogic();
                     }
                 }
-                wsThreadMgt.getCommands();
+                Map map1 = wsThreadMgt.getCommands();
+                if (!map1.get("name").equals("Thread")) {
+                    wsThreadMgt.putCommander(map);
+                    wsThreadMgt.getCommands();
+                }
             }
         } catch (Exception e) {
             if (StringUtils.contains(e.getMessage(), EX_PARKING_MATHINE_EXCEPTION)) {
-                wsThreadMgt.getCommands();
-
+                Map map1 = wsThreadMgt.getCommands();
+                if (!map1.get("name").equals("Thread")) {
+                    wsThreadMgt.putCommander(map);
+                    wsThreadMgt.getCommands();
+                }
             } else if (StringUtils.contains(e.getMessage(), EX_PARKING_USER_AUTH_OUT_SERVICE)) {
                 getLoggerParking().warn("当前时间:[" + SkylotUtils.getStrDate() + "],设备同步异常,不能完成停车操作!");
                 getMarqueeUtil().sendText("SkyLot", "设备故障无法进行同步", true);
-                wsThreadMgt.getCommands();
+                Map map1 = wsThreadMgt.getCommands();
+                if (!map1.get("name").equals("Thread")) {
+                    wsThreadMgt.putCommander(map);
+                    wsThreadMgt.getCommands();
+                }
             }
             TstbFtpCarInformationCriteria carInformationCriteria = new TstbFtpCarInformationCriteria();
             carInformationCriteria.createCriteria().andTfcCarCodeEqualTo(this.getTstbFtpCarInformation().getTfcCarCode());

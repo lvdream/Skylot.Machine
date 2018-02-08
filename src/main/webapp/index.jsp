@@ -35,8 +35,9 @@ License: You must have a valid license purchased only from themeforest(the above
 <script>
     $(document).ready(function () {
         // 指定websocket路径
+
 //        var websocket = new WebSocket('ws://10.3.13.13:8080/skymachine/log');
-        var websocket = new WebSocket('ws://192.168.10.17:8080/skymachine/log');
+        var websocket = new WebSocket('ws://192.168.10.10:8080/skymachine/log');
         websocket.onmessage = function (event) {
             // 接收服务端的实时日志并添加到HTML页面中
             $("#log-container div").append(event.data + "<p> </p>");

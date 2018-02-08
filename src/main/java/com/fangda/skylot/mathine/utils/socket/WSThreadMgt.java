@@ -60,9 +60,6 @@ public class WSThreadMgt {
         } catch (Exception e) {
             throw new SkyLotException(e);
         }
-        if (map != null) {
-        } else {
-        }
         return map;
     }
 }

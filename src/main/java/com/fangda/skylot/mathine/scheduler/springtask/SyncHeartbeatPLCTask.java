@@ -23,17 +23,20 @@ public class SyncHeartbeatPLCTask {
     private WSThreadMgt wsThreadMgt;
 
     public void syncPLC() throws SkyLotException {
+        Map map = Maps.newHashMap();
+        map.put("name", "PLC");
         int result = 0;
         try {
             if (wsThreadMgt.checkCommander() == 0) {
-                Map map = Maps.newHashMap();
-                map.put("name", "PLC");
                 wsThreadMgt.putCommander(map);
                 result = syncServiceImpl.heartbeatSyncPLC();
-                wsThreadMgt.getCommands();
+                Map map1 = wsThreadMgt.getCommands();
+                if (!map1.get("name").equals("PLC")) {
+                    wsThreadMgt.putCommander(map);
+                    wsThreadMgt.getCommands();
+                }
             }
         } catch (Exception e) {
-            wsThreadMgt.getCommands();
             throw new SkyLotException(e);
         }
     }

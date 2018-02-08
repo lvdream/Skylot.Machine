@@ -477,7 +477,10 @@ public class SocketServiceImpl extends BaseCommandUtils implements SocketService
             stringBuilder.append(StringUtils.leftPad(parkingLogic.getActionDirect() + "", 4, "0"));//正反转参数
             returnint = CommandExectue(PLC_COMMUNACAITON_HEAD_PARKING, stringBuilder.toString(), null);//旋转车台
             if (returnint == 0) {//存车
-                int status = confirmStatus(0);
+                int status = 1;
+                while (confirmStatus(0, true) == 1) {
+                    status = 0;
+                }
                 if (status == NumberUtils.toInt(FN_RETURN_STATUS_SUCCESS)) {//设备旋转完成
                     log.warn("设备旋转完成");
                     loggerParking.warn("当前时间:[" + SkylotUtils.getStrDate() + "],当前操作[存车],设备旋转完成");
@@ -1005,7 +1008,7 @@ public class SocketServiceImpl extends BaseCommandUtils implements SocketService
                 } catch (InterruptedException e) {
                     throw new SkyLotException(e);
                 }
-                if (followLoop != null && followLoop.length > 0) {
+                if (followLoop.length > 0) {
                     break;
                 }
                 looptimes++;

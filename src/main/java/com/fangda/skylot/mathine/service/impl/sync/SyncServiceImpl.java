@@ -755,7 +755,7 @@ public class SyncServiceImpl implements SyncService {
     /**
      * 比较本地库和PLC返回的停车记录,更新本地停车记录为PLC的停车记录
      */
-    private void comparePLC2Local() throws Exception {
+    public void comparePLC2Local() throws Exception {
         Map mapPLC = socketService.getParkingStatus(1);
         Map mapDB = socketService.getParkingStatus(0);
         StringBuilder stringBuilder = new StringBuilder();

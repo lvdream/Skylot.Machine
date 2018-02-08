@@ -91,4 +91,11 @@ public interface SyncService {
      * @return true:是,false:否
      */
     boolean hasSyncError(String errorType, boolean... compareDate) throws Exception;
+
+    /**
+     * 比较PLC和本地数据,不一样,则同步PLC数据到本地
+     *
+     * @throws Exception
+     */
+    void comparePLC2Local() throws Exception;
 }
