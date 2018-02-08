@@ -407,7 +407,7 @@ public class SyncServiceImpl implements SyncService {
             tstbMathineParkingLog.setTmplOperationEnergyCost(MapUtils.getString(parkingMap, MAP_ENERGY));
             this.setTmpl(tstbMathineParkingLog);
             ((TstbMathineParkingLogDAO) this.daoMap.get("tstbMathineParkingLogDao")).save(this.getTmpl());
-            CommandSchedule();
+            CommandSchedule(this.getTmpl());
 
             return 0;
 
@@ -467,11 +467,16 @@ public class SyncServiceImpl implements SyncService {
      *
      * @throws JsonProcessingException
      */
-    private void CommandSchedule() throws JsonProcessingException, Exception {
+    private void CommandSchedule(TstbMathineParkingLog... parkingLogs) throws JsonProcessingException, Exception {
         ParkingLogService parkingLogService = (ParkingLogService) serviceMap.get("parkinglogService");
         TstbMathineParkingLogCriteria criteria = new TstbMathineParkingLogCriteria();
         criteria.createCriteria().andTmplCreatedateGreaterThanOrEqualTo(DateFormatUtils.format(DateUtils.addMinutes(new Date(), -1), DATE_FORMAT_STANDARD)).andTmplCreatedateLessThanOrEqualTo(SkylotUtils.getStrDate());//// TODO: 2017/6/25 默认抓取PLC同步时间是当前时间减去一分钟之内的时间区间
-        List quaryList = parkingLogService.queryForAll(criteria);
+        List quaryList = Lists.newArrayList();
+        if (parkingLogs.length > 0) {
+            quaryList.add(parkingLogs[0]);
+        } else {
+            quaryList = parkingLogService.queryForAll(criteria);
+        }
         if (CollectionUtils.isNotEmpty(quaryList)) {
             Map scheduleMap = new HashMap();
             scheduleMap.put(SCHEDULEACTION_TYPE_HEARTBEAT, SCHEDULEACTION_TYPE_HEARTBEAT_SERVER);
@@ -691,11 +696,10 @@ public class SyncServiceImpl implements SyncService {
                     if (StringUtils.equals(SCHEDULEACTION_BUSINESSOBJ_MACHINE, next.getIsaBusinessObj())) {//如果是IMA对象的同步
                         serviceMap.get("machineActionService").update(iftbMachineAction, criteria);
                     }
-
-                } catch (Exception e) {//已有队列正在运行e
-                    throw new SkyLotException(e);
-                } finally {
                     wsThreadMgtSend.getCommands();
+                } catch (Exception e) {//已有队列正在运行e
+                    addSyncError("2", next.getIsaScheduleMessage());
+                    throw new SkyLotException(e);
                 }
             }
         }
@@ -788,7 +792,7 @@ public class SyncServiceImpl implements SyncService {
                     tstbMathineParkingLog.setTmplType(MACHINEPARKING_TYPE_TAKE);
                     tstbMathineParkingLog.setTmplStatus(PARKING_PULLING_STATUS_FINISH);
                     this.daoMap.get("tstbMathineParkingLogDao").save(tstbMathineParkingLog);
-                    CommandSchedule();
+                    CommandSchedule(tstbMathineParkingLog);
                 }
             }
         }
@@ -809,12 +813,7 @@ public class SyncServiceImpl implements SyncService {
         if (orignalText.length > 0) {
             oftbSyncLog.setOslOrignalMessage(orignalText[0]);
         }
-        OftbSyncLogCriteria oftbSyncLogCriteria = new OftbSyncLogCriteria();
-        oftbSyncLogCriteria.createCriteria().andOslTypeEqualTo(errorType);
-        List errorList = this.daoMap.get("oftbSyncLogDao").ReadAll(oftbSyncLogCriteria);
-        if (CollectionUtils.isEmpty(errorList) || StringUtils.equals(errorType, FN_RETURN_STATUS_SUCCESS)) {
-            this.daoMap.get("oftbSyncLogDao").save(oftbSyncLog);
-        }
+        this.daoMap.get("oftbSyncLogDao").save(oftbSyncLog);
     }
 
     /**

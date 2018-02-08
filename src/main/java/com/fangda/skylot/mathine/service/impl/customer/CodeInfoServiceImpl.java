@@ -79,40 +79,41 @@ public class CodeInfoServiceImpl extends BaseServiceImpl<OftbCodeInfo, OftbCodeI
                         Date veriableDate = DateUtil.strToDateLong(MapUtils.getString(map, MAP_QRCODE_ENDDATE));
                         Date systemDate = DateUtil.strToDateLong(DateUtil.getNowDate());
                         resultMap.put(SCHEDULEACTION_BUSINESSOBJ_CUSTOMER, MapUtils.getString(map, MAP_QRCODE_CARCODE));
-                        boolean dateBoolean = veriableDate.after(systemDate);
-                        if (!dateBoolean) {//二维码有效期小于当前系统时间
-                            if (iftbMachineAction.getImaCode().equals("0")) {//月租
-                                resultMap.put(MAP_PARKING_STATUS, SCHEDULEACTION_STATUS_ERROR);
-                            } else {//临停
-                                resultMap.put(MAP_PARKING_STATUS, FN_RETURN_STATUS_ERROR);
-                            }
-                        } else {
-                            TstbMathineParkingCriteria tstbMathineParkingCriteria = new TstbMathineParkingCriteria();
-                            tstbMathineParkingCriteria.createCriteria().andTmpCarCodeEqualTo(MapUtils.getString(map, MAP_QRCODE_CARCODE)).andTmpPhysicalCodeLike(MapUtils.getString(map, MAP_QRCODE_PHYSICALCODE));
-
-                            //判断车牌和位置
-                            TstbMathineParking parking = ((ParkingService) serviceMap.get("parkingService")).query(tstbMathineParkingCriteria);
-                            if (null != parking) {
-                                //判断用户,月租用户需要判断
-                                resultMap.put(MAP_PARKING_STATUS, FN_RETURN_STATUS_SUCCESS);
+                        if (!canceled) {
+                            boolean dateBoolean = veriableDate.after(systemDate);
+                            if (!dateBoolean) {//二维码有效期小于当前系统时间
                                 if (iftbMachineAction.getImaCode().equals("0")) {//月租
-                                    MstbCustomerCriteria customerCriteria = new MstbCustomerCriteria();
-                                    customerCriteria.createCriteria().andMcIdEqualTo(NumberUtils.toInt(MapUtils.getString(map, MAP_QRCODE_MCID)));
-                                    MstbCustomer customer = ((CustomerService) serviceMap.get("customerService")).query(customerCriteria);
-                                    if (null == customer) {
-                                        resultMap.put(MAP_PARKING_STATUS, FN_RETURN_STATUS_HANDLE);
-                                    }
+                                    resultMap.put(MAP_PARKING_STATUS, SCHEDULEACTION_STATUS_ERROR);
+                                } else {//临停
+                                    resultMap.put(MAP_PARKING_STATUS, FN_RETURN_STATUS_ERROR);
                                 }
                             }
-                            if (canceled) {//检查是否要取消停车
-                                TstbFtpCarInformationCriteria tstbFtpCarInformationCriteria = new TstbFtpCarInformationCriteria();
-                                tstbFtpCarInformationCriteria.createCriteria().andTfcCarCodeEqualTo(MapUtils.getString(map, MAP_QRCODE_CARCODE));//当前扫描的二维码是不是当前要取得汽车
-                                List dataList = ((FTPCarService) serviceMap.get("ftpcarService")).queryForAll(tstbFtpCarInformationCriteria);
-                                if (CollectionUtils.isEmpty(dataList)) {
+                        }
+                        TstbMathineParkingCriteria tstbMathineParkingCriteria = new TstbMathineParkingCriteria();
+                        tstbMathineParkingCriteria.createCriteria().andTmpCarCodeEqualTo(MapUtils.getString(map, MAP_QRCODE_CARCODE)).andTmpPhysicalCodeLike(MapUtils.getString(map, MAP_QRCODE_PHYSICALCODE));
+                        //判断车牌和位置
+                        TstbMathineParking parking = ((ParkingService) serviceMap.get("parkingService")).query(tstbMathineParkingCriteria);
+                        if (null != parking) {
+                            //判断用户,月租用户需要判断
+                            resultMap.put(MAP_PARKING_STATUS, FN_RETURN_STATUS_SUCCESS);
+                            if (iftbMachineAction.getImaCode().equals("0")) {//月租
+                                MstbCustomerCriteria customerCriteria = new MstbCustomerCriteria();
+                                customerCriteria.createCriteria().andMcIdEqualTo(NumberUtils.toInt(MapUtils.getString(map, MAP_QRCODE_MCID)));
+                                MstbCustomer customer = ((CustomerService) serviceMap.get("customerService")).query(customerCriteria);
+                                if (null == customer) {
                                     resultMap.put(MAP_PARKING_STATUS, FN_RETURN_STATUS_HANDLE);
                                 }
                             }
                         }
+                        if (canceled) {//检查是否要取消停车
+                            TstbFtpCarInformationCriteria tstbFtpCarInformationCriteria = new TstbFtpCarInformationCriteria();
+                            tstbFtpCarInformationCriteria.createCriteria().andTfcCarCodeEqualTo(MapUtils.getString(map, MAP_QRCODE_CARCODE));//当前扫描的二维码是不是当前要取得汽车
+                            List dataList = ((FTPCarService) serviceMap.get("ftpcarService")).queryForAll(tstbFtpCarInformationCriteria);
+                            if (CollectionUtils.isEmpty(dataList)) {
+                                resultMap.put(MAP_PARKING_STATUS, FN_RETURN_STATUS_HANDLE);
+                            }
+                        }
+
                     }
                 }
             }

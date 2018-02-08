@@ -722,7 +722,7 @@ public class SkylotUtils {
         String decodeStr = null;
         try {
             decodeStr = BaseCommandUtils.decode(Qcode);
-            if (!StringUtils.contains(decodeStr, ":00")) {
+            if (!StringUtils.contains(decodeStr, ":")) {
                 decodeStr = Qcode;
             }
         } catch (Exception e) {

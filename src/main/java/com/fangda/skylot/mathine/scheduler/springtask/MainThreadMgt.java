@@ -43,7 +43,7 @@ public class MainThreadMgt extends MainThreadUtil {
      *
      * @throws SkyLotException
      */
-    public void go() throws SkyLotException, InterruptedException {
+    public void go() throws Exception {
         try {
             if (wsThreadMgt.checkCommander() == 0) {
                 Map map = Maps.newHashMap();
@@ -68,11 +68,16 @@ public class MainThreadMgt extends MainThreadUtil {
             }
         } catch (Exception e) {
             if (StringUtils.contains(e.getMessage(), EX_PARKING_MATHINE_EXCEPTION)) {
+                wsThreadMgt.getCommands();
 
             } else if (StringUtils.contains(e.getMessage(), EX_PARKING_USER_AUTH_OUT_SERVICE)) {
                 getLoggerParking().warn("当前时间:[" + SkylotUtils.getStrDate() + "],设备同步异常,不能完成停车操作!");
                 getMarqueeUtil().sendText("SkyLot", "设备故障无法进行同步", true);
+                wsThreadMgt.getCommands();
             }
+            TstbFtpCarInformationCriteria carInformationCriteria = new TstbFtpCarInformationCriteria();
+            carInformationCriteria.createCriteria().andTfcCarCodeEqualTo(this.getTstbFtpCarInformation().getTfcCarCode());
+            serviceMap.get("ftpcarService").delete(carInformationCriteria);
 //            wsThreadMgt.getCommands();
             throw new SkyLotException(e);
         }
@@ -298,6 +303,9 @@ public class MainThreadMgt extends MainThreadUtil {
         Map resultMap = Maps.newHashMap();
         int result = getSyncServiceImpl().checkPLC(2);
         if (result == NumberUtils.toInt(FN_RETURN_STATUS_SUCCESS)) {
+            this.setHighError(false);
+            this.setPeopleDoor(false);
+            this.setCarDoor(false);
             getLoggerParking().warn("当前时间:[" + SkylotUtils.getStrDate() + "],当前操作[取车],当前车辆是[" + this.getTstbFtpCarInformation().getTfcCarCode() + "],PLC设备可用,准备取车!");
             getMarqueeUtil().sendText("取车中", "当前车辆是[" + this.getTstbFtpCarInformation().getTfcCarCode() + "],PLC设备可用,准备取车!", true);
             //首先,旋转到位
@@ -420,12 +428,13 @@ public class MainThreadMgt extends MainThreadUtil {
                 }
                 //判断,车库门关闭
                 a = 0;
+                getSocketService().carDoor(FN_RETURN_STATUS_ERROR);//车库门关门指令发送成功
                 while (!isCarDoor()) {
                     if (a == 0) {
                         getMarqueeUtil().sendText("取车中", "等待车库门关闭", true);
                     }
-                    getSocketService().carDoor(FN_RETURN_STATUS_ERROR);//车库门关门指令发送成功
                     getLoggerParking().warn("当前时间:[" + SkylotUtils.getStrDate() + "],当前操作[取车],获取车库门关闭状态");
+                    heartBeatPLC("3", "3");
                     if (!extractError()) {
                         heartBeatPLC("2", "3");
                     }
