@@ -1,5 +1,7 @@
 package com.fangda.skylot.mathine.utils;
 
+import com.fangda.skylot.mathine.service.sync.SyncService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
@@ -10,6 +12,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class AutoStartJob implements
         ApplicationListener<ContextRefreshedEvent> {
+    @Autowired
+    private SyncService syncServiceImpl;
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {

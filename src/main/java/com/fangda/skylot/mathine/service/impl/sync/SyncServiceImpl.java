@@ -104,28 +104,12 @@ public class SyncServiceImpl implements SyncService {
         }
         if (hasSyncError("1")) {//PLC通信失败,先同步数据
             comparePLC2Local();
-        } else {
-            addSyncError("0");//新增正常数据
         }
         int a = 0;
-        int r = checkPLC(9, true);
-        while (r != 0) {
-            r = checkPLC(9, true);
-            Thread.sleep(1000);
-            if (a > 10) {//PLC连接超时
-                addSyncError("1");
-                break;
-            }
-            if (r == 1 || r == -1 || r == 2) {//一般故障,严重故障
-                addSyncError("1");
-                break;
-            }
-            a++;
-        }
         plcStatus = 1;
-        if (r == 0) {
-            addSyncError("0");//新增正常数据
-        } else {
+        int r = checkPLC(9, true);
+        if (r == 1 || r == -1 || r == 2) {//一般故障,严重故障
+            addSyncError("1");
             plcStatus = 2;
             if (r == -1) {
                 plcStatus = 9;
@@ -137,8 +121,9 @@ public class SyncServiceImpl implements SyncService {
                     code.setErrorList(eList);
                 }
             }
+        } else {
+            addSyncError("0");//新增正常数据
         }
-
         try {
             mainThreadUtil.updateStatus("1", "" + plcStatus, "3", null, null, r == 0 ? "0" : "1", code.getTargetLot());
             Map scheduleMap = new HashMap();
@@ -428,8 +413,7 @@ public class SyncServiceImpl implements SyncService {
         //01.删除已经同步完成的对象
 
         IftbScheduleActionCriteria iftbScheduleActionCriteria = new IftbScheduleActionCriteria();
-        iftbScheduleActionCriteria.createCriteria().andIsaStatusEqualTo(SCHEDULEACTION_STATUS_FINISH);
-        scheduleService.delete(iftbScheduleActionCriteria);
+
 
         //02.更新心跳
         IftbScheduleAction iftbScheduleAction = IftbScheduleAction.builder().build();
@@ -677,22 +661,18 @@ public class SyncServiceImpl implements SyncService {
                     wsThreadMgtSend.putCommander(next);
                     String data = sendSync(next);
                     if (StringUtils.equals(data, FN_RETURN_STATUS_SUCCESS)) {
-                        iftbMachineAction.setImaStatus(FN_RETURN_STATUS_SUCCESS);
                         iftbScheduleActionCriteria.createCriteria().andIsaIdEqualTo(next.getIsaId());
                         next.setIsaStatus(SCHEDULEACTION_STATUS_FINISH);
                         addSyncError("0", next.getIsaScheduleMessage());
-                        ((ScheduleService) serviceMap.get("scheduleService")).update(next, iftbScheduleActionCriteria);
                         OftbSyncLogCriteria oftbSyncLogCriteria = new OftbSyncLogCriteria();
                         oftbSyncLogCriteria.createCriteria().andOslTypeEqualTo("0");
-//                        if (hasSyncError("0", false)) {
-//                            //comparePLC2Local();//上一次有同步失败记录
-//                            hasSyncError("0", true);
-//                        }
                         iftbMachineAction.setImaPhysicalStatus(FN_RETURN_STATUS_SUCCESS);
                     } else {//和SaaS同步失败,放置一条失败的信息
                         addSyncError("2", next.getIsaScheduleMessage());
                         iftbMachineAction.setImaPhysicalStatus(FN_RETURN_STATUS_ERROR);
                     }
+                    //删除已经完成的定期任务
+                    ((ScheduleService) serviceMap.get("scheduleService")).delete(iftbScheduleActionCriteria);
                     if (StringUtils.equals(SCHEDULEACTION_BUSINESSOBJ_MACHINE, next.getIsaBusinessObj())) {//如果是IMA对象的同步
                         serviceMap.get("machineActionService").update(iftbMachineAction, criteria);
                     }
@@ -817,7 +797,7 @@ public class SyncServiceImpl implements SyncService {
     }
 
     /**
-     * 是否有错误信息
+     * 是否有错误信息,如果有错误的信息,查询出错误,返回真,且将错误信息的状态改为处理完
      *
      * @param errorType
      * @return
@@ -826,18 +806,15 @@ public class SyncServiceImpl implements SyncService {
     public boolean hasSyncError(String errorType, boolean... compareDate) throws Exception {
         OftbSyncLogCriteria oftbSyncLogCriteria = new OftbSyncLogCriteria();
         OftbSyncLogCriteria.Criteria criteria = oftbSyncLogCriteria.createCriteria();
-        if (compareDate.length > 0) {
-            criteria.andOslCreatedateLessThan(DateFormatUtils.format(DateUtils.addMinutes(new Date(), -2), DATE_FORMAT_STANDARD));
-            // TODO: 05/02/2018 查找5分钟之前是否有同步失败的信息,如有则反馈SaaS,当前设备故障
-        }
-        List oftbSyncLogDao = this.daoMap.get("oftbSyncLogDao").ReadAll(oftbSyncLogCriteria);
-        if (CollectionUtils.isNotEmpty(oftbSyncLogDao)) {
-            OftbSyncLog errorList = (OftbSyncLog) oftbSyncLogDao.get(0);
-            if (errorList != null) {
-                if (errorList.getOslType().equals(errorType)) {
-                    return true;
-                }
+        criteria.andOslTypeEqualTo(errorType);
+        int count = this.daoMap.get("oftbSyncLogDao").ReadCount(criteria);
+        if (count > 0) {
+            OftbSyncLog oftbSyncLog = OftbSyncLog.builder().build();
+            oftbSyncLog.setOslType(SCHEDULEACTION_TYPE_HEARTBEAT_SERVER);//改为处理完成
+            if (compareDate.length == 0) {//只是查询不更新
+                this.daoMap.get("oftbSyncLogDao").updatewithoutNull(oftbSyncLog, oftbSyncLogCriteria);
             }
+            return true;
         }
         return false;
     }
