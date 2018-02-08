@@ -34,6 +34,7 @@ public class ErrorCode {
     private Map codePLC;
     private String targetLot;
     private List errorList;
+    private List errorCancel;
 
     /**
      * 处理错误逻辑

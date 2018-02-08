@@ -90,7 +90,7 @@ public class QRCodeController extends BaseController {
                 Map subMapData = ((CodeInfoService) serviceMap.get("codeInfoService")).verifyCode(consoleParamater.getScanCode(), true);
                 jsonDataResult.setResult(MapUtils.getString(subMapData, MAP_PARKING_STATUS));
                 jsonDataResult.setCarCode(MapUtils.getString(SkylotUtils.verifyCode(consoleParamater.getScanCode()), MAP_QRCODE_CARCODE));
-                cancelCar(jsonDataResult, mainThreadUtil, result, exceptionBuilder);
+                cancelCar(jsonDataResult, mainThreadUtil, result, exceptionBuilder, socketService, "1");
                 result.setResultType(true);
                 jsonDataResult.setResult("0");
                 subMap = SkylotUtils.beanToHashMap(jsonDataResult);

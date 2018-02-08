@@ -675,6 +675,7 @@ public class SyncServiceImpl implements SyncService {
                         iftbMachineAction.setImaStatus(FN_RETURN_STATUS_SUCCESS);
                         iftbScheduleActionCriteria.createCriteria().andIsaIdEqualTo(next.getIsaId());
                         next.setIsaStatus(SCHEDULEACTION_STATUS_FINISH);
+                        addSyncError("0", next.getIsaScheduleMessage());
                         ((ScheduleService) serviceMap.get("scheduleService")).update(next, iftbScheduleActionCriteria);
                         OftbSyncLogCriteria oftbSyncLogCriteria = new OftbSyncLogCriteria();
                         oftbSyncLogCriteria.createCriteria().andOslTypeEqualTo("0");
@@ -683,7 +684,6 @@ public class SyncServiceImpl implements SyncService {
 //                            hasSyncError("0", true);
 //                        }
                         iftbMachineAction.setImaPhysicalStatus(FN_RETURN_STATUS_SUCCESS);
-                        addSyncError("0", next.getIsaScheduleMessage());
                     } else {//和SaaS同步失败,放置一条失败的信息
                         addSyncError("2", next.getIsaScheduleMessage());
                         iftbMachineAction.setImaPhysicalStatus(FN_RETURN_STATUS_ERROR);

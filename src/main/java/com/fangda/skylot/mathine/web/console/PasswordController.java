@@ -116,7 +116,7 @@ public class PasswordController extends BaseController {
             if (StringUtils.isNotEmpty(consoleParamater.getScanCode())) {
                 Map subMapData = ((CodeInfoService) serviceMap.get("codeInfoService")).verifyCode(consoleParamater.getScanCode(), false);
                 jsonDataResult.setResult(MapUtils.getString(subMapData, MAP_PARKING_STATUS));
-                cancelCar(jsonDataResult, mainThreadUtil, result, exceptionBuilder);
+                cancelCar(jsonDataResult, mainThreadUtil, result, exceptionBuilder, socketService, "1");
                 jsonDataResult.setCarCode(MapUtils.getString(SkylotUtils.verifyCode(consoleParamater.getScanCode()), MAP_QRCODE_CARCODE));
             }
 

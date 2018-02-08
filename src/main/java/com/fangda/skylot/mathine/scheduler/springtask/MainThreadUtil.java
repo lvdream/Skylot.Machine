@@ -444,7 +444,7 @@ public class MainThreadUtil {
 
         jsonResult.setResultType(true);
         if (checkCanceled()) {
-            jsonResult.setResultType(CollectionUtils.isNotEmpty(jsonResult.getError()) ? false : true);
+            jsonResult.setResultType(true);
         }
 
         IftbMachineActionCriteria criteria = new IftbMachineActionCriteria();

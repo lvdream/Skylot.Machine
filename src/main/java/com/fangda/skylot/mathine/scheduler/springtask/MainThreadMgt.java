@@ -177,11 +177,6 @@ public class MainThreadMgt extends MainThreadUtil {
 //                    Thread.sleep(1000);
 //                    a++;
 //                }
-                if (checkCanceled()) {
-                    if (cancelAction(FN_RETURN_STATUS_SUCCESS)) {
-                        return false;
-                    }
-                }
                 a = 0;
                 s = 1;
                 //判断1005的状态
@@ -200,21 +195,16 @@ public class MainThreadMgt extends MainThreadUtil {
                         heartBeatPLC("3", "3");
                         s = 0;
                     }
+                    if (checkCanceled()) {
+                        if (cancelAction(FN_RETURN_STATUS_SUCCESS)) {
+                            return false;
+                        }
+                    }
                     Thread.sleep(1000);
                     a++;
                 }
-                if (checkCanceled()) {
-                    if (cancelAction(FN_RETURN_STATUS_SUCCESS)) {
-                        return false;
-                    }
-                }
                 //全部执行完成之后,将当前停车车辆的状态置为停车确认状态
                 confirmCar();
-                if (checkCanceled()) {
-                    if (cancelAction(FN_RETURN_STATUS_SUCCESS)) {
-                        return false;
-                    }
-                }
                 a = 0;
                 //继续等待,等待用户发送确认指令,用户发送停车确认指令,状态置为3
                 while (StringUtils.equals(SCHEDULEACTION_MODULEID_ITEMCUSTOMER, this.getTstbFtpCarInformation().getTfcStatus() + "")) {
@@ -241,17 +231,10 @@ public class MainThreadMgt extends MainThreadUtil {
                     Thread.sleep(1000);
                     a++;
                 }
-                if (checkCanceled()) {
-                    if (cancelAction(FN_RETURN_STATUS_SUCCESS)) {
-                        return false;
-                    }
-                }
                 //关车库门
                 a = 0;
                 this.setPeopleDoor(false);
                 this.setCarDoor(false);
-
-
                 getSocketService().carDoor(FN_RETURN_STATUS_ERROR);//执行关车门
                 while (!isCarDoor()) {
                     getLoggerParking().warn("当前时间:[" + SkylotUtils.getStrDate() + "],当前操作[存车],获取车库门关闭状态");
