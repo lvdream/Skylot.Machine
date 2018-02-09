@@ -19,6 +19,11 @@ public class AutoStartJob implements
     public void onApplicationEvent(ContextRefreshedEvent event) {
         if (event.getApplicationContext().getParent() == null) {
             System.out.println("-----所有Bean载入完成---");
+            try {
+                syncServiceImpl.comparePLC2Local();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 }

@@ -805,9 +805,8 @@ public class SyncServiceImpl implements SyncService {
      */
     public boolean hasSyncError(String errorType, boolean... compareDate) throws Exception {
         OftbSyncLogCriteria oftbSyncLogCriteria = new OftbSyncLogCriteria();
-        OftbSyncLogCriteria.Criteria criteria = oftbSyncLogCriteria.createCriteria();
-        criteria.andOslTypeEqualTo(errorType);
-        int count = this.daoMap.get("oftbSyncLogDao").ReadCount(criteria);
+        oftbSyncLogCriteria.createCriteria().andOslTypeEqualTo(errorType);
+        int count = this.daoMap.get("oftbSyncLogDao").ReadCount(oftbSyncLogCriteria);
         if (count > 0) {
             OftbSyncLog oftbSyncLog = OftbSyncLog.builder().build();
             oftbSyncLog.setOslType(SCHEDULEACTION_TYPE_HEARTBEAT_SERVER);//改为处理完成
