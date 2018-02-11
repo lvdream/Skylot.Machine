@@ -10,19 +10,19 @@
     <task:scheduler id="mainThread" pool-size="1"/>
     <!-- PLC 心跳定期任务 -->
     <task:scheduled-tasks scheduler="plcSync">
-        <task:scheduled ref="syncHeartbeatPLCTask" method="syncPLC" cron="0/5 * * * * ?"/>
+        <task:scheduled ref="syncHeartbeatPLCTask" method="syncPLC" fixed-delay="900"/>
     </task:scheduled-tasks>
     <!-- SaaS后台定期任务 -->
     <task:scheduled-tasks scheduler="serverSync">
-        <task:scheduled ref="syncParkingLogicServer" method="run" cron="0/10 * * * * ?"/>
+        <task:scheduled ref="syncParkingLogicServer" method="run" fixed-delay="5000"/>
     </task:scheduled-tasks>
     <!-- FTP 定期扫描 -->
     <task:scheduled-tasks scheduler="ftpProcess">
-        <task:scheduled ref="syncFTPUtil" method="ftp" cron="0/2 * * * * ?"/>
+        <task:scheduled ref="syncFTPUtil" method="ftp" fixed-delay="300"/>
     </task:scheduled-tasks>
     <!-- 停取车主线程 -->
     <task:scheduled-tasks scheduler="mainThread">
-        <task:scheduled ref="mainThreadMgt" method="go" cron="0/3 * * * * ?"/>
+        <task:scheduled ref="mainThreadMgt" method="go" fixed-delay="500"/>
     </task:scheduled-tasks>
 
 </beans>
