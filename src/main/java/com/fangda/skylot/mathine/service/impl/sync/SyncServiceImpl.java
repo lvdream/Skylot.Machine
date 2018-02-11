@@ -739,20 +739,11 @@ public class SyncServiceImpl implements SyncService {
         Map mapPLC = socketService.getParkingStatus(1);
         Map mapDB = socketService.getParkingStatus(0);
         StringBuilder stringBuilder = new StringBuilder();
-        Iterator<Map.Entry<Integer, String>> itPLC = mapPLC.entrySet().iterator();
         Iterator<Map.Entry<Integer, String>> itDB = mapDB.entrySet().iterator();
         List missedCar = Lists.newArrayList();
         while (itDB.hasNext()) {
             Map.Entry<Integer, String> pairDB = itDB.next();
-            boolean find = false;
-            while (itPLC.hasNext()) {
-                Map.Entry<Integer, String> pairPLC = itPLC.next();
-                if (pairPLC.getKey().equals(pairDB.getKey())) {
-                    find = true;
-                    break;
-                }
-            }
-            if (!find) {
+            if (mapPLC.get(pairDB.getKey()) == null) {
                 missedCar.add(pairDB.getKey() + "");
             }
         }
