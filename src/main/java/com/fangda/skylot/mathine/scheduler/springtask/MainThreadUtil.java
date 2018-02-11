@@ -100,8 +100,12 @@ public class MainThreadUtil {
                     serviceMap.get("ftpcarService").update(this.getTstbFtpCarInformation(), carInformationCriteria);
                 }
             } else {
-                this.getTstbFtpCarInformation().setTfcStatus(NumberUtils.toInt(SCHEDULEACTION_MODULEID_ITEMCUSTOMER));//等待用户确认状态
-                serviceMap.get("ftpcarService").update(this.getTstbFtpCarInformation(), carInformationCriteria);
+                hasTasktodo();
+                if (!this.getTstbFtpCarInformation().getTfcStatus().equals(SCHEDULEACTION_MODULEID_MACHINEITEM)) {//用户已经确认
+                    this.getTstbFtpCarInformation().setTfcStatus(NumberUtils.toInt(SCHEDULEACTION_MODULEID_ITEMCUSTOMER));//等待用户确认状态
+                    serviceMap.get("ftpcarService").update(this.getTstbFtpCarInformation(), carInformationCriteria);
+                }
+
             }
             return true;
         } catch (Exception e) {
@@ -288,6 +292,10 @@ public class MainThreadUtil {
      */
     protected boolean parkingError() throws SkyLotException {
         Map valuesMap = getSocketService().getIndexError();
+        //增加命令超时处理
+        if (MapUtils.getIntValue(valuesMap, "status") == NumberUtils.toInt(FN_RETURN_STATUS_TIMEOUT)) {
+            throw new SkyLotException(FN_RETURN_STATUS_TIMEOUT);
+        }
         analyzingError(valuesMap, "p");
         if (MapUtils.isEmpty(MapUtils.getMap(valuesMap, "valueMap")) && MapUtils.isEmpty(MapUtils.getMap(valuesMap, "valueAppendMap"))) {
             return true;

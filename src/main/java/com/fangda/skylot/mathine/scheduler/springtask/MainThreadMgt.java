@@ -71,7 +71,7 @@ public class MainThreadMgt extends MainThreadUtil {
                 }
             }
         } catch (Exception e) {
-            if (StringUtils.contains(e.getMessage(), EX_PARKING_MATHINE_EXCEPTION)) {
+            if (StringUtils.contains(e.getMessage(), EX_PARKING_MATHINE_EXCEPTION) || StringUtils.contains(e.getMessage(), FN_RETURN_STATUS_TIMEOUT)) {
                 Map map1 = wsThreadMgt.getCommands();
                 if (!map1.get("name").equals("Thread")) {
                     wsThreadMgt.putCommander(map);
@@ -86,6 +86,7 @@ public class MainThreadMgt extends MainThreadUtil {
                     wsThreadMgt.getCommands();
                 }
             }
+            getMarqueeUtil().sendText("Skylot", "欢迎停车!", true, "丝该老特");
             TstbFtpCarInformationCriteria carInformationCriteria = new TstbFtpCarInformationCriteria();
             carInformationCriteria.createCriteria().andTfcCarCodeEqualTo(this.getTstbFtpCarInformation().getTfcCarCode());
             serviceMap.get("ftpcarService").delete(carInformationCriteria);
@@ -130,9 +131,10 @@ public class MainThreadMgt extends MainThreadUtil {
                     s = MapUtils.getIntValue(parkingMap, MAP_PARKING_STATUS);
                     resultMap = parkingMap;
                     if (s == 0) {
-
                         break;
                     } else if (s == NumberUtils.toInt(FN_RETURN_STATUS_HANDLE)) {//急停处理
+                        throw new SkyLotException(EX_PARKING_MATHINE_EXCEPTION);
+                    } else if (s == NumberUtils.toInt(FN_RETURN_STATUS_TIMEOUT)) {//命令超时
                         throw new SkyLotException(EX_PARKING_MATHINE_EXCEPTION);
                     }
 
@@ -157,8 +159,6 @@ public class MainThreadMgt extends MainThreadUtil {
                             return false;
                         }
                     }
-
-
                     //获取到1005状态信息,都是正常也是可以跳出循环
                     if (parkingError()) {
                         heartBeatPLC("3", "2");
@@ -286,7 +286,6 @@ public class MainThreadMgt extends MainThreadUtil {
             TstbFtpCarInformationCriteria carInformationCriteria = new TstbFtpCarInformationCriteria();
             carInformationCriteria.createCriteria().andTfcCarCodeEqualTo(this.getTstbFtpCarInformation().getTfcCarCode());
             serviceMap.get("ftpcarService").delete(carInformationCriteria);
-            getMarqueeUtil().sendText("Skylot", "欢迎停车!", true, "丝该老特");
             //更新IMA状态
             updateStatus("3", "9", "1", this.getTstbFtpCarInformation().getTfcCarCode(), this.getTstbFtpCarInformation().getTfcCarInCode(), "3", null);
             if (StringUtils.contains(e.getMessage(), EX_PARKING_MATHINE_EXCEPTION)) {//急停处理
@@ -465,8 +464,6 @@ public class MainThreadMgt extends MainThreadUtil {
                 getLoggerParking().warn("当前时间:[" + SkylotUtils.getStrDate() + "],当前操作[取车],当前车辆是[" + this.getTstbFtpCarInformation().getTfcCarCode() + "],PLC设备上没有要取车的车辆!");
                 return false;
             }
-
-
         } else {
             if (result == 2) {//没有可用车位可以停车
                 getLoggerParking().warn("当前时间:[" + SkylotUtils.getStrDate() + "],当前操作[取车],当前车辆是[" + this.getTstbFtpCarInformation().getTfcCarCode() + "],PLC设备已经没有可用停车位置,本次取车失败!");
@@ -485,14 +482,14 @@ public class MainThreadMgt extends MainThreadUtil {
     private boolean doBookExtractLogic(ParkingLogic... parkingLogics) throws Exception {
         TstbMathineParking tstbMathineParking = TstbMathineParking.builder().build();
         int result = getSyncServiceImpl().checkPLC(2);
+        String showText = "预约取车";
         try {
             if (result == NumberUtils.toInt(FN_RETURN_STATUS_SUCCESS)) {
-                if (parkingLogics.length == 0) {//预约取车
-                    getMarqueeUtil().sendText("预约取车", this.getTstbFtpCarInformation().getTfcCarCode() + "正在进行预约取车", false);
-                    getLoggerParking().warn("当前时间:[" + SkylotUtils.getStrDate() + "],当前操作[预约取车],当前车辆是[" + this.getTstbFtpCarInformation().getTfcCarCode() + "],PLC设备可用,准备取车!");
-                } else {//荷载
-                    getLoggerParking().warn("当前时间:[" + SkylotUtils.getStrDate() + "],当前操作[荷载],PLC设备可用,准备旋转!");
+                if (parkingLogics.length > 0) {//荷载
+                    showText = "荷载";
                 }
+                getMarqueeUtil().sendText(showText, this.getTstbFtpCarInformation().getTfcCarCode() + "正在进行" + showText, false);
+                getLoggerParking().warn("当前时间:[" + SkylotUtils.getStrDate() + "],当前操作[" + showText + "],当前车辆是[" + this.getTstbFtpCarInformation().getTfcCarCode() + "],PLC设备可用!");
                 //首先,旋转到位
                 int s = 1;
                 TstbMathineParkingCriteria criteria = new TstbMathineParkingCriteria();
@@ -500,19 +497,13 @@ public class MainThreadMgt extends MainThreadUtil {
                 tstbMathineParking = ((ParkingService) serviceMap.get("parkingService")).query(criteria);
                 if (tstbMathineParking != null) {
                     code.setTargetLot(tstbMathineParking.getTmpPhysicalCode());
-                    while (s == 1) {//旋转
+                    //旋转
+                    getSocketService().doDirection(NumberUtils.toInt(tstbMathineParking.getTmpPhysicalCode()), new ParkingLogic());
+                    while (getSocketService().confirmStatus(0, true) == 1) {//旋转
                         heartBeatPLC("4", "1");
-                        getLoggerParking().warn("当前时间:[" + SkylotUtils.getStrDate() + "],当前操作[预约取车],旋转车台是[" + tstbMathineParking.getTmpPhysicalCode() + "]");
-                        s = getSocketService().doDirection(NumberUtils.toInt(tstbMathineParking.getTmpPhysicalCode()), new ParkingLogic());
-                        if (s == 0) {
-                            break;
-                        }
-                    }
-                    int a = 1;
-                    while (a != 0) {
-                        a = getSyncServiceImpl().checkPLC(2, true);
-                        getLoggerParking().warn("当前时间:[" + SkylotUtils.getStrDate() + "],当前操作[预约取车],旋转中");
-                        if (a == -1) {
+                        getLoggerParking().warn("当前时间:[" + SkylotUtils.getStrDate() + "],当前操作[" + showText + "],旋转车台是[" + tstbMathineParking.getTmpPhysicalCode() + "]");
+                        highErrorExist();
+                        if (isHighError()) {
                             throw new SkyLotException(EX_PARKING_MATHINE_EXCEPTION);
                         }
                         Thread.sleep(1000);
@@ -522,17 +513,16 @@ public class MainThreadMgt extends MainThreadUtil {
                     carInformationCriteria.createCriteria().andTfcCarCodeEqualTo(this.getTstbFtpCarInformation().getTfcCarCode());
                     serviceMap.get("ftpcarService").delete(carInformationCriteria);
                     heartBeatPLC("1", "3");
-
                     return true;
                 } else {
-                    getLoggerParking().warn("当前时间:[" + SkylotUtils.getStrDate() + "],当前操作[预约取车],当前车辆是[" + this.getTstbFtpCarInformation().getTfcCarCode() + "],PLC设备上没有要取车的车辆!");
+                    getLoggerParking().warn("当前时间:[" + SkylotUtils.getStrDate() + "],当前操作[" + showText + "],当前车辆是[" + this.getTstbFtpCarInformation().getTfcCarCode() + "],PLC设备上没有要取车的车辆!");
                     return false;
                 }
             } else {
                 if (result == 2) {//没有可用车位可以停车
-                    getLoggerParking().warn("当前时间:[" + SkylotUtils.getStrDate() + "],当前操作[预约取车],当前车辆是[" + this.getTstbFtpCarInformation().getTfcCarCode() + "],PLC设备已经没有可用停车位置,本次取车失败!");
+                    getLoggerParking().warn("当前时间:[" + SkylotUtils.getStrDate() + "],当前操作[" + showText + "],当前车辆是[" + this.getTstbFtpCarInformation().getTfcCarCode() + "],PLC设备已经没有可用停车位置,本次取车失败!");
                 } else {
-                    getLoggerParking().warn("当前时间:[" + SkylotUtils.getStrDate() + "],当前操作[预约取车],当前车辆是[" + this.getTstbFtpCarInformation().getTfcCarCode() + "],PLC设备故障,本次取车失败!");
+                    getLoggerParking().warn("当前时间:[" + SkylotUtils.getStrDate() + "],当前操作[" + showText + "],当前车辆是[" + this.getTstbFtpCarInformation().getTfcCarCode() + "],PLC设备故障,本次取车失败!");
                 }
                 return false;
             }

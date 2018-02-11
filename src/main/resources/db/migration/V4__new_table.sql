@@ -210,10 +210,11 @@ CREATE PROCEDURE sp_oftb_reserve_taking()
     DECLARE tmp_car_code_w VARCHAR(200) CHARACTER SET utf8;
     DECLARE tmp_ima_id_w VARCHAR(100) CHARACTER SET utf8;
     DECLARE tmp_pysical_code_w VARCHAR(2) CHARACTER SET utf8;
-
+    # 查询10秒钟之后是否有预约车辆
     SET tmp_count = (SELECT count(*)
                      FROM oftb_reserve_taking
-                     WHERE date_add(now(), INTERVAL '60' SECOND) > ort_reserve_time AND now() < ort_reserve_time);
+                     WHERE date_add(now(), INTERVAL '10' SECOND) > ort_reserve_time AND now() < ort_reserve_time);
+
     IF (tmp_count > 0)
     THEN
       SET tmp_pysical_code_w = (SELECT ort_physical_code
@@ -231,8 +232,13 @@ CREATE PROCEDURE sp_oftb_reserve_taking()
                                                        FROM oftb_reserve_taking
                                                        ORDER BY ort_id ASC
                                                        LIMIT 1));
-      INSERT INTO tstb_ftp_car_information (ima_id, tfc_car_code, tfc_status, tfc_createtime, tfc_car_action)
-      VALUES (tmp_ima_id_w, tmp_car_code_w, 1, now(), '2');
+      # 判断当前是否有车辆正在停取车,如果没有车辆正在停取车,则进行预约操作,反正不进行操作
+      IF (SELECT count(*)
+          FROM tstb_ftp_car_information) = 0
+      THEN
+        INSERT INTO tstb_ftp_car_information (ima_id, tfc_car_code, tfc_status, tfc_createtime, tfc_car_action)
+        VALUES (tmp_ima_id_w, tmp_car_code_w, 1, now(), '2');
+      END IF;
     END IF;
     # 删除过期预约项目
     SET tmp_count = (SELECT count(*)
@@ -245,6 +251,8 @@ CREATE PROCEDURE sp_oftb_reserve_taking()
       WHERE date_add(now(), INTERVAL '-1' DAY) > ort_reserve_time;
     END IF;
   END;
+
+
 DELIMITER ;
 
 

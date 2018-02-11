@@ -169,6 +169,7 @@ public class SocketServiceImpl extends BaseCommandUtils implements SocketService
         Map map = Maps.newHashMap();
         map.put("valueMap", this.valueMap);
         map.put("valueAppendMap", this.valueMapAppend);
+        map.put("status", returnint);
         return map;
     }
 
@@ -388,13 +389,13 @@ public class SocketServiceImpl extends BaseCommandUtils implements SocketService
         int returnint = -1;
         try {
             StringBuilder stringBuilder = new StringBuilder();
-            //旋转
-            getBaseNumber();//获取最下方停车板编号
-            getParkingStatus(1);//获取停车状态
-            parkingLogic.setBaseNum(getBaseNum());
-            parkingLogic.setMachineTotalItmes(MACHINEPARKING_QUANTITY);
-            parkingLogic.setParkingStatusMap(this.getValueMap());
-            parkingLogic.getStoreNum(1);
+            getBaseNumber();
+            List positionList = ListUtils.sum(parkingLogic.getRightPositionNumber(NumberUtils.toInt(getBaseNum()), 0), parkingLogic.getRightPositionNumber(NumberUtils.toInt(getBaseNum()), 2));//依次查找,下方和左侧;上方和左侧
+            if (ArrayUtils.contains(positionList.toArray(), number)) {
+                parkingLogic.setActionDirect(2);
+            } else {
+                parkingLogic.setActionDirect(1);
+            }
             stringBuilder.append("00000102820C1C000003");
             stringBuilder.append("0001");
             stringBuilder.append(StringUtils.leftPad(Integer.toHexString(number), 4, "0"));
@@ -695,24 +696,6 @@ public class SocketServiceImpl extends BaseCommandUtils implements SocketService
                 }
                 if (bType == 0) {//存车
                     if (pNum == 14) {//运行完成状态
-//                        if (this.getStatusCheck() == 0) {//验证运行中状态存在
-//                            setDirectionBeforeTime(System.currentTimeMillis() - getFinishParkingTime());//停车前,旋转计时结束
-//                            // TODO: 14/08/2017 需要增加存车完成之后,最下方车位不是所需车位,告知PLC告警
-//                            this.setStatusCheck(1);//继续侦测运行空闲状态
-//                            return NumberUtils.toInt(FN_RETURN_STATUS_ERROR);
-//                        } else if (this.getStatusCheck() == -1) {//当前最下方已经是待旋转车位
-//                            setDirectionBeforeTime(0);//设置旋转计时为0
-//                            // TODO: 14/08/2017 需要增加存车完成之后,最下方车位不是所需车位,告知PLC告警
-//                            this.setStatusCheck(1);//继续侦测空闲状态
-//                            return NumberUtils.toInt(FN_RETURN_STATUS_ERROR);
-//                        } else if (this.getStatusCheck() == 1) {//验证运行完成状态存在
-//                            this.setStatusCheck(-1);//完成停车操作
-//                            try {
-//                                Thread.sleep(1000);//停车完成时,等待空闲,附加延迟1秒
-//                            } catch (InterruptedException e) {
-//                                e.printStackTrace();
-//                            }
-//                        }
                         return NumberUtils.toInt(FN_RETURN_STATUS_SUCCESS);
                     } else if (pNum == 10) {//停车完成状态
                         if (this.getStatusCheck() == 1) {//验证运行完成状态存在
@@ -858,6 +841,9 @@ public class SocketServiceImpl extends BaseCommandUtils implements SocketService
                 } else {
                     if (NumberUtils.toInt(FN_RETURN_STATUS_HANDLE) == status) {//系统急停,严重错误
                         returnMap.put(MAP_PARKING_STATUS, NumberUtils.toInt(FN_RETURN_STATUS_HANDLE));
+                    }
+                    if (NumberUtils.toInt(FN_RETURN_STATUS_TIMEOUT) == status) {//系统超时
+                        returnMap.put(MAP_PARKING_STATUS, NumberUtils.toInt(FN_RETURN_STATUS_TIMEOUT));
                     }
                 }
             } else {

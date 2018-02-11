@@ -50,6 +50,11 @@ public final class Constant {
      */
     public static final String FN_RETURN_STATUS_HANDLE = "2";
     /**
+     * 方法默认返回值
+     * 超时
+     */
+    public static final String FN_RETURN_STATUS_TIMEOUT = "-2";
+    /**
      * 判定同步是否失败时长（单位：分钟）
      */
     public static final int TIMEOUT_OF_SYNCHRONIZE = 10;
