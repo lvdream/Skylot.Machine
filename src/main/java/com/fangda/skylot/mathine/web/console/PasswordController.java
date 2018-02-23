@@ -55,10 +55,10 @@ public class PasswordController extends BaseController {
         JsonResult result = new JsonResult();
         JsonDataResult jsonDataResult = new JsonDataResult();
         StringBuilder exceptionBuilder = new StringBuilder();
+        Map subMap = Maps.newHashMap();
         exceptionBuilder.append(STR_EXCEPTION_BUSINESS_CODE);
         try {
             result.setResultType(true);
-            Map subMap = Maps.newHashMap();
             if (StringUtils.isNotEmpty(consoleParamater.getPassword()) &&
                     StringUtils.isEmpty(consoleParamater.getScanCode())) {
                 consoleParamater.setScanCode(consoleParamater.getPassword());
@@ -77,8 +77,13 @@ public class PasswordController extends BaseController {
                     tstbFtpCarInformation.setImaId(GetProperties.getProperties("system.properties", "skylot.machine.id"));
                     serviceMap.get("ftpcarService").add(tstbFtpCarInformation);//存储识别到的车牌号
                 } else {
-                    exceptionBuilder.append("request.confirm.getcar.fail");
+                    if (StringUtils.equals(jsonDataResult.getResult(), FN_RETURN_STATUS_ERROR)) {//过期
+                        exceptionBuilder.append("request.scancode.getcar.overrate");
+                    } else if (StringUtils.equals(jsonDataResult.getResult(), EX_PARKING_USER_CAR_NO_ACCESS)) {//找不到
+                        exceptionBuilder.append("system.scancode.getcar.fail");
+                    }
                     throw new SkyLotException(exceptionBuilder.toString());
+
                 }
                 jsonDataResult.setCarCode(MapUtils.getString(SkylotUtils.verifyCode(consoleParamater.getScanCode()), MAP_QRCODE_CARCODE));
             }
@@ -88,6 +93,12 @@ public class PasswordController extends BaseController {
             resultMap = SkylotUtils.beanToHashMap(result);
         } catch (Exception e) {
             doException(code, result, jsonDataResult, resultMap, e);
+        }
+        resultMap.put("resultType", true);
+        subMap.put("machineStatus", "1");
+        resultMap.put("data", subMap);
+        if (exceptionBuilder.toString().contains("system.scancode.getcar.fail")) {
+            resultMap.put("resultType", false);
         }
         return resultMap;
     }

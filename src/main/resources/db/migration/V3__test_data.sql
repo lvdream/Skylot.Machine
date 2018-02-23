@@ -206,6 +206,7 @@ DELIMITER ;
 
 
 DROP TRIGGER IF EXISTS TR_after_save_tstb_ftp_car_carinformation;
+DELIMITER ;;
 CREATE TRIGGER TR_after_save_tstb_ftp_car_carinformation
   AFTER INSERT
   ON tstb_ftp_car_information
@@ -216,12 +217,12 @@ CREATE TRIGGER TR_after_save_tstb_ftp_car_carinformation
 
     );
   END;
-;
-;
+;;
 DELIMITER ;
 
 
 DROP PROCEDURE IF EXISTS sp_tstb_ftp_car_information;
+DELIMITER ;;
 CREATE PROCEDURE sp_tstb_ftp_car_information()
   BEGIN
     -- 验证当前停车表是否拥有的记录数大于2条
@@ -236,8 +237,7 @@ CREATE PROCEDURE sp_tstb_ftp_car_information()
     END IF;
   END;
 
-;
-;
+;;
 DELIMITER ;
 
 DROP TABLE IF EXISTS iftb_schedule_action;

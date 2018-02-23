@@ -55,8 +55,11 @@ CREATE TABLE `oftb_reserve_taking` (
   DEFAULT CHARSET = utf8
   COMMENT ='预约取车表';
 
-
+;
+;
+DELIMITER ;
 DROP TRIGGER TR_after_save_tstb_mathine_parking_log;
+DELIMITER ;;
 CREATE TRIGGER TR_after_save_tstb_mathine_parking_log
   AFTER INSERT
   ON tstb_mathine_parking_log
@@ -75,9 +78,9 @@ CREATE TRIGGER TR_after_save_tstb_mathine_parking_log
   END;
 
 
-;
-;
+;;
 DELIMITER ;
+
 TRUNCATE TABLE iftb_item_customer;
 TRUNCATE TABLE iftb_machine_action;
 TRUNCATE TABLE iftb_schedule_action;
@@ -97,6 +100,7 @@ TRUNCATE TABLE tstb_mathine_parking_log;
 ;
 ;
 DELIMITER ;
+
 ALTER TABLE tstb_ftp_car_information
   ADD tfc_car_color VARCHAR(4) NULL
 COMMENT '车辆颜色';
@@ -140,7 +144,8 @@ ALTER TABLE tstb_ftp_car_information
 2:预约取车';
 
 
-DELIMITER ;;
+DROP PROCEDURE IF EXISTS sp_oftb_reserve_taking;
+
 CREATE PROCEDURE `sp_tstb_ftp_car_information`()
   BEGIN
     -- 验证当前停车表是否拥有的记录数大于2条
@@ -153,9 +158,11 @@ CREATE PROCEDURE `sp_tstb_ftp_car_information`()
       SIGNAL SQLSTATE 'HY000'
       SET MESSAGE_TEXT = 'allow_parking_count_over';
     END IF;
-  END ;;
-DELIMITER ;;;
+  END;
+;
+;
 DELIMITER ;
+
 ALTER TABLE iftb_machine_action
   ADD ima_error_json TEXT NULL
 COMMENT '错误信息JSON对象';
@@ -198,11 +205,8 @@ COMMENT '设备物理状态
 2:设备严重故障
 3:设备一般故障';
 
-
-;
-;
-DELIMITER ;
 DROP PROCEDURE IF EXISTS sp_oftb_reserve_taking;
+DELIMITER ;;
 CREATE PROCEDURE sp_oftb_reserve_taking()
   BEGIN
     -- 验证当前预约表是否有预约车辆
@@ -210,10 +214,11 @@ CREATE PROCEDURE sp_oftb_reserve_taking()
     DECLARE tmp_car_code_w VARCHAR(200) CHARACTER SET utf8;
     DECLARE tmp_ima_id_w VARCHAR(100) CHARACTER SET utf8;
     DECLARE tmp_pysical_code_w VARCHAR(2) CHARACTER SET utf8;
-    # 查询10秒钟之后是否有预约车辆
+    # 查询60秒钟之后和30秒之前是否有预约车辆
     SET tmp_count = (SELECT count(*)
                      FROM oftb_reserve_taking
-                     WHERE date_add(now(), INTERVAL '10' SECOND) > ort_reserve_time AND now() < ort_reserve_time);
+                     WHERE date_add(now(), INTERVAL '60' SECOND) > ort_reserve_time AND
+                           date_add(now(), INTERVAL '-30' SECOND) < ort_reserve_time);
 
     IF (tmp_count > 0)
     THEN
@@ -244,7 +249,11 @@ CREATE PROCEDURE sp_oftb_reserve_taking()
     SET tmp_count = (SELECT count(*)
                      FROM oftb_reserve_taking
                      WHERE date_add(now(), INTERVAL '-1' DAY) > ort_reserve_time);
-
+    DROP EVENT IF EXISTS et_sp_reserve;
+    DELIMITER ;;
+    CREATE EVENT et_sp_reserve
+      ON SCHEDULE EVERY 20 SECOND
+      ON COMPLETION PRESERVE DO CALL sp_oftb_reserve_taking();
     IF (tmp_count > 0)
     THEN
       DELETE FROM oftb_reserve_taking
@@ -252,15 +261,9 @@ CREATE PROCEDURE sp_oftb_reserve_taking()
     END IF;
   END;
 
-
+;;
 DELIMITER ;
 
-
-DELIMITER ;
-DROP EVENT IF EXISTS et_sp_reserve;
-CREATE EVENT et_sp_reserve
-  ON SCHEDULE EVERY 2 SECOND
-  ON COMPLETION PRESERVE DO CALL sp_oftb_reserve_taking();
 
 DELIMITER ;
 

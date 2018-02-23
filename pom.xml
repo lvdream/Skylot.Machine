@@ -471,9 +471,9 @@
                 <artifactId>flyway-maven-plugin</artifactId>
                 <version>4.2.0</version>
                 <configuration>
-                    <url>jdbc:mysql://192.168.10.4:3306/fangda_skylot_mathinemgt_test_02?useUnicode=true&amp;characterEncoding=utf8&amp;allowMultiQueries=true</url>
-                    <user>root</user>
-                    <password>123</password>
+                    <url>jdbc:mysql://10.8.0.190:3306/fangda_skylot_mathinemgt_test_02?useUnicode=true&amp;characterEncoding=utf8&amp;allowMultiQueries=true</url>
+                    <user>fangda</user>
+                    <password>123456</password>
                 </configuration>
                 <dependencies>
                     <dependency>

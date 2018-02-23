@@ -16,7 +16,6 @@ import com.fangda.skylot.mathine.model.utils.JsonDataResult;
 import com.fangda.skylot.mathine.model.utils.JsonResult;
 import com.fangda.skylot.mathine.scheduler.springtask.MainThreadUtil;
 import com.fangda.skylot.mathine.service.SocketService;
-import com.fangda.skylot.mathine.utils.SkylotUtils;
 import com.fangda.skylot.mathine.utils.exception.SkyLotException;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -35,12 +34,11 @@ import static com.fangda.skylot.mathine.utils.constant.Constant.STR_EXCEPTION_BU
  */
 public class BaseController {
     protected void doException(ErrorCode code, JsonResult result, JsonDataResult jsonDataResult, Map resultMap, Exception e) {
+        result.setResultType(false);
         if (StringUtils.contains(e.getMessage(), STR_EXCEPTION_BUSINESS_CODE)) {
             code.doErrorLogic(result, resultMap, StringUtils.substringAfterLast(e.getMessage(), STR_EXCEPTION_BUSINESS_CODE));
         } else {
-            result.setResultType(false);
             result.setData(Maps.newHashMap());
-            resultMap = SkylotUtils.beanToHashMap(result);
 //                throw new SkyLotException(e);
         }
     }

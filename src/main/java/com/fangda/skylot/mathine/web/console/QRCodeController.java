@@ -12,6 +12,7 @@ import com.fangda.skylot.mathine.service.SocketService;
 import com.fangda.skylot.mathine.service.customer.CodeInfoService;
 import com.fangda.skylot.mathine.utils.GetProperties;
 import com.fangda.skylot.mathine.utils.SkylotUtils;
+import com.fangda.skylot.mathine.utils.exception.SkyLotException;
 import com.fangda.skylot.mathine.web.BaseController;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
@@ -45,6 +46,7 @@ public class QRCodeController extends BaseController {
     public Map getJSON(ConsoleParamater consoleParamater) throws Exception {
         Map resultMap = Maps.newHashMap();
         JsonResult result = new JsonResult();
+        StringBuilder exceptionBuilder = new StringBuilder();
         JsonDataResult jsonDataResult = new JsonDataResult();
         try {
             Map subMap = Maps.newHashMap();
@@ -64,6 +66,13 @@ public class QRCodeController extends BaseController {
                     tstbFtpCarInformation.setImaId(GetProperties.getProperties("system.properties", "skylot.machine.id"));
                     serviceMap.get("ftpcarService").add(tstbFtpCarInformation);//存储识别到的车牌号
                     result.setResultType(true);
+                } else {
+                    if (StringUtils.equals(jsonDataResult.getResult(), FN_RETURN_STATUS_ERROR)) {//过期
+                        exceptionBuilder.append("request.scancode.getcar.overrate");
+                    } else if (StringUtils.equals(jsonDataResult.getResult(), EX_PARKING_USER_CAR_NO_ACCESS)) {//找不到
+                        exceptionBuilder.append("system.scancode.getcar.fail");
+                    }
+                    throw new SkyLotException(exceptionBuilder.toString());
                 }
             }
             subMap = SkylotUtils.beanToHashMap(jsonDataResult);
@@ -72,6 +81,11 @@ public class QRCodeController extends BaseController {
             resultMap = SkylotUtils.beanToHashMap(result);
         } catch (Exception e) {
             doException(code, result, jsonDataResult, resultMap, e);
+        }
+        resultMap.put("resultType", true);
+        resultMap.put("data", Maps.newHashMap());
+        if (exceptionBuilder.toString().contains("system.scancode.getcar.fail")) {
+            resultMap.put("resultType", false);
         }
         return resultMap;
     }

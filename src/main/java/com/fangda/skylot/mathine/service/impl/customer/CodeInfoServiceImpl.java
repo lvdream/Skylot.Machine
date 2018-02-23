@@ -59,6 +59,7 @@ public class CodeInfoServiceImpl extends BaseServiceImpl<OftbCodeInfo, OftbCodeI
     @Override
     public Map verifyCode(String originalCode, boolean canceled) throws Exception {
         Map resultMap = Maps.newHashMap();
+        resultMap.put(MAP_PARKING_STATUS, EX_PARKING_USER_CAR_NO_ACCESS);//默认找不到车辆
         try {
             Map map = SkylotUtils.verifyCode(originalCode);
             if (MapUtils.isEmpty(map)) {

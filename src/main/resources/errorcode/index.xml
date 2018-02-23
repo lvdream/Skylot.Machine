@@ -8,10 +8,10 @@
                 <!-- console related error code -->
                 <entry key="request.system.init.timeout" value="请求超时"/>
                 <entry key="request.system.init.fail" value="请求失败"/>
-                <entry key="request.scancode.getcar.timeout" value="请求超时"/>
+                <entry key="request.scancode.getcar.overrate" value="待取车辆已过期"/>
                 <entry key="request.scancode.getcar.fail" value="请求失败"/>
                 <entry key="system.scancode.getcar.notexit" value="车辆已取出/车牌号不存在"/>
-                <entry key="system.scancode.getcar.fail" value="二维码识别有误"/>
+                <entry key="system.scancode.getcar.fail" value="二维码识别错误或密码错误"/>
                 <entry key="request.password.getcar.timeout" value="请求超时"/>
                 <entry key="request.password.getcar.fail" value="请求失败"/>
                 <entry key="system.password.getcar.notexit" value="车辆已取出/车牌号不存在"/>

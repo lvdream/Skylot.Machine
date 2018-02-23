@@ -53,6 +53,6 @@ public class ErrorCode {
             list.add(errorMap);
         }
         result.setError(list);
-        resultMap = SkylotUtils.beanToHashMap(result);
+        resultMap.put("error", list);
     }
 }

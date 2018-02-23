@@ -444,9 +444,9 @@ public class MainThreadMgt extends MainThreadUtil {
                         getMarqueeUtil().sendText("取车中", "等待车库门关闭", true);
                     }
                     getLoggerParking().warn("当前时间:[" + SkylotUtils.getStrDate() + "],当前操作[取车],获取车库门关闭状态");
-                    heartBeatPLC("3", "3");
+                    heartBeatPLC("2", "3");
                     if (!extractError()) {
-                        heartBeatPLC("2", "3");
+                        heartBeatPLC("2", "2");
                     }
                     carDoorhadClose();
                     Thread.sleep(1000);
