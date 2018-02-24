@@ -35,6 +35,10 @@ public class ErrorCode {
     private String targetLot;
     private List errorList;
     private List errorCancel;
+    /**
+     * 出现错误的次数
+     */
+    private int reTryTimes = 0;
 
     /**
      * 处理错误逻辑

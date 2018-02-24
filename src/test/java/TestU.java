@@ -158,7 +158,7 @@ public class TestU {
 
     @Test
 //    @Ignore
-    public void Test() throws IOException, SkyLotException {
+    public void Test() throws IOException, Exception {
 //        String com = "FE 5C 4B 89 41 00 00 00 61 00 00 00 00 2E 00 00 00 05 00 00 08 00 05 03 09 23 30 30 33 32 23 30 30 31 36 23 31 23 36 36 23 31 23 30 23 30 23 30 30 23 35 37 3B 2F 38 31 32 34 32 23 30 30 23 FF FF";
 //        baseCommanderMarquee.run(com);
 //        ParkingLogic parkingLogic = new ParkingLogic();

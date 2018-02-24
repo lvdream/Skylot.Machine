@@ -32,14 +32,18 @@ public interface SocketService {
      *
      * @return 0, 有空位, 1, 没有空位
      */
-    int enableParking() throws SkyLotException;
+    int enableParking() throws Exception;
 
     /**
      * 进行停车
      *
+     * @param carNumber 车牌
+     * @param firstPark 是否停车首次
+     * @param isQueue 是否是排队车辆
      * @return iStatus:0, 停车成功, 1, 停车失败;iParkingLocation:停车位置;iDirection:待旋转到最下方车位;BaseNumber:操作之前最下方车位编号;iParkingStatus:当前停车状态
+     * @throws Exception
      */
-    Map doParking(String carNumber, boolean firstPark) throws SkyLotException;
+    Map doParking(String carNumber, boolean firstPark, boolean isQueue) throws Exception;
 
     /**
      * 进行取车
@@ -127,7 +131,7 @@ public interface SocketService {
      * @return 0, 操作成功,-1操作失败,-2,操作超时
      * @throws SkyLotException
      */
-    Map getParkingStatus(int Type) throws SkyLotException;
+    Map getParkingStatus(int Type) throws Exception;
 
     /**
      * 获取PLC一般故障

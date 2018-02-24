@@ -41,13 +41,13 @@ public class BaseCommander {
      *
      * @return 是否连接成功 0:成功,1:失败
      */
-    public int buildFirstConnection() throws IOException {
+    public int buildFirstConnection() throws Exception {
         if (client == null) {
             try {
                 buildConnection();
                 return baseCommand(PLC_COMMUNACAITON_HEAD, "");
-            } catch (SkyLotException e) {
-                e.printStackTrace();
+            } catch (Exception e) {
+                throw new Exception(e);
             }
         }
         return NumberUtils.toInt(FN_RETURN_STATUS_SUCCESS);
@@ -61,7 +61,7 @@ public class BaseCommander {
      * @param verifyCode     验证返回值,可选
      * @return 成功失败, 0成功,-1失败
      */
-    public int baseCommand(String HeadCommand, String append_Command, String... verifyCode) {
+    public int baseCommand(String HeadCommand, String append_Command, String... verifyCode) throws Exception {
         try {
             stringBuilder = new StringBuilder();
             stringBuilderto = new StringBuilder();
@@ -113,9 +113,7 @@ public class BaseCommander {
             }
             return 0;
         } catch (Exception e) {
-            log.error("socket connection error");
-            e.printStackTrace();
-            return -1;
+            throw new Exception(e);
         }
     }
 
@@ -131,9 +129,7 @@ public class BaseCommander {
             setInputStream(getClient().getInputStream());
             return true;
         } catch (Exception e) {
-            log.error(e.getMessage());
-            e.printStackTrace();
-            return false;
+            throw new SkyLotException("socket connection error", e);
         }
 
     }

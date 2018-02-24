@@ -22,6 +22,7 @@ public class AutoStartJob implements
             try {
                 syncServiceImpl.comparePLC2Local();
             } catch (Exception e) {
+
                 e.printStackTrace();
             }
         }

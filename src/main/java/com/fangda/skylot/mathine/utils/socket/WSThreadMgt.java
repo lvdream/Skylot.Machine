@@ -3,6 +3,7 @@ package com.fangda.skylot.mathine.utils.socket;
 import com.fangda.skylot.mathine.utils.GetProperties;
 import com.fangda.skylot.mathine.utils.exception.SkyLotException;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.stereotype.Component;
 
@@ -42,6 +43,23 @@ public class WSThreadMgt {
      */
     public int checkCommander() {
         try {
+            return connection.size();
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+
+    /**
+     * 查看队列中的对象是否和当前对象相符
+     *
+     * @return 0>no,1>yes
+     */
+    public int checkObj(Map obj) {
+        try {
+            Map inMap = connection.element();
+            if (MapUtils.isNotEmpty(inMap) && MapUtils.isNotEmpty(obj) && MapUtils.getString(inMap, "name").equals(MapUtils.getString(obj, "name"))) {
+                return 1;
+            }
             return connection.size();
         } catch (Exception e) {
             return 0;

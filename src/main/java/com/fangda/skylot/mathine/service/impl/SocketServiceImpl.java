@@ -30,7 +30,6 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
@@ -434,7 +433,7 @@ public class SocketServiceImpl extends BaseCommandUtils implements SocketService
      * @return 0, 操作成功,-1操作失败,-2,操作超时
      * @throws SkyLotException
      */
-    public Map getParkingStatus(int Type) throws SkyLotException {
+    public Map getParkingStatus(int Type) throws Exception {
         Map dataMap = Maps.newHashMap();
         int returnint = -1;
         try {
@@ -454,7 +453,7 @@ public class SocketServiceImpl extends BaseCommandUtils implements SocketService
                 valueMap = (HashMap) dataMap;
             }
         } catch (Exception e) {
-            throw new SkyLotException(e);
+            throw new Exception(e);
         }
 
         return dataMap;
@@ -770,7 +769,7 @@ public class SocketServiceImpl extends BaseCommandUtils implements SocketService
      * @throws SkyLotException
      */
     @Override
-    public int enableParking() throws SkyLotException {
+    public int enableParking() throws Exception {
         getParkingStatus(1);
         if (MapUtils.isNotEmpty(this.valueMap)) {
             if (this.valueMap.keySet().size() == NumberUtils.toInt(MACHINEPARKING_QUANTITY)) {
@@ -789,7 +788,7 @@ public class SocketServiceImpl extends BaseCommandUtils implements SocketService
      * @throws SkyLotException
      */
     @Override
-    public Map doParking(String carNumber, boolean firstPark) throws SkyLotException {
+    public Map doParking(String carNumber, boolean firstPark, boolean isQueue) throws Exception {
         Logger loggerParking = Logger.getLogger("Parking");
         Map returnMap = new HashMap();
         setTimeCounter(0);
@@ -817,7 +816,7 @@ public class SocketServiceImpl extends BaseCommandUtils implements SocketService
                 parkingLogic.setMachineTotalItmes(MACHINEPARKING_QUANTITY);
                 returnMap.put(MAP_PARKING_CAR_PARKING_STATUS, SingletonObjectMapper.getInstance().writeValueAsString(this.getValueMap()));
                 parkingLogic.setParkingStatusMap(this.getValueMap());
-                parkingNumber = parkingLogic.getStoreNum(0);
+                parkingNumber = parkingLogic.getStoreNum(0, isQueue);
                 code.setTargetLot(parkingNumber + "");
                 try {
                     mainThreadUtil.heartBeatPLC("3", "1");
@@ -941,7 +940,7 @@ public class SocketServiceImpl extends BaseCommandUtils implements SocketService
                     parkingLogic.setMachineTotalItmes(MACHINEPARKING_QUANTITY);
                     returnMap.put(MAP_PARKING_CAR_PARKING_STATUS, SingletonObjectMapper.getInstance().writeValueAsString(this.getValueMap()));
                     parkingLogic.setParkingStatusMap(this.getValueMap());
-                    parkingLogic.getStoreNum(1);
+                    parkingLogic.getStoreNum(1, false);
                     returnMap.put(MAP_TIME_SPEND_ALL, (getDirectionBeforeTime() + getFinishParkingTime() + getDirectionAfterTime()) / 1000);
                     returnMap.put(MAP_TIME_SPEND_DIRECTION, (getDirectionBeforeTime()) / 1000);
                     returnMap.put(MAP_TIME_SPEND_DOING, (getFinishParkingTime()) / 1000);
@@ -1076,12 +1075,12 @@ public class SocketServiceImpl extends BaseCommandUtils implements SocketService
      * @param verifyCode     验证返回值,可选
      * @return 成功失败, 0成功,-1失败,-2操作超时
      */
-    private int CommandExectue(final String HeadCommand, final String append_Command, final String... verifyCode) {
+    private int CommandExectue(final String HeadCommand, final String append_Command, final String... verifyCode) throws Exception {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         final Integer[] result = {-1};
         FutureTask<Integer> future =
                 new FutureTask<Integer>(new Callable<Integer>() {//使用Callable接口作为构造参数
-                    public Integer call() throws IOException {
+                    public Integer call() throws Exception {
                         baseCommander.buildFirstConnection();//握手
                         result[0] = baseCommander.baseCommand(HeadCommand, append_Command, verifyCode);//执行操作命令
                         setStringBuilder(baseCommander.getStringBuilder());
@@ -1092,10 +1091,16 @@ public class SocketServiceImpl extends BaseCommandUtils implements SocketService
         executor.execute(future);
         try {
             result[0] = future.get(NumberUtils.toInt(GetProperties.getProperties("system.properties", "skylot.plc.operation.timeout")), TimeUnit.SECONDS); //取得结果，同时设置超时执行时间为系统预定义时间。
+
         } catch (InterruptedException e) {
             future.cancel(true);
         } catch (ExecutionException e) {
             future.cancel(true);
+            Throwable cat = e.getCause();
+            while (cat.getCause() != null) {
+                cat = cat.getCause();
+            }
+            throw new Exception(cat);
         } catch (TimeoutException e) {
             log.warn("超时了!!!" + HeadCommand);
             // TODO: 08/08/2017 发生命令超时控制,日后要增加上一次指令的修正 
@@ -1104,8 +1109,9 @@ public class SocketServiceImpl extends BaseCommandUtils implements SocketService
             return -2;
         } finally {
             executor.shutdown();
-            return result[0];
+//            return result[0];
         }
+        return result[0];
     }
 
 

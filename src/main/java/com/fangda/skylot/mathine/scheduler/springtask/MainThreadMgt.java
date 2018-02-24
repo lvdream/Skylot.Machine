@@ -92,6 +92,10 @@ public class MainThreadMgt extends MainThreadUtil {
             serviceMap.get("ftpcarService").delete(carInformationCriteria);
 //            wsThreadMgt.getCommands();
             throw new SkyLotException(e);
+        } finally {
+            if (wsThreadMgt.checkObj(map) == 1) {
+                wsThreadMgt.getCommands();
+            }
         }
     }
 
@@ -124,7 +128,13 @@ public class MainThreadMgt extends MainThreadUtil {
                     if (isHighError()) {
                         throw new SkyLotException(EX_PARKING_MATHINE_EXCEPTION);
                     }
-                    parkingMap = getSocketService().doParking(this.getTstbFtpCarInformation().getTfcCarCode(), true);
+                    try {
+                        parkingMap = getSocketService().doParking(this.getTstbFtpCarInformation().getTfcCarCode(), true, StringUtils.equals(this.getTstbFtpCarInformation().getTfcCreateuser(), "1"));
+                    } catch (Exception e) {
+                        if (handleNetworkError(e)) {
+                            throw new SkyLotException(EX_PARKING_MATHINE_EXCEPTION);
+                        }
+                    }
                     heartBeatPLC("3", "1");
                     getLoggerParking().warn("当前时间:[" + SkylotUtils.getStrDate() + "],当前操作[存车],旋转车台,打开车库门");
                     getMarqueeUtil().sendText("存车中", this.getTstbFtpCarInformation().getTfcCarCode() + "车库门已开,请驶入停车位", true);
@@ -139,9 +149,15 @@ public class MainThreadMgt extends MainThreadUtil {
                     }
 
                 }
-                if (checkCanceled()) {
-                    if (cancelAction(FN_RETURN_STATUS_SUCCESS)) {
-                        return false;
+                try {
+                    if (checkCanceled()) {
+                        if (cancelAction(FN_RETURN_STATUS_SUCCESS)) {
+                            return false;
+                        }
+                    }
+                } catch (Exception e) {
+                    if (handleNetworkError(e)) {
+                        throw new SkyLotException(EX_PARKING_MATHINE_EXCEPTION);
                     }
                 }
                 //其次,判断内部摄像头是否已经识别到车辆车牌,30秒延迟判断
@@ -151,18 +167,36 @@ public class MainThreadMgt extends MainThreadUtil {
                         getMarqueeUtil().sendText("存车中", "请正确驶入停车位,内部摄像头正在识别您的车牌!", true);
                     }
                     highErrorExist();
-                    if (isHighError()) {
-                        throw new SkyLotException(EX_PARKING_MATHINE_EXCEPTION);
+                    try {
+                        if (isHighError()) {
+                            throw new SkyLotException(EX_PARKING_MATHINE_EXCEPTION);
+                        }
+                    } catch (Exception e) {
+                        if (handleNetworkError(e)) {
+                            throw new SkyLotException(EX_PARKING_MATHINE_EXCEPTION);
+                        }
                     }
-                    if (checkCanceled()) {
-                        if (cancelAction(FN_RETURN_STATUS_SUCCESS)) {
-                            return false;
+                    try {
+                        if (checkCanceled()) {
+                            if (cancelAction(FN_RETURN_STATUS_SUCCESS)) {
+                                return false;
+                            }
+                        }
+                    } catch (Exception e) {
+                        if (handleNetworkError(e)) {
+                            throw new SkyLotException(EX_PARKING_MATHINE_EXCEPTION);
                         }
                     }
                     //获取到1005状态信息,都是正常也是可以跳出循环
-                    if (parkingError()) {
-                        heartBeatPLC("3", "2");
-                        break;
+                    try {
+                        if (parkingError()) {
+                            heartBeatPLC("3", "2");
+                            break;
+                        }
+                    } catch (Exception e) {
+                        if (handleNetworkError(e)) {
+                            throw new SkyLotException(EX_PARKING_MATHINE_EXCEPTION);
+                        }
                     }
                     Thread.sleep(1000);
                     heartBeatPLC("3", "2");
@@ -180,20 +214,38 @@ public class MainThreadMgt extends MainThreadUtil {
                     if (a == 0) {
                         getMarqueeUtil().sendText("存车中", "系统正在进行安全检查", true);
                     }
-                    highErrorExist();
-                    if (isHighError()) {
-                        throw new SkyLotException(EX_PARKING_MATHINE_EXCEPTION);
+                    try {
+                        highErrorExist();
+                        if (isHighError()) {
+                            throw new SkyLotException(EX_PARKING_MATHINE_EXCEPTION);
+                        }
+                    } catch (SkyLotException e) {
+                        if (handleNetworkError(e)) {
+                            throw new SkyLotException(EX_PARKING_MATHINE_EXCEPTION);
+                        }
                     }
                     getLoggerParking().warn("当前时间:[" + SkylotUtils.getStrDate() + "],当前操作[存车],读取1005数据");
                     Thread.sleep(300);
                     heartBeatPLC("3", "2");
-                    if (parkingError()) {
-                        heartBeatPLC("3", "3");
-                        s = 0;
+                    try {
+                        if (parkingError()) {
+                            heartBeatPLC("3", "3");
+                            s = 0;
+                        }
+                    } catch (Exception e) {
+                        if (handleNetworkError(e)) {
+                            throw new SkyLotException(EX_PARKING_MATHINE_EXCEPTION);
+                        }
                     }
-                    if (checkCanceled()) {
-                        if (cancelAction(FN_RETURN_STATUS_SUCCESS)) {
-                            return false;
+                    try {
+                        if (checkCanceled()) {
+                            if (cancelAction(FN_RETURN_STATUS_SUCCESS)) {
+                                return false;
+                            }
+                        }
+                    } catch (Exception e) {
+                        if (handleNetworkError(e)) {
+                            throw new SkyLotException(EX_PARKING_MATHINE_EXCEPTION);
                         }
                     }
                     Thread.sleep(1000);
@@ -208,21 +260,27 @@ public class MainThreadMgt extends MainThreadUtil {
                     if (a == 0) {
                         getMarqueeUtil().sendText("存车中", "请在屏幕上确认停车", true);
                     }
-                    highErrorExist();
-                    if (isHighError()) {
-                        throw new SkyLotException(EX_PARKING_MATHINE_EXCEPTION);
-                    }
-                    hasTasktodo();
-                    if (parkingError() && CollectionUtils.isEmpty(code.getErrorList())) {
-                        heartBeatPLC("3", "3");
-                    } else {
-                        heartBeatPLC("3", "2");
-                        if (checkCanceled()) {
-                            if (cancelAction(FN_RETURN_STATUS_SUCCESS)) {
-                                return false;
-                            }
+                    try {
+                        highErrorExist();
+                        if (isHighError()) {
+                            throw new SkyLotException(EX_PARKING_MATHINE_EXCEPTION);
                         }
-                        this.getTstbFtpCarInformation().setTfcStatus(NumberUtils.toInt(SCHEDULEACTION_MODULEID_ITEMCUSTOMER));
+                        hasTasktodo();
+                        if (parkingError() && CollectionUtils.isEmpty(code.getErrorList())) {
+                            heartBeatPLC("3", "3");
+                        } else {
+                            heartBeatPLC("3", "2");
+                            if (checkCanceled()) {
+                                if (cancelAction(FN_RETURN_STATUS_SUCCESS)) {
+                                    return false;
+                                }
+                            }
+                            this.getTstbFtpCarInformation().setTfcStatus(NumberUtils.toInt(SCHEDULEACTION_MODULEID_ITEMCUSTOMER));
+                        }
+                    } catch (Exception e) {
+                        if (handleNetworkError(e)) {
+                            throw new SkyLotException(EX_PARKING_MATHINE_EXCEPTION);
+                        }
                     }
                     Thread.sleep(1000);
                     a++;
@@ -231,13 +289,25 @@ public class MainThreadMgt extends MainThreadUtil {
                 a = 0;
                 this.setPeopleDoor(false);
                 this.setCarDoor(false);
-                getSocketService().carDoor(FN_RETURN_STATUS_ERROR);//执行关车门
+                try {
+                    getSocketService().carDoor(FN_RETURN_STATUS_ERROR);//执行关车门
+                } catch (SkyLotException e) {
+                    if (handleNetworkError(e)) {
+                        throw new SkyLotException(EX_PARKING_MATHINE_EXCEPTION);
+                    }
+                }
                 while (!isCarDoor()) {
                     getLoggerParking().warn("当前时间:[" + SkylotUtils.getStrDate() + "],当前操作[存车],获取车库门关闭状态");
-                    parkingError();
-                    heartBeatPLC("3", "3");
-                    carDoorhadClose();
-                    getSocketService().writeCarcode(this.getTstbFtpCarInformation().getTfcCarCode());
+                    try {
+                        parkingError();
+                        heartBeatPLC("3", "3");
+                        carDoorhadClose();
+                        getSocketService().writeCarcode(this.getTstbFtpCarInformation().getTfcCarCode());
+                    } catch (Exception e) {
+                        if (handleNetworkError(e)) {
+                            throw new SkyLotException(EX_PARKING_MATHINE_EXCEPTION);
+                        }
+                    }
                     if (a == 0) {
                         getMarqueeUtil().sendText("存车中", "停车完成!", true);
                     }
@@ -318,22 +388,40 @@ public class MainThreadMgt extends MainThreadUtil {
                     heartBeatPLC("2", "1");
                     getLoggerParking().warn("当前时间:[" + SkylotUtils.getStrDate() + "],当前操作[取车],旋转车台是[" + tstbMathineParking.getTmpPhysicalCode() + "]");
                     getMarqueeUtil().sendText("取车中", "设备旋转中,待旋转车台是[" + tstbMathineParking.getTmpPhysicalCode() + "]", true);
-                    extractMap = getSocketService().doPulling(tstbMathineParking.getTmpPhysicalCode(), true);
+                    try {
+                        extractMap = getSocketService().doPulling(tstbMathineParking.getTmpPhysicalCode(), true);
+                    } catch (SkyLotException e) {
+                        if (handleNetworkError(e)) {
+                            throw new SkyLotException(EX_PARKING_MATHINE_EXCEPTION);
+                        }
+                    }
                     s = MapUtils.getIntValue(extractMap, MAP_PARKING_STATUS);
                     resultMap = extractMap;
                     if (s == 0) {
                         break;
                     }
-                    highErrorExist();
-                    if (isHighError()) {
-                        throw new SkyLotException(EX_PARKING_MATHINE_EXCEPTION);
+                    try {
+                        highErrorExist();
+                        if (isHighError()) {
+                            throw new SkyLotException(EX_PARKING_MATHINE_EXCEPTION);
+                        }
+                    } catch (SkyLotException e) {
+                        if (handleNetworkError(e)) {
+                            throw new SkyLotException(EX_PARKING_MATHINE_EXCEPTION);
+                        }
                     }
                 }
-                if (checkCanceled()) {
-                    if (cancelAction(FN_RETURN_STATUS_ERROR)) {
-                        return false;
-                    } else {
-                        cancelError();
+                try {
+                    if (checkCanceled()) {
+                        if (cancelAction(FN_RETURN_STATUS_ERROR)) {
+                            return false;
+                        } else {
+                            cancelError();
+                        }
+                    }
+                } catch (Exception e) {
+                    if (handleNetworkError(e)) {
+                        throw new SkyLotException(EX_PARKING_MATHINE_EXCEPTION);
                     }
                 }
                 confirmCar();
@@ -344,17 +432,23 @@ public class MainThreadMgt extends MainThreadUtil {
                     if (a == 0) {
                         getMarqueeUtil().sendText("取车中", "等待行人门打开!", true);
                     }
-                    highErrorExist();
-                    if (isHighError()) {
-                        throw new SkyLotException(EX_PARKING_MATHINE_EXCEPTION);
-                    }
-                    heartBeatPLC("2", "2");
-                    peopleDoorhadOpen();
-                    if (checkCanceled()) {
-                        if (cancelAction(FN_RETURN_STATUS_ERROR)) {
-                            return false;
-                        } else {
-                            cancelError();
+                    try {
+                        highErrorExist();
+                        if (isHighError()) {
+                            throw new SkyLotException(EX_PARKING_MATHINE_EXCEPTION);
+                        }
+                        heartBeatPLC("2", "2");
+                        peopleDoorhadOpen();
+                        if (checkCanceled()) {
+                            if (cancelAction(FN_RETURN_STATUS_ERROR)) {
+                                return false;
+                            } else {
+                                cancelError();
+                            }
+                        }
+                    } catch (Exception e) {
+                        if (handleNetworkError(e)) {
+                            throw new SkyLotException(EX_PARKING_MATHINE_EXCEPTION);
                         }
                     }
                     a++;
@@ -364,34 +458,47 @@ public class MainThreadMgt extends MainThreadUtil {
                     heartBeatPLC("2", "2");
                     getLoggerParking().warn("当前时间:[" + SkylotUtils.getStrDate() + "],当前操作[取车],准备打开车门");
                     getMarqueeUtil().sendText("取车中", "准备打开车门!", true);
-                    highErrorExist();
-                    if (isHighError()) {
-                        throw new SkyLotException(EX_PARKING_MATHINE_EXCEPTION);
-                    }
-                    if (checkCanceled()) {
-                        if (cancelAction(FN_RETURN_STATUS_ERROR)) {
-                            return false;
-                        } else {
-                            cancelError();
+
+                    try {
+                        highErrorExist();
+                        if (isHighError()) {
+                            throw new SkyLotException(EX_PARKING_MATHINE_EXCEPTION);
+                        }
+                        if (checkCanceled()) {
+                            if (cancelAction(FN_RETURN_STATUS_ERROR)) {
+                                return false;
+                            } else {
+                                cancelError();
+                            }
+                        }
+                        getSocketService().carDoor(FN_RETURN_STATUS_SUCCESS);//车库门开门指令发送成功
+                    } catch (Exception e) {
+                        if (handleNetworkError(e)) {
+                            throw new SkyLotException(EX_PARKING_MATHINE_EXCEPTION);
                         }
                     }
-                    getSocketService().carDoor(FN_RETURN_STATUS_SUCCESS);//车库门开门指令发送成功
                 }
                 //判断,车库门打开
                 while (!isCarDoor()) {
                     getLoggerParking().warn("当前时间:[" + SkylotUtils.getStrDate() + "],当前操作[取车],获取车库门打开状态");
                     heartBeatPLC("2", "2");
-                    carDoorhadOpen();
-                    if (checkCanceled()) {
-                        if (cancelAction(FN_RETURN_STATUS_ERROR)) {
-                            return false;
-                        } else {
-                            cancelError();
+                    try {
+                        carDoorhadOpen();
+                        if (checkCanceled()) {
+                            if (cancelAction(FN_RETURN_STATUS_ERROR)) {
+                                return false;
+                            } else {
+                                cancelError();
+                            }
                         }
-                    }
-                    highErrorExist();
-                    if (isHighError()) {
-                        throw new SkyLotException(EX_PARKING_MATHINE_EXCEPTION);
+                        highErrorExist();
+                        if (isHighError()) {
+                            throw new SkyLotException(EX_PARKING_MATHINE_EXCEPTION);
+                        }
+                    } catch (Exception e) {
+                        if (handleNetworkError(e)) {
+                            throw new SkyLotException(EX_PARKING_MATHINE_EXCEPTION);
+                        }
                     }
                     Thread.sleep(1000);
                 }
@@ -403,22 +510,34 @@ public class MainThreadMgt extends MainThreadUtil {
 
                 while (s == 1) {
                     getLoggerParking().warn("当前时间:[" + SkylotUtils.getStrDate() + "],当前操作[取车],读取1007数据");
-                    if (checkCanceled()) {
-                        if (cancelAction(FN_RETURN_STATUS_ERROR)) {
-                            return false;
-                        } else {
-                            cancelError();
+                    try {
+                        if (checkCanceled()) {
+                            if (cancelAction(FN_RETURN_STATUS_ERROR)) {
+                                return false;
+                            } else {
+                                cancelError();
+                            }
+                        }
+                    } catch (Exception e) {
+                        if (handleNetworkError(e)) {
+                            throw new SkyLotException(EX_PARKING_MATHINE_EXCEPTION);
                         }
                     }
                     if (a == 0) {
                         getMarqueeUtil().sendText("取车中", "系统正在进行安全检查", true);
                     }
-                    if (extractError()) {
-                        s = 0;
-                    }
-                    highErrorExist();
-                    if (isHighError()) {
-                        throw new SkyLotException(EX_PARKING_MATHINE_EXCEPTION);
+                    try {
+                        if (extractError()) {
+                            s = 0;
+                        }
+                        highErrorExist();
+                        if (isHighError()) {
+                            throw new SkyLotException(EX_PARKING_MATHINE_EXCEPTION);
+                        }
+                    } catch (SkyLotException e) {
+                        if (handleNetworkError(e)) {
+                            throw new SkyLotException(EX_PARKING_MATHINE_EXCEPTION);
+                        }
                     }
                     heartBeatPLC("2", "2");
                     a++;
@@ -426,17 +545,29 @@ public class MainThreadMgt extends MainThreadUtil {
                 }
                 //判断,车库门关闭
                 a = 0;
-                getSocketService().carDoor(FN_RETURN_STATUS_ERROR);//车库门关门指令发送成功
+                try {
+                    getSocketService().carDoor(FN_RETURN_STATUS_ERROR);//车库门关门指令发送成功
+                } catch (SkyLotException e) {
+                    if (handleNetworkError(e)) {
+                        throw new SkyLotException(EX_PARKING_MATHINE_EXCEPTION);
+                    }
+                }
                 while (!isCarDoor()) {
                     if (a == 0) {
                         getMarqueeUtil().sendText("取车中", "等待车库门关闭", true);
                     }
                     getLoggerParking().warn("当前时间:[" + SkylotUtils.getStrDate() + "],当前操作[取车],获取车库门关闭状态");
                     heartBeatPLC("2", "3");
-                    if (!extractError()) {
-                        heartBeatPLC("2", "2");
+                    try {
+                        if (!extractError()) {
+                            heartBeatPLC("2", "2");
+                        }
+                        carDoorhadClose();
+                    } catch (Exception e) {
+                        if (handleNetworkError(e)) {
+                            throw new SkyLotException(EX_PARKING_MATHINE_EXCEPTION);
+                        }
                     }
-                    carDoorhadClose();
                     Thread.sleep(1000);
                     a++;
                 }
@@ -488,13 +619,25 @@ public class MainThreadMgt extends MainThreadUtil {
                 if (tstbMathineParking != null) {
                     code.setTargetLot(tstbMathineParking.getTmpPhysicalCode());
                     //旋转
-                    getSocketService().doDirection(NumberUtils.toInt(tstbMathineParking.getTmpPhysicalCode()), new ParkingLogic());
+                    try {
+                        getSocketService().doDirection(NumberUtils.toInt(tstbMathineParking.getTmpPhysicalCode()), new ParkingLogic());
+                    } catch (Exception e) {
+                        if (handleNetworkError(e)) {
+                            throw new SkyLotException(EX_PARKING_MATHINE_EXCEPTION);
+                        }
+                    }
                     while (getSocketService().confirmStatus(0, true) == 1) {//旋转
                         heartBeatPLC(parkingLogics.length > 0 ? "5" : "4", "1");
                         getLoggerParking().warn("当前时间:[" + SkylotUtils.getStrDate() + "],当前操作[" + showText + "],旋转车台是[" + tstbMathineParking.getTmpPhysicalCode() + "]");
-                        highErrorExist();
-                        if (isHighError()) {
-                            throw new SkyLotException(EX_PARKING_MATHINE_EXCEPTION);
+                        try {
+                            highErrorExist();
+                            if (isHighError()) {
+                                throw new SkyLotException(EX_PARKING_MATHINE_EXCEPTION);
+                            }
+                        } catch (SkyLotException e) {
+                            if (handleNetworkError(e)) {
+                                throw new SkyLotException(EX_PARKING_MATHINE_EXCEPTION);
+                            }
                         }
                         Thread.sleep(1000);
                     }
@@ -526,5 +669,19 @@ public class MainThreadMgt extends MainThreadUtil {
             serviceMap.get("reserveTakingService").delete(oftbReserveTakingCriteria);
             getMarqueeUtil().sendText("Skylot", "欢迎停车!", true, "思该唠特");
         }
+    }
+
+    private boolean handleNetworkError(Exception e) {
+        if (e.getMessage().contains("connect timed out")) {//出现了网络连接问题
+            if (code.getReTryTimes() != 0) {//已经有连接问题
+                if (code.getReTryTimes() == 3) {
+                    code.setReTryTimes(0);
+                    return true;
+                } else {
+                    code.setReTryTimes(code.getReTryTimes() + 1);
+                }
+            }
+        }
+        return false;
     }
 }

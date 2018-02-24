@@ -30,14 +30,13 @@ public class SyncHeartbeatPLCTask {
             if (wsThreadMgt.checkCommander() == 0) {
                 wsThreadMgt.putCommander(map);
                 result = syncServiceImpl.heartbeatSyncPLC();
-                Map map1 = wsThreadMgt.getCommands();
-                if (!map1.get("name").equals("PLC")) {
-                    wsThreadMgt.putCommander(map);
-                    wsThreadMgt.getCommands();
-                }
             }
         } catch (Exception e) {
             throw new SkyLotException(e);
+        } finally {
+            if (wsThreadMgt.checkObj(map) == 1) {
+                wsThreadMgt.getCommands();
+            }
         }
     }
 }

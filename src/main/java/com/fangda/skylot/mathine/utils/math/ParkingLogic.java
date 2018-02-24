@@ -50,10 +50,11 @@ public class ParkingLogic {
      * 获取应该存储位置
      *
      * @param actionType 操作的类型,0:停车,1:取车
+     * @param isQueue    是否是排队车辆,如果是排队车辆,则选择最近空置车台
      * @return 具体车板编号
      * @throws SkyLotException 定义异常
      */
-    public int getStoreNum(int actionType) throws SkyLotException {
+    public int getStoreNum(int actionType, boolean isQueue) throws SkyLotException {
         if (StringUtils.isEmpty(getBaseNum())) {//没有传递最下方车板信息
             throw new SkyLotException(PLC_EXCEPTION_PARKING_GET_BASE_ITEM_ERROR);
         }

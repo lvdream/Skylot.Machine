@@ -90,41 +90,42 @@ public class SyncServiceImpl implements SyncService {
 
     @Override
     public int heartbeatSyncPLC() throws Exception {
-        code.setErrorList(Lists.newArrayList());
-        mainThreadUtil.setErrorList(Lists.newArrayList());
-        int plcStatus = 0;
-        //check the indenty type
-        int iType = NumberUtils.toInt(GetProperties.getProperties("system.properties", "identify.type"));
-        if (iType == NumberUtils.toInt(Constant.SYSTEM_WORKING_MODEL_TEST)) {
-            String localpath = GetProperties.getProperties("system.properties", "download.file.path");//本地路径
-            File f = new File(localpath + "/" + "test.csv");
-            if (f.exists()) {
-                return 2;
-            }
-        }
-        if (hasSyncError("1")) {//PLC通信失败,先同步数据
-            comparePLC2Local();
-        }
-        int a = 0;
-        plcStatus = 1;
-        int r = checkPLC(9, true);
-        if (r == 1 || r == -1 || r == 2) {//一般故障,严重故障
-            addSyncError("1");
-            plcStatus = 2;
-            if (r == -1) {
-                plcStatus = 9;
-            }
-            if (r == 1) {//一般故障
-                Map eMap = socketService.getNormalErrorStatus();
-                List eList = mainThreadUtil.analyzingError(eMap, "n");
-                if (CollectionUtils.isNotEmpty(eList)) {
-                    code.setErrorList(eList);
+        try {
+            code.setErrorList(Lists.newArrayList());
+            mainThreadUtil.setErrorList(Lists.newArrayList());
+            int plcStatus = 0;
+            //check the indenty type
+            int iType = NumberUtils.toInt(GetProperties.getProperties("system.properties", "identify.type"));
+            if (iType == NumberUtils.toInt(Constant.SYSTEM_WORKING_MODEL_TEST)) {
+                String localpath = GetProperties.getProperties("system.properties", "download.file.path");//本地路径
+                File f = new File(localpath + "/" + "test.csv");
+                if (f.exists()) {
+                    return 2;
                 }
             }
-        } else {
-            addSyncError("0");//新增正常数据
-        }
-        try {
+            if (hasSyncError("1")) {//PLC通信失败,先同步数据
+                comparePLC2Local();
+            }
+            int a = 0;
+            plcStatus = 1;
+            int r = checkPLC(9, true);
+            if (r == 1 || r == -1 || r == 2) {//一般故障,严重故障
+                addSyncError("1");
+                plcStatus = 2;
+                if (r == -1) {
+                    plcStatus = 9;
+                }
+                if (r == 1) {//一般故障
+                    Map eMap = socketService.getNormalErrorStatus();
+                    List eList = mainThreadUtil.analyzingError(eMap, "n");
+                    if (CollectionUtils.isNotEmpty(eList)) {
+                        code.setErrorList(eList);
+                    }
+                }
+            } else {
+                addSyncError("0");//新增正常数据
+            }
+
             mainThreadUtil.updateStatus("1", "" + plcStatus, "3", null, null, r == 0 ? "0" : "1", code.getTargetLot());
             Map scheduleMap = new HashMap();
             scheduleMap.put(SCHEDULEACTION_TYPE_HEARTBEAT, SCHEDULEACTION_TYPE_HEARTBEAT_PLC);
@@ -132,12 +133,25 @@ public class SyncServiceImpl implements SyncService {
             scheduleMap.put(SCHEDULEACTION_MESSAGE, SingletonObjectMapper.getInstance().writeValueAsString(socketService.getAllStatus(true)));
             updateSchedule(scheduleMap);
             return 0;
-        } catch (JsonProcessingException e) {
-            throw new SkyLotException(e);
-        } finally {
-            return 1;
+        } catch (Exception e) {
+            if (e.getMessage().contains("connect timed out")) {//出现了网络连接问题
+                if (code.getReTryTimes() != 0) {//已经有连接问题
+                    if (code.getReTryTimes() == 3) {
+                        mainThreadUtil.updateStatus("1", "9", "3", null, null, "1", code.getTargetLot());
+                        Map scheduleMap = new HashMap();
+                        scheduleMap.put(SCHEDULEACTION_TYPE_HEARTBEAT, SCHEDULEACTION_TYPE_HEARTBEAT_PLC);
+                        scheduleMap.put(SCHEDULEACTION_TYPE_ITEM, "9");
+                        scheduleMap.put(SCHEDULEACTION_MESSAGE, SingletonObjectMapper.getInstance().writeValueAsString(socketService.getAllStatus(true)));
+                        updateSchedule(scheduleMap);
+                        code.setReTryTimes(0);
+                        return -1;
+                    } else {
+                        code.setReTryTimes(code.getReTryTimes() + 1);
+                    }
+                }
+            }
+            throw new Exception(e);
         }
-
     }
 
     @Override
@@ -151,7 +165,7 @@ public class SyncServiceImpl implements SyncService {
                 if (parkingStatus == 0) {//PLC是否准备好停车
                     loggerParking.warn("当前时间:[" + SkylotUtils.getStrDate() + "],当前操作[存车],当前车辆是[" + carNumber + "],PLC设备可用,准备停车!");
                     if (getParkingPhysicalCode(carNumber) == 0) {//车牌已经停车,不能再存
-                        parkingMap = socketService.doParking(carNumber, firstPark);
+                        parkingMap = socketService.doParking(carNumber, firstPark, false);
                         if (MapUtils.getIntValue(parkingMap, MAP_PARKING_STATUS) == 0) {
                             if (createParkinglog(carNumber, parkingMap, 0) == 0) {
                                 ((TstbMathineParkingLogDAO) this.daoMap.get("tstbMathineParkingLogDao")).save(this.getTmpl());
@@ -736,36 +750,40 @@ public class SyncServiceImpl implements SyncService {
      * 比较本地库和PLC返回的停车记录,更新本地停车记录为PLC的停车记录
      */
     public void comparePLC2Local() throws Exception {
-        Map mapPLC = socketService.getParkingStatus(1);
-        Map mapDB = socketService.getParkingStatus(0);
-        StringBuilder stringBuilder = new StringBuilder();
-        Iterator<Map.Entry<Integer, String>> itDB = mapDB.entrySet().iterator();
-        List missedCar = Lists.newArrayList();
-        while (itDB.hasNext()) {
-            Map.Entry<Integer, String> pairDB = itDB.next();
-            if (mapPLC.get(pairDB.getKey()) == null) {
-                missedCar.add(pairDB.getKey() + "");
-            }
-        }
-        if (CollectionUtils.isNotEmpty(missedCar)) {//PLC没有的停车记录
-            TstbMathineParkingCriteria criteria = new TstbMathineParkingCriteria();
-            criteria.createCriteria().andTmpPhysicalCodeIn(missedCar);
-            List<TstbMathineParking> missList = serviceMap.get("parkingService").queryForAll(criteria);
-            if (CollectionUtils.isNotEmpty(missList)) {
-                for (int i = 0; i < missList.size(); i++) {
-                    TstbMathineParking tstbMathineParking = missList.get(i);
-                    TstbMathineParkingLog tstbMathineParkingLog = TstbMathineParkingLog.builder().build();
-                    tstbMathineParkingLog.setImaId(SkylotUtils.imaId);
-                    tstbMathineParkingLog.setTmplCar(tstbMathineParking.getTmpCarCode());
-                    tstbMathineParkingLog.setTmplCreatedate(SkylotUtils.getStrDate());
-                    tstbMathineParkingLog.setTmplPhysicalCode(tstbMathineParking.getTmpPhysicalCode());
-                    tstbMathineParkingLog.setTmplCreateuser("system");
-                    tstbMathineParkingLog.setTmplType(MACHINEPARKING_TYPE_TAKE);
-                    tstbMathineParkingLog.setTmplStatus(PARKING_PULLING_STATUS_FINISH);
-                    this.daoMap.get("tstbMathineParkingLogDao").save(tstbMathineParkingLog);
-                    CommandSchedule(tstbMathineParkingLog);
+        try {
+            Map mapPLC = socketService.getParkingStatus(1);
+            Map mapDB = socketService.getParkingStatus(0);
+            StringBuilder stringBuilder = new StringBuilder();
+            Iterator<Map.Entry<Integer, String>> itDB = mapDB.entrySet().iterator();
+            List missedCar = Lists.newArrayList();
+            while (itDB.hasNext()) {
+                Map.Entry<Integer, String> pairDB = itDB.next();
+                if (mapPLC.get(pairDB.getKey()) == null) {
+                    missedCar.add(pairDB.getKey() + "");
                 }
             }
+            if (CollectionUtils.isNotEmpty(missedCar)) {//PLC没有的停车记录
+                TstbMathineParkingCriteria criteria = new TstbMathineParkingCriteria();
+                criteria.createCriteria().andTmpPhysicalCodeIn(missedCar);
+                List<TstbMathineParking> missList = serviceMap.get("parkingService").queryForAll(criteria);
+                if (CollectionUtils.isNotEmpty(missList)) {
+                    for (int i = 0; i < missList.size(); i++) {
+                        TstbMathineParking tstbMathineParking = missList.get(i);
+                        TstbMathineParkingLog tstbMathineParkingLog = TstbMathineParkingLog.builder().build();
+                        tstbMathineParkingLog.setImaId(SkylotUtils.imaId);
+                        tstbMathineParkingLog.setTmplCar(tstbMathineParking.getTmpCarCode());
+                        tstbMathineParkingLog.setTmplCreatedate(SkylotUtils.getStrDate());
+                        tstbMathineParkingLog.setTmplPhysicalCode(tstbMathineParking.getTmpPhysicalCode());
+                        tstbMathineParkingLog.setTmplCreateuser("system");
+                        tstbMathineParkingLog.setTmplType(MACHINEPARKING_TYPE_TAKE);
+                        tstbMathineParkingLog.setTmplStatus(PARKING_PULLING_STATUS_FINISH);
+                        this.daoMap.get("tstbMathineParkingLogDao").save(tstbMathineParkingLog);
+                        CommandSchedule(tstbMathineParkingLog);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            throw new Exception(e);
         }
     }
 
