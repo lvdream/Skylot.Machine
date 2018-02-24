@@ -208,7 +208,7 @@ DELIMITER ;
 DROP TRIGGER IF EXISTS TR_after_save_tstb_ftp_car_carinformation;
 DELIMITER ;;
 CREATE TRIGGER TR_after_save_tstb_ftp_car_carinformation
-  AFTER INSERT
+  BEFORE INSERT
   ON tstb_ftp_car_information
   FOR EACH ROW
   BEGIN
