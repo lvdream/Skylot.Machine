@@ -212,7 +212,13 @@ CREATE TRIGGER TR_after_save_tstb_ftp_car_carinformation
   ON tstb_ftp_car_information
   FOR EACH ROW
   BEGIN
-
+    DECLARE tmp_count INT;
+    SET tmp_count = (SELECT count(*)
+                     FROM tstb_ftp_car_information);
+    IF (tmp_count = 1)
+    THEN
+      SET NEW.tfc_createuser = '1'; # 标示这一条操作数据是一条排队对象,便于处理排队对象的配载位置
+    END IF;
     CALL sp_tstb_ftp_car_information(
 
     );

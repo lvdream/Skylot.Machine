@@ -538,7 +538,11 @@ public class MainThreadUtil {
             socketService.confirmStatus(4);//等待车库门关闭
             TstbFtpCarInformationCriteria carInformationCriteria = new TstbFtpCarInformationCriteria();
             carInformationCriteria.createCriteria().andTfcCarCodeEqualTo(this.getTstbFtpCarInformation().getTfcCarCode());
-            serviceMap.get("ftpcarService").delete(carInformationCriteria);
+            if (actionType.equals("0")) {//取消停车,删除排队队列
+                serviceMap.get("ftpcarService").delete(new TstbFtpCarInformationCriteria());
+            } else {
+                serviceMap.get("ftpcarService").delete(carInformationCriteria);
+            }
             getMarqueeUtil().sendText("Skylot", "欢迎停车!", true, "思该唠特");
             //更新IMA状态
             updateStatus("1", "1", "3", this.getTstbFtpCarInformation().getTfcCarCode(), this.getTstbFtpCarInformation().getTfcCarInCode(), "0", code.getTargetLot());
